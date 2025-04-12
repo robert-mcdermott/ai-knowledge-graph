@@ -3,7 +3,7 @@
 # AI Powered Knowledge Graph Generator
 
 This system takes an unstructured text document, and uses an LLM of your choice to extract knowledge in the form of Subject-Predicate-Object (SPO) triplets, and visualizes the relationships as an interactive knowledge graph.
-A demo of a knowlege graph created with this project can be found here: [Industrial-Revolution Knowledge Graph](https://robert-mcdermott.github.io/ai-knowledge-graph/)
+A demo of a knowlege graph created with this project can be found here: [Rise of Evolution Knowledge Graph](https://aimaster-dev.github.io/knowledge-website)
 
 
 ## Features
