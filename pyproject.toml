@@ -23,3 +23,10 @@ generate-graph = "src.knowledge_graph.main:main"
 
 [tool.setuptools]
 package-dir = {"" = "."}
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = '.git*,*.lock'
+check-hidden = true
+ignore-regex = '(\ballEdges\b|.{300,})'
+# ignore-words-list = ''
