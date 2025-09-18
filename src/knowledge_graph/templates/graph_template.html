@@ -678,7 +678,7 @@ function populateFilterOptions() {
             });
         } else if (selectedItem === 'edge') {
             // Add edge properties
-            const edgeProperties = ['from', 'to', 'label', 'title'];
+            const edgeProperties = ['from', 'to', 'label', 'title', 'inferred'];
             edgeProperties.forEach(prop => {
                 const option = document.createElement('option');
                 option.value = prop;
@@ -721,7 +721,11 @@ function populateFilterOptions() {
             // Get all unique values for the selected edge property
             const edges = network.body.data.edges.get();
             edges.forEach(edge => {
-                if (edge[selectedProperty] !== undefined) {
+                if (selectedProperty === 'inferred') {
+                    // Handle inferred property specially - it's stored as dashes
+                    const isInferred = edge.dashes === true;
+                    values.add(isInferred.toString());
+                } else if (edge[selectedProperty] !== undefined) {
                     values.add(edge[selectedProperty].toString());
                 }
             });
@@ -783,7 +787,15 @@ function filterSelection() {
         else if (itemType === 'edge') {
             const edges = network.body.data.edges.get();
             edges.forEach(edge => {
-                if (edge[property] && edge[property].toString() === value) {
+                let match = false;
+                if (property === 'inferred') {
+                    // Handle inferred property specially - it's stored as dashes
+                    const isInferred = edge.dashes === true;
+                    match = isInferred.toString() === value;
+                } else if (edge[property] && edge[property].toString() === value) {
+                    match = true;
+                }
+                if (match) {
                     edgesToShow.push(edge.id);
                     // Include connected nodes
                     nodesToShow.push(edge.from);
