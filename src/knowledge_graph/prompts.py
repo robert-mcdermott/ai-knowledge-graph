@@ -20,7 +20,7 @@ Follow these rules carefully:
 - Ensure that all possible relationships are identified in the text and are captured in an S-P-O relation.
 - Standardize terminology: If the same concept appears with slight variations (e.g., "artificial intelligence" and "AI"), use the most common or canonical form consistently.
 - Make all the text of S-P-O text lower-case, even Names of people and places.
-- If a person is mentioned by name, create a relation to their location, profession and what they are known for (invented, wrote, started, title, etc.) if known and if it fits the context of the informaiton. 
+- If a person is mentioned by name, create a relation to their location, profession and what they are known for (invented, wrote, started, title, etc.) if known and if it fits the context of the information. 
 
 Important Considerations:
 - Aim for precision in entity naming - use specific forms that distinguish between similar but different entities
