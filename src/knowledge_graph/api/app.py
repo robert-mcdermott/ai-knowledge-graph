@@ -31,12 +31,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files
-web_dir = Path(__file__).parent.parent.parent.parent / "web"
-app.mount("/static", StaticFiles(directory=str(web_dir / "static")), name="static")
-
 # Store active processing tasks
 active_tasks: Dict[str, Dict] = {}
+
+# Try to mount static files if they exist
+try:
+    web_dir = Path(__file__).parent.parent.parent.parent / "web"
+    if (web_dir / "static").exists():
+        app.mount("/static", StaticFiles(directory=str(web_dir / "static")), name="static")
+except Exception:
+    pass  # Static files are optional
 
 
 class ProcessingConfig(BaseModel):
@@ -71,10 +75,48 @@ class ProgressUpdate:
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main web interface."""
-    html_file = web_dir / "templates" / "index.html"
-    if html_file.exists():
-        return FileResponse(html_file)
-    return HTMLResponse(content="<h1>Knowledge Graph Generator</h1><p>Upload interface not found.</p>")
+    # Try to find HTML file in multiple locations
+    possible_paths = [
+        Path(__file__).parent / "templates" / "index.html",  # Local to app.py
+        Path(__file__).parent.parent.parent.parent / "web" / "templates" / "index.html",  # Root web dir
+    ]
+
+    for html_file in possible_paths:
+        if html_file.exists():
+            return FileResponse(html_file)
+
+    # Fallback: return basic HTML
+    return HTMLResponse(content="""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>AI Knowledge Graph Generator</title>
+        <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+            h1 { color: #333; }
+            .info { background: #f0f0f0; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <h1>🚀 AI Knowledge Graph Generator</h1>
+        <div class="info">
+            <h2>Service is running!</h2>
+            <p>The web interface template was not found, but the API is working.</p>
+            <h3>Available Endpoints:</h3>
+            <ul>
+                <li><strong>POST /api/upload</strong> - Upload a text file for processing</li>
+                <li><strong>GET /api/task/{task_id}</strong> - Check task status</li>
+                <li><strong>WS /ws/{task_id}</strong> - WebSocket for real-time progress</li>
+                <li><strong>GET /api/view/{task_id}</strong> - View generated graph</li>
+                <li><strong>GET /api/download/{task_id}</strong> - Download graph HTML</li>
+                <li><strong>GET /health</strong> - Health check</li>
+                <li><strong>GET /docs</strong> - API Documentation (Swagger UI)</li>
+            </ul>
+            <p><a href="/docs">→ View Interactive API Documentation</a></p>
+        </div>
+    </body>
+    </html>
+    """)
 
 
 @app.post("/api/upload")
