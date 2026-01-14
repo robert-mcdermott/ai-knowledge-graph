@@ -8,11 +8,13 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 
 ## Features
 
+- **Web Interface**: User-friendly web interface for uploading files and generating knowledge graphs (NEW!)
 - **Text Chunking**: Automatically splits large documents into manageable chunks for processing
 - **Knowledge Extraction**: Uses AI to identify entities and their relationships
 - **Entity Standardization**: Ensures consistent entity naming across document chunks
 - **Relationship Inference**: Discovers additional relationships between disconnected parts of the graph
 - **Interactive Visualization**: Creates an interactive graph visualization
+- **Real-time Progress**: WebSocket-based real-time progress updates during processing
 - **Works with Any OpenAI Compatible API Endpoint**: Ollama, LM Studio, OpenAI, vLLM, LiteLLM (provides access to AWS Bedrock, Azure OpenAI, Anthropic and many other LLM services) 
 
 ## Requirements
@@ -21,6 +23,35 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 - Required packages (install using `pip install -r requirements.txt` or `uv sync`)
 
 ## Quick Start
+
+### Option 1: Web Interface (Recommended for Beginners)
+
+1. Clone this repository
+2. Install dependencies: `pip install -r requirements.txt`
+3. Configure your settings in `config.toml`
+4. Start the web server:
+
+```bash
+python start_web.py
+```
+
+5. Open your browser to http://localhost:8000
+6. Upload your text file and generate your knowledge graph!
+
+See [WEB_INTERFACE.md](WEB_INTERFACE.md) for detailed web interface documentation.
+
+### Option 1B: Deploy to Cloud (Recommended for Sharing)
+
+Want others to access your web interface? Deploy to a free cloud platform:
+
+**Quick Deploy Options:**
+- **Railway** (推薦): [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+- **Render**: Free tier available
+- **Fly.io**: Free tier available
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for Railway, Render, and Fly.io.
+
+### Option 2: Command Line Interface
 
 1. Clone this repository
 2. Install dependencies: `pip install -r requirements.txt`

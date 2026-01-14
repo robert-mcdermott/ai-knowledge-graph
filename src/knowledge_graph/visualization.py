@@ -186,23 +186,38 @@ def _calculate_centrality_metrics(G_undirected, all_nodes):
 def _detect_communities(G_undirected, all_nodes):
     """Detect communities in the graph."""
     try:
-        # Attempt to detect communities using Louvain method
-        import community as community_louvain
-        partition = community_louvain.best_partition(G_undirected)
-        community_count = len(set(partition.values()))
+        # Try to use NetworkX's built-in Louvain community detection (NetworkX 2.5+)
+        from networkx.algorithms import community as nx_community
+        communities = nx_community.louvain_communities(G_undirected)
+
+        # Convert to partition dictionary format
+        partition = {}
+        for idx, comm in enumerate(communities):
+            for node in comm:
+                partition[node] = idx
+
+        community_count = len(communities)
         print(f"Detected {community_count} communities using Louvain method")
         return partition, community_count
-    except:
-        # Fallback: assign community IDs based on degree for simplicity
-        node_communities = {}
-        for node in all_nodes:
-            node_degree = G_undirected.degree(node) if node in G_undirected else 0
-            # Ensure we have at least 0 as a community ID
-            community_id = max(0, node_degree) % 8  # Using modulo 8 to limit number of colors
-            node_communities[node] = community_id
-        community_count = len(set(node_communities.values()))
-        print(f"Using degree-based communities ({community_count} communities)")
-        return node_communities, community_count
+    except Exception as e:
+        try:
+            # Fallback to python-louvain package if installed
+            import community as community_louvain
+            partition = community_louvain.best_partition(G_undirected)
+            community_count = len(set(partition.values()))
+            print(f"Detected {community_count} communities using Louvain method (python-louvain)")
+            return partition, community_count
+        except:
+            # Final fallback: assign community IDs based on degree for simplicity
+            node_communities = {}
+            for node in all_nodes:
+                node_degree = G_undirected.degree(node) if node in G_undirected else 0
+                # Ensure we have at least 0 as a community ID
+                community_id = max(0, node_degree) % 8  # Using modulo 8 to limit number of colors
+                node_communities[node] = community_id
+            community_count = len(set(node_communities.values()))
+            print(f"Using degree-based communities ({community_count} communities)")
+            return node_communities, community_count
 
 def _calculate_node_sizes(all_nodes, betweenness, degree, eigenvector):
     """Calculate node sizes based on centrality metrics."""

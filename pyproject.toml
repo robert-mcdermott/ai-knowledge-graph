@@ -4,14 +4,17 @@ version = "0.6.1"
 description = "Takes a text document and generates an interactive knowledge graph"
 authors = [{ name = "Robert McDermott", email = "robert.c.mcdermott@gmail.com" }, ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "networkx>=3.4.2",
     "pyvis>=0.3.2",
     "pyvis-network>=0.0.6",
     "requests>=2.32.3",
     "tomli>=2.2.1",
-    "python-louvain>=0.16"
+    "fastapi>=0.115.5",
+    "uvicorn[standard]>=0.34.0",
+    "python-multipart>=0.0.20",
+    "websockets>=14.1"
 ]
 
 [build-system]

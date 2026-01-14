@@ -21,7 +21,6 @@ ptyprocess==0.7.0
 pure-eval==0.2.3
 pygments==2.19.1
 python-dateutil==2.9.0.post0
-python-louvain==0.16
 pytz==2025.1
 pyvis==0.3.2
 pyvis-network==0.0.6
@@ -33,3 +32,9 @@ traitlets==5.14.3
 tzdata==2025.1
 urllib3==2.3.0
 wcwidth==0.2.13
+
+# Web API dependencies
+fastapi==0.115.5
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+websockets==14.1
