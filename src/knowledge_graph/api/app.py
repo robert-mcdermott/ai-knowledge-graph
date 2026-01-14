@@ -15,10 +15,10 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from knowledge_graph.config import load_config
-from knowledge_graph.main import process_text_in_chunks
-from knowledge_graph.text_utils import chunk_text
-from knowledge_graph.visualization import visualize_knowledge_graph
+from ..config import load_config
+from ..main import process_text_in_chunks
+from ..text_utils import chunk_text
+from ..visualization import visualize_knowledge_graph
 
 app = FastAPI(title="AI Knowledge Graph Generator", version="0.6.1")
 
