@@ -21,3 +21,7 @@ test_api.py
 *.html
 *.json
 !docs/*.html
+!railway.json
+!render.yaml
+!*.dockerignore
+!Dockerfile

@@ -40,6 +40,17 @@ python start_web.py
 
 See [WEB_INTERFACE.md](WEB_INTERFACE.md) for detailed web interface documentation.
 
+### Option 1B: Deploy to Cloud (Recommended for Sharing)
+
+Want others to access your web interface? Deploy to a free cloud platform:
+
+**Quick Deploy Options:**
+- **Railway** (推薦): [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+- **Render**: Free tier available
+- **Fly.io**: Free tier available
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions for Railway, Render, and Fly.io.
+
 ### Option 2: Command Line Interface
 
 1. Clone this repository
