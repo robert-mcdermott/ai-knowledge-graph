@@ -221,8 +221,8 @@ async def websocket_endpoint(websocket: WebSocket, task_id: str):
         # Process chunks (this will take time)
         triples = await asyncio.to_thread(
             process_text_in_chunks,
-            text,
             config,
+            text,
             debug=False
         )
 
