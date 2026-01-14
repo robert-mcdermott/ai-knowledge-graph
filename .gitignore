@@ -7,3 +7,17 @@ lib/
 *.egg-info
 __pycache__
 venv/
+
+# Configuration files with API keys (use config.toml.example as template)
+config.toml
+
+# Temporary and test files
+test_sample.txt
+test_api.py
+*.pyc
+
+# Generated outputs
+/tmp/
+*.html
+*.json
+!docs/*.html
