@@ -68,7 +68,9 @@ is stale (`prompts.py` is now a package).
 ## Phase 1 – Stop the bleeding (P0, mostly S)
 
 > **Wave 1 (done):** LLM client + JSON extraction + config validation, with a pytest suite
-> (`tests/`). Remaining Phase 1 waves: inference defaults, text handling, template fixes.
+> (`tests/`).
+> **Wave 2 (done):** inference defaults, constraints, budget, method tags and standardization guard.
+> Remaining Phase 1 waves: text handling, template fixes.
 
 Correctness fixes that change results today. Do these first and cut a 0.6.2 patch.
 
@@ -107,26 +109,26 @@ Correctness fixes that change results today. Do these first and cut a 0.6.2 patc
       package) or only quote keys that follow `{` or `,`. `P1 S`
 
 ### Inference & standardization (`entity_standardization.py`)
-- [ ] **Honor `inference.apply_transitive`** (currently never read) and **default it to
+- [x] **Honor `inference.apply_transitive`** (currently never read) and **default it to
       `false`**. In the confirmed run it produced 962 of 1472 edges. `P0 S`
-- [ ] **Constrain transitive inference when it is on**: only through low-degree
+- [x] **Constrain transitive inference when it is on**: only through low-degree
       intermediates (skip hubs like `technology`/`computing`, which fan out to everything),
       only 1 hop, cap at N per subject and at a fraction of extracted edges, and only for
       predicate classes where transitivity is meaningful (`is a`, `part of`, `located in`,
       `caused`/`led to`). `P0 M`
-- [ ] **Stop truncating `"<pred> via <entity>"` predicates into nonsense.** Keep the
+- [x] **Stop truncating `"<pred> via <entity>"` predicates into nonsense.** Keep the
       predicate as `pred1` and store the intermediate node in a `via` field; show
       "via X" in the tooltip instead of the label. `P0 S`
-- [ ] **Make lexical-similarity inference opt-in** (`inference.lexical = false` by default)
+- [x] **Make lexical-similarity inference opt-in** (`inference.lexical = false` by default)
       and require a shared *content* word (not a stop-word) plus a length ≥ 5. `P0 S`
-- [ ] **Fix the misleading counters**: "Inferred N new relationships between communities"
+- [x] **Fix the misleading counters**: "Inferred N new relationships between communities"
       prints the cumulative total on every pair; "Added -22 inferred relationships" can go
       negative because dedup runs after the count. `P1 S`
-- [ ] **Over-merging guard in standardization**: the 4-char stem rule merges
+- [x] **Over-merging guard in standardization**: the 4-char stem rule merges
       `steam engine factories` into `steam engine` (verified). Require the subset rule to be
       a *prefix* match or the LLM to confirm; log every merge at debug level so users can
       audit. `P1 M`
-- [ ] **Pick community representatives by degree, not `list(set)[:5]`** (arbitrary order
+- [x] **Pick community representatives by degree, not `list(set)[:5]`** (arbitrary order
       today), and cap total inference LLM calls (5 communities → 10 pair calls). `P1 S`
 
 ### Text handling (`text_utils.py`, `main.py`)
@@ -226,7 +228,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [ ] **Response cache** keyed by hash(model, prompt) in `.kg-cache/`, so re-running
       visualization changes or tweaking inference doesn't re-pay for extraction.
       Promote `json_to_html.py` to `generate-graph --from-json graph.json`. `P1 S`
-- [ ] **Smarter inference budget**: cap inferred edges to a configurable fraction of extracted
+- [x] **Smarter inference budget**: cap inferred edges to a configurable fraction of extracted
       edges (default 50 %), prefer LLM-inferred over rule-inferred when over budget, and
       never infer between nodes already connected in either direction. `P1 S`
 - [ ] **LLM-named communities**: after Louvain, ask the LLM for a 2–4 word label per

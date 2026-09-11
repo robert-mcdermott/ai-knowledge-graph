@@ -12,7 +12,7 @@ def test_defaults_are_applied():
     assert cfg["llm"]["max_tokens"] == 32768
     assert cfg["llm"]["token_param"] == "auto"
     assert cfg["chunking"] == {"chunk_size": 500, "overlap": 50}
-    assert cfg["inference"]["apply_transitive"] is True
+    assert cfg["inference"]["apply_transitive"] is False
 
 
 def test_missing_model_is_an_error():

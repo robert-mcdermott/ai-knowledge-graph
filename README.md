@@ -68,14 +68,22 @@ chunk_size = 200  # Number of words per chunk
 overlap = 20      # Number of words to overlap between chunks
 
 [standardization]
-enabled = true            # Enable entity standardization
+enabled = true               # Enable entity standardization
 use_llm_for_entities = true  # Use LLM for additional entity resolution
+#merge_word_subsets = false  # Aggressive heuristic merging by shared words (off by default)
 
 [inference]
-enabled = true             # Enable relationship inference
-use_llm_for_inference = true  # Use LLM for relationship inference
-apply_transitive = true    # Apply transitive inference rules
+enabled = true               # Enable relationship inference
+use_llm_for_inference = true # LLM infers links between/within disconnected components
+apply_transitive = false     # Rule-based A->B->C => A->C for transitive predicates (off by default)
+#lexical = false             # Rule-based "related to" edges for names sharing a word (off by default)
+#max_inferred_ratio = 0.5    # Cap inferred edges at this fraction of extracted edges
 ```
+
+Every inferred triple in the JSON output carries `"inferred": true` and a `"method"`
+(`llm_community`, `llm_within`, `transitive` or `lexical`); transitive triples also record the
+intermediate node in `"via"`. Rule-based inference is off by default because in testing it
+generated roughly 70 % of all edges and hid the relationships actually found in the text.
 
 ### A note on reasoning models
 

@@ -23,13 +23,24 @@ chunk_size = 100  # Number of words per chunk
 overlap = 20      # Number of words to overlap between chunks
 
 [standardization]
-enabled = true             # Whether to enable entity standardization
+enabled = true               # Whether to enable entity standardization
 use_llm_for_entities = true  # Whether to use LLM for additional entity resolution
+#merge_word_subsets = false  # Aggressive heuristic merging by shared words/stems
+                             # ("steam engine factories" -> "steam engine"); off by default
 
 [inference]
-enabled = true             # Whether to enable relationship inference
-use_llm_for_inference = true  # Whether to use LLM for relationship inference
-apply_transitive = true    # Whether to apply transitive inference rules
+enabled = true               # Whether to enable relationship inference
+use_llm_for_inference = true # LLM infers links between and within disconnected components
+apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for transitive predicate
+                             # families (is a / part of / located in / led to). Off by default:
+                             # it produced ~70% of all edges in testing and buried the real ones.
+#transitive_predicate_groups = ["is a", "part of", "located in", "led to"]
+#transitive_max_hub_degree = 10   # never chain through nodes with more connections than this
+#transitive_max_per_subject = 5   # cap new transitive edges per subject
+#lexical = false                  # Rule: connect names sharing a content word ("related to"); off by default
+#lexical_min_word_length = 5
+#max_inferred_ratio = 0.5         # Cap inferred edges at this fraction of extracted edges
+#max_communities_for_llm = 5      # Largest components considered for cross-community LLM inference
 
 [visualization]
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 

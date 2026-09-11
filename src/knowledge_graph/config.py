@@ -22,8 +22,18 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "json_mode": False,
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
-    "standardization": {"enabled": True, "use_llm_for_entities": True},
-    "inference": {"enabled": True, "use_llm_for_inference": True, "apply_transitive": True},
+    "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
+    "inference": {
+        "enabled": True,
+        "use_llm_for_inference": True,
+        "apply_transitive": False,
+        "transitive_max_hub_degree": 10,
+        "transitive_max_per_subject": 5,
+        "lexical": False,
+        "lexical_min_word_length": 5,
+        "max_inferred_ratio": 0.5,
+        "max_communities_for_llm": 5,
+    },
     "visualization": {"edge_smooth": False},
 }
 
@@ -95,6 +105,22 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
         raise ConfigError("[chunking] overlap must be a non-negative integer")
     if overlap >= size:
         raise ConfigError(f"[chunking] overlap ({overlap}) must be smaller than chunk_size ({size})")
+
+    inference = config["inference"]
+    ratio = inference["max_inferred_ratio"]
+    if not isinstance(ratio, (int, float)) or ratio < 0:
+        raise ConfigError("[inference] max_inferred_ratio must be a number >= 0")
+    for key in ("transitive_max_hub_degree", "transitive_max_per_subject", "lexical_min_word_length",
+                "max_communities_for_llm"):
+        if not isinstance(inference[key], int) or inference[key] < 0:
+            raise ConfigError(f"[inference] {key} must be a non-negative integer")
+    groups = inference.get("transitive_predicate_groups")
+    if groups is not None:
+        from src.knowledge_graph.entity_standardization import TRANSITIVE_PREDICATE_GROUPS
+        unknown = set(groups) - set(TRANSITIVE_PREDICATE_GROUPS)
+        if unknown:
+            raise ConfigError(f"[inference] unknown transitive_predicate_groups {sorted(unknown)}; "
+                              f"choose from {sorted(TRANSITIVE_PREDICATE_GROUPS)}")
     return config
 
 
