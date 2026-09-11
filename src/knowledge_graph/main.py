@@ -10,13 +10,13 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from src.knowledge_graph.config import load_config
-from src.knowledge_graph.llm import call_llm, extract_json_from_text
+from src.knowledge_graph.llm import LLMClient, LLMError, extract_json_from_text
 from src.knowledge_graph.visualization import visualize_knowledge_graph, sample_data_visualization
 from src.knowledge_graph.text_utils import chunk_text
 from src.knowledge_graph.entity_standardization import standardize_entities, infer_relationships, limit_predicate_length
 from src.knowledge_graph.prompts import prompt_factory
 
-def process_with_llm(config, input_text, debug=False):
+def process_with_llm(config, input_text, debug=False, client=None):
     """
     Process input text with LLM to extract triples.
     
@@ -24,25 +24,25 @@ def process_with_llm(config, input_text, debug=False):
         config: Configuration dictionary
         input_text: Text to analyze
         debug: If True, print detailed debug information
+        client: Optional LLMClient to reuse (built from config when omitted)
         
     Returns:
-        List of extracted triples or None if processing failed
+        List of extracted triples or None if the response contained no valid triples
+
+    Raises:
+        LLMError: if the request failed or the response was truncated/empty
     """
     # Use prompts from the centralized prompt factory
     system_prompt = prompt_factory.get_prompt("main_system")
     user_prompt = prompt_factory.get_prompt("main_user")
     user_prompt += f"```\n{input_text}```\n" 
 
-    # LLM configuration
-    model = config["llm"]["model"]
-    api_key = config["llm"]["api_key"]
-    max_tokens = config["llm"]["max_tokens"]
-    temperature = config["llm"]["temperature"]
-    base_url = config["llm"]["base_url"]
+    if client is None:
+        client = LLMClient.from_config(config)
     
-    # Process with LLM
+    # Process with LLM (raises LLMError on truncated/empty/failed responses)
     metadata = {}
-    response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
+    response = client.complete(user_prompt, system_prompt)
     
     # Print raw response only if debug mode is on
     if debug:
@@ -87,7 +87,7 @@ def process_with_llm(config, input_text, debug=False):
         print("\n\nERROR ### Could not extract valid JSON from response: ", response, "\n\n")
         return None
 
-def process_text_in_chunks(config, full_text, debug=False):
+def process_text_in_chunks(config, full_text, debug=False, continue_on_error=False):
     """
     Process a large text by breaking it into chunks with overlap,
     and then processing each chunk separately.
@@ -96,9 +96,13 @@ def process_text_in_chunks(config, full_text, debug=False):
         config: Configuration dictionary
         full_text: The complete text to process
         debug: If True, print detailed debug information
+        continue_on_error: If True, skip chunks whose LLM call fails instead of aborting
     
     Returns:
         List of all extracted triples from all chunks
+
+    Raises:
+        LLMError: when a chunk fails and continue_on_error is False
     """
     # Get chunking parameters from config
     chunk_size = config.get("chunking", {}).get("chunk_size", 500)
@@ -112,13 +116,23 @@ def process_text_in_chunks(config, full_text, debug=False):
     print("=" * 50)
     print(f"Processing text in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
     
-    # Process each chunk
+    # Process each chunk with a single shared client
+    client = LLMClient.from_config(config)
     all_results = []
+    failed_chunks = []
     for i, chunk in enumerate(text_chunks):
-        print(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)")
+        print(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)", flush=True)
         
         # Process the chunk with LLM
-        chunk_results = process_with_llm(config, chunk, debug)
+        try:
+            chunk_results = process_with_llm(config, chunk, debug, client=client)
+        except LLMError as e:
+            if not continue_on_error:
+                raise LLMError(f"Chunk {i+1}/{len(text_chunks)} failed: {e}\n"
+                               f"(Use --continue-on-error to skip failed chunks instead of aborting.)") from e
+            print(f"Warning: skipping chunk {i+1}: {e}", flush=True)
+            failed_chunks.append(i + 1)
+            continue
         
         if chunk_results:
             # Add chunk information to each triple
@@ -130,7 +144,12 @@ def process_text_in_chunks(config, full_text, debug=False):
         else:
             print(f"Warning: Failed to extract triples from chunk {i+1}")
     
-    print(f"\nExtracted a total of {len(all_results)} triples from all chunks")
+    print(f"\nExtracted a total of {len(all_results)} triples from all chunks", flush=True)
+    if failed_chunks:
+        print(f"Warning: {len(failed_chunks)} of {len(text_chunks)} chunks failed and were skipped: "
+              f"{failed_chunks}. The graph is incomplete.", flush=True)
+    if not all_results:
+        return []
     
     # Apply entity standardization if enabled
     if config.get("standardization", {}).get("enabled", False):
@@ -208,6 +227,8 @@ def main():
     parser.add_argument('--debug', action='store_true', help='Enable debug output (raw LLM responses and extracted JSON)')
     parser.add_argument('--no-standardize', action='store_true', help='Disable entity standardization')
     parser.add_argument('--no-inference', action='store_true', help='Disable relationship inference')
+    parser.add_argument('--continue-on-error', action='store_true',
+                        help='Skip chunks whose LLM call fails or is truncated instead of aborting')
     
     args = parser.parse_args()
     
@@ -215,7 +236,7 @@ def main():
     config = load_config(args.config)
     if not config:
         print(f"Failed to load configuration from {args.config}. Exiting.")
-        return
+        sys.exit(1)
     
     # If test flag is provided, generate a sample visualization
     if args.test:
@@ -230,7 +251,7 @@ def main():
     if not args.input:
         print("Error: --input is required unless --test is used")
         parser.print_help()
-        return
+        sys.exit(2)
     
     # Override configuration settings with command line arguments
     if args.no_standardize:
@@ -245,10 +266,15 @@ def main():
         print(f"Using input text from file: {args.input}")
     except Exception as e:
         print(f"Error reading input file {args.input}: {e}")
-        return
+        sys.exit(1)
     
     # Process text in chunks
-    result = process_text_in_chunks(config, input_text, args.debug)
+    try:
+        result = process_text_in_chunks(config, input_text, args.debug, args.continue_on_error)
+    except LLMError as e:
+        print(f"\nERROR: {e}", flush=True)
+        print("Knowledge graph generation aborted.")
+        sys.exit(1)
     
     if result:
         # Save the raw data as JSON for potential reuse
@@ -271,7 +297,8 @@ def main():
         print("\nTo view the visualization, open the following file in your browser:")
         print(f"file://{os.path.abspath(args.output)}")
     else:
-        print("Knowledge graph generation failed due to errors in LLM processing.")
+        print("Knowledge graph generation failed: no triples were extracted.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main() 

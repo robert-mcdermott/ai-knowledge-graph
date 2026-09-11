@@ -6,9 +6,17 @@ model = "gemma3"
 api_key = "sk-1234"
 base_url = "http://localhost:11434/v1/chat/completions"
 #base_url = "http://localhost:4000/v1/chat/completions"
-max_tokens = 8192
-#max_tokens = 4096
-temperature = 0.8
+max_tokens = 32768  # Reasoning models (deepseek, qwen3, gpt-5, o-series) spend most of this on hidden
+                    # reasoning; 8192 is NOT enough for them and the run will abort with a truncation error.
+temperature = 0.8   # Omit this line for models that only accept the default temperature (e.g. gpt-5)
+#timeout = 300              # Seconds to wait for one completion (default 300)
+#max_retries = 3            # Retries on 429/5xx/connection errors with exponential back-off (default 3)
+#token_param = "auto"       # "auto" (default) switches to max_completion_tokens when the server asks for it
+#json_mode = false          # Send response_format = json_object (OpenAI, Ollama, vLLM, LiteLLM support it)
+#reasoning_effort = "low"   # Passed through as-is for models/servers that support it
+#api_key = "env:OPENAI_API_KEY"  # Read the key from an environment variable instead of this file
+#[llm.extra_body]           # Any extra JSON fields for the request body, e.g. Ollama's think switch
+#think = false
 
 [chunking]
 chunk_size = 100  # Number of words per chunk

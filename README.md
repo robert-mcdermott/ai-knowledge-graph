@@ -50,10 +50,18 @@ The system can be configured using the `config.toml` file:
 ```toml
 [llm]
 model = "gemma3"  # Google open weight model
-api_key = "sk-1234"
+api_key = "sk-1234"              # or "env:OPENAI_API_KEY" to read it from the environment
 base_url = "http://localhost:11434/v1/chat/completions" # Local Ollama instance running locally (but can be any OpenAI compatible endpoint)
-max_tokens = 8192
-temperature = 0.2
+max_tokens = 32768               # reasoning models need a large budget, see note below
+temperature = 0.2                # omit for models that only accept the default (e.g. gpt-5)
+# Optional:
+#timeout = 300                   # seconds per request
+#max_retries = 3                 # retries on 429/5xx/connection errors
+#token_param = "auto"            # auto-switches to max_completion_tokens for newer OpenAI models
+#json_mode = false               # request response_format = json_object
+#reasoning_effort = "low"        # passed through to servers/models that support it
+#[llm.extra_body]                # arbitrary extra request fields, e.g. Ollama's think switch
+#think = false
 
 [chunking]
 chunk_size = 200  # Number of words per chunk
@@ -69,6 +77,16 @@ use_llm_for_inference = true  # Use LLM for relationship inference
 apply_transitive = true    # Apply transitive inference rules
 ```
 
+### A note on reasoning models
+
+Models such as DeepSeek, Qwen3, gpt-5 and the o-series "think" before they answer, and that
+hidden reasoning is charged against `max_tokens`. With a small budget the model can spend
+everything on reasoning and return **no answer at all**. The generator detects this
+(`finish_reason = "length"`) and aborts with an explanation instead of silently producing an
+empty graph. Set `max_tokens` to 16k–32k for such models, lower `reasoning_effort`, use
+smaller chunks, or pass `--continue-on-error` to skip failed chunks and accept an
+incomplete graph.
+
 ## Command Line Options
 
 - `--input FILE`: Input text file to process
@@ -77,13 +95,14 @@ apply_transitive = true    # Apply transitive inference rules
 - `--debug`: Enable debug output with raw LLM responses
 - `--no-standardize`: Disable entity standardization
 - `--no-inference`: Disable relationship inference
+- `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
 - `--test`: Generate sample visualization using test data
 
 ### Usage message (--help)
 
 ```bash
 generate-graph --help
-usage: generate-graph [-h] [--test] [--config CONFIG] [--output OUTPUT] [--input INPUT] [--debug] [--no-standardize] [--no-inference]
+usage: generate-graph [-h] [--test] [--config CONFIG] [--output OUTPUT] [--input INPUT] [--debug] [--no-standardize] [--no-inference] [--continue-on-error]
 
 Knowledge Graph Generator and Visualizer
 
@@ -96,6 +115,8 @@ options:
   --debug           Enable debug output (raw LLM responses and extracted JSON)
   --no-standardize  Disable entity standardization
   --no-inference    Disable relationship inference
+  --continue-on-error
+                    Skip chunks whose LLM call fails or is truncated instead of aborting
 ```
 
 ### Example Run

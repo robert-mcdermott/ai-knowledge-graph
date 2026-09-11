@@ -7,3 +7,13 @@ lib/
 *.egg-info
 __pycache__
 venv/
+
+# Generated outputs in the repo root (generate-graph writes here by default) and local configs
+/*.html
+/*.json
+/out/
+config-*.toml
+config.local.toml
+
+# Test/tooling caches
+.pytest_cache/

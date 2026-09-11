@@ -1,20 +1,116 @@
-"""Configuration utilities for the knowledge graph generator."""
-import tomli
-import os
+"""Configuration loading, validation and defaults for the knowledge graph generator."""
+from __future__ import annotations
 
-def load_config(config_file="config.toml"):
+import os
+import re
+from typing import Any
+
+try:  # Python 3.11+
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - older interpreters
+    import tomli as tomllib  # type: ignore[no-redef]
+
+_ENV_BRACES = re.compile(r"^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$")
+
+DEFAULTS: dict[str, dict[str, Any]] = {
+    "llm": {
+        "max_tokens": 32768,
+        "temperature": 0.2,
+        "timeout": 300,
+        "max_retries": 3,
+        "token_param": "auto",
+        "json_mode": False,
+    },
+    "chunking": {"chunk_size": 500, "overlap": 50},
+    "standardization": {"enabled": True, "use_llm_for_entities": True},
+    "inference": {"enabled": True, "use_llm_for_inference": True, "apply_transitive": True},
+    "visualization": {"edge_smooth": False},
+}
+
+
+class ConfigError(ValueError):
+    """Raised when the configuration is missing or invalid."""
+
+
+def resolve_secret(value: Any) -> Any:
+    """Resolve ``env:NAME`` / ``${NAME}`` references to environment variables.
+
+    Plain strings are returned unchanged so existing configs keep working.
     """
-    Load configuration from TOML file.
-    
-    Args:
-        config_file: Path to the TOML configuration file
-        
-    Returns:
-        Dictionary containing the configuration or None if loading fails
+    if not isinstance(value, str):
+        return value
+    name = None
+    if value.startswith("env:"):
+        name = value[4:].strip()
+    else:
+        match = _ENV_BRACES.match(value)
+        if match:
+            name = match.group(1)
+    if name is None:
+        return value
+    resolved = os.environ.get(name)
+    if not resolved:
+        raise ConfigError(f"Environment variable {name!r} referenced by the config is not set")
+    return resolved
+
+
+def apply_defaults(config: dict[str, Any]) -> dict[str, Any]:
+    """Fill in missing sections/keys from :data:`DEFAULTS` (in place) and return the config."""
+    for section, values in DEFAULTS.items():
+        table = config.setdefault(section, {})
+        for key, default in values.items():
+            table.setdefault(key, default)
+    return config
+
+
+def validate_config(config: dict[str, Any]) -> dict[str, Any]:
+    """Validate types and ranges, resolve secrets, and return the config.
+
+    Raises:
+        ConfigError: with a message that names the offending key.
     """
+    if not isinstance(config, dict):
+        raise ConfigError("Configuration must be a table")
+    apply_defaults(config)
+
+    llm = config["llm"]
+    for key in ("model", "base_url"):
+        if not llm.get(key):
+            raise ConfigError(f"[llm] {key} is required")
+    llm["api_key"] = resolve_secret(llm.get("api_key"))
+    if not isinstance(llm["max_tokens"], int) or llm["max_tokens"] <= 0:
+        raise ConfigError("[llm] max_tokens must be a positive integer")
+    if llm.get("temperature") is not None and not isinstance(llm["temperature"], (int, float)):
+        raise ConfigError("[llm] temperature must be a number (or omitted)")
+    if llm["token_param"] not in ("auto", "max_tokens", "max_completion_tokens"):
+        raise ConfigError("[llm] token_param must be 'auto', 'max_tokens' or 'max_completion_tokens'")
+    if not isinstance(llm.get("extra_body", {}), dict):
+        raise ConfigError("[llm] extra_body must be a table")
+
+    chunking = config["chunking"]
+    size, overlap = chunking["chunk_size"], chunking["overlap"]
+    if not isinstance(size, int) or size <= 0:
+        raise ConfigError("[chunking] chunk_size must be a positive integer")
+    if not isinstance(overlap, int) or overlap < 0:
+        raise ConfigError("[chunking] overlap must be a non-negative integer")
+    if overlap >= size:
+        raise ConfigError(f"[chunking] overlap ({overlap}) must be smaller than chunk_size ({size})")
+    return config
+
+
+def load_config(config_file: str = "config.toml") -> dict[str, Any] | None:
+    """Load, default and validate a TOML config. Returns ``None`` (after printing) on failure."""
     try:
         with open(config_file, "rb") as f:
-            return tomli.load(f)
-    except Exception as e:
-        print(f"Error loading config file: {e}")
-        return None 
+            config = tomllib.load(f)
+    except FileNotFoundError:
+        print(f"Error: config file not found: {config_file}")
+        return None
+    except (OSError, tomllib.TOMLDecodeError) as e:
+        print(f"Error loading config file {config_file}: {e}")
+        return None
+    try:
+        return validate_config(config)
+    except ConfigError as e:
+        print(f"Invalid configuration in {config_file}: {e}")
+        return None

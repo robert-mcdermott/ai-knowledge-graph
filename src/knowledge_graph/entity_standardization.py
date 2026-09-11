@@ -1,7 +1,7 @@
 """Entity standardization and relationship inference for knowledge graphs."""
 import re
 from collections import defaultdict
-from src.knowledge_graph.llm import call_llm
+from src.knowledge_graph.llm import LLMClient, extract_json_from_text
 from src.knowledge_graph.prompts import prompt_factory
 
 def limit_predicate_length(predicate, max_words=3):
@@ -409,21 +409,8 @@ def _resolve_entities_with_llm(triples, config):
     user_prompt = prompt_factory.get_prompt("entity_resolution_user", entity_list)
     
     try:
-        # LLM configuration
-        model = config["llm"]["model"]
-        api_key = config["llm"]["api_key"]
-        max_tokens = config["llm"]["max_tokens"]
-        temperature = config["llm"]["temperature"]
-        base_url = config["llm"]["base_url"]
-        
-        # Call LLM
-        response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-        
-        # Extract JSON mapping
-        import json
-        from src.knowledge_graph.llm import extract_json_from_text
-        
-        entity_mapping = extract_json_from_text(response)
+        response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+        entity_mapping = extract_json_from_text(response, expect="object")
         
         if entity_mapping and isinstance(entity_mapping, dict):
             # Apply the mapping to standardize entities
@@ -508,19 +495,8 @@ def _infer_relationships_with_llm(triples, communities, config):
             )
             
             try:
-                # LLM configuration
-                model = config["llm"]["model"]
-                api_key = config["llm"]["api_key"]
-                max_tokens = config["llm"]["max_tokens"]
-                temperature = config["llm"]["temperature"]
-                base_url = config["llm"]["base_url"]
-                
-                # Call LLM
-                response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-                
-                # Extract JSON results
-                from src.knowledge_graph.llm import extract_json_from_text
-                inferred_triples = extract_json_from_text(response)
+                response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+                inferred_triples = extract_json_from_text(response, expect="array")
                 
                 if inferred_triples and isinstance(inferred_triples, list):
                     # Mark as inferred and add to new triples
@@ -624,19 +600,8 @@ def _infer_within_community_relationships(triples, communities, config):
         )
         
         try:
-            # LLM configuration
-            model = config["llm"]["model"]
-            api_key = config["llm"]["api_key"]
-            max_tokens = config["llm"]["max_tokens"]
-            temperature = config["llm"]["temperature"]
-            base_url = config["llm"]["base_url"]
-            
-            # Call LLM
-            response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-            
-            # Extract JSON results
-            from src.knowledge_graph.llm import extract_json_from_text
-            inferred_triples = extract_json_from_text(response)
+            response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+            inferred_triples = extract_json_from_text(response, expect="array")
             
             if inferred_triples and isinstance(inferred_triples, list):
                 # Mark as inferred and add to new triples
