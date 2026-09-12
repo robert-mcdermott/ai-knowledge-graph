@@ -2,7 +2,9 @@
 
 # AI Powered Knowledge Graph Generator
 
-This system takes an unstructured text document, and uses an LLM of your choice to extract knowledge in the form of Subject-Predicate-Object (SPO) triplets, and visualizes the relationships as an interactive knowledge graph.
+This system takes an unstructured text document, and uses an LLM of your choice to extract knowledge in the form of Subject-Predicate-Object (SPO) triplets, and visualizes the relationships as an interactive knowledge graph. Optional companion commands let you ask the
+graph questions (`graph-chat`) and run everything from a local web interface (`graph-serve`).
+
 **Live examples** (no install needed): <https://robert-mcdermott.github.io/ai-knowledge-graph/>
 
 | | | |
@@ -27,38 +29,65 @@ This system takes an unstructured text document, and uses an LLM of your choice 
 ## Requirements
 
 - Python 3.11+
-- Dependencies: `networkx`, `jinja2`, `requests` (installed by `pip install -e .` or `uv sync`)
+- Core dependencies: `networkx`, `jinja2`, `requests` (installed automatically)
+- Optional extras: `[web]` for `graph-serve` (FastAPI, uvicorn), `[pdf]` and `[docx]` for those input formats,
+  `[all]` for everything
+- An OpenAI-compatible LLM endpoint for generating new graphs (a local Ollama works well); the sample
+  graphs in this repository can be explored without one
 
 ## Quick Start
 
-1. Clone this repository
-2. Install: `pip install -e .` (or `uv sync`)
-3. Configure your settings in `config.toml`
-4. Run the system:
+### 1. Install
 
 ```bash
-generate-graph --input your_text_file.txt --output knowledge_graph.html
+git clone https://github.com/robert-mcdermott/ai-knowledge-graph.git
+cd ai-knowledge-graph
+uv sync --extra web            # or: pip install -e ".[web]"
 ```
 
-Or with UV:
+`uv sync` creates the environment and the `generate-graph`, `graph-chat` and `graph-serve` commands; prefix
+commands with `uv run` (as below) or activate the environment. With pip, drop the `uv run` prefix.
+
+### 2. Explore the sample graphs (no LLM needed)
+
+```bash
+uv run graph-serve --config config.toml --graphs data/samples --open
+```
+
+This opens a library with the five sample graphs from `data/samples/`; click one to explore it. Browsing works
+without a reachable model; the **Ask** panel and the **New graph** form use the model configured in
+`config.toml`. To render a sample to a static page instead:
+
+```bash
+uv run generate-graph --from-json data/samples/marie-curie.json --output marie-curie.html
+```
+
+### 3. Generate a graph from your own text
+
+Edit `config.toml` (model name, endpoint, API key; see [Configuration](#configuration)), then:
 
 ```bash
 uv run generate-graph --input your_text_file.txt --output knowledge_graph.html
 ```
 
-Or straight from the checkout without installing:
+That writes `knowledge_graph.html` (a self-contained interactive page), `knowledge_graph.json` (the triples)
+and `knowledge_graph.meta.json` (community names). Keep personal settings in a file git ignores, such as
+`config-working.toml`, and pass it with `--config`. From a checkout without installing, `python generate-graph.py`
+works the same way.
+
+### 4. Ask the graph questions
 
 ```bash
-python generate-graph.py --input your_text_file.txt --output knowledge_graph.html
+uv run graph-chat knowledge_graph.json "How did the steam engine change cities?"
 ```
 
 ### Development
 
 ```bash
-pip install -e ".[dev]"   # adds pytest and ruff
-pip install -e ".[all]"   # adds pypdf, python-docx and the web server
-pytest -q                 # 149 tests, no LLM needed
-ruff check .
+uv sync --extra dev --extra web   # or: pip install -e ".[dev,web]"
+uv run pytest -q                  # 170 tests, no LLM needed
+uv run ruff check .
+python scripts/build_docs.py      # rebuild the GitHub Pages site from data/samples
 ```
 
 ## Configuration
@@ -182,35 +211,66 @@ incomplete graph.
 - `--export FORMATS`: Extra outputs next to the HTML, comma-separated: `json` (always), `csv`, `graphml` (Gephi, yEd, Cytoscape), `cypher` (Neo4j `MERGE` script)
 - `--test`: Generate sample visualization using test data
 
-### Usage message (--help)
+### Usage messages (--help)
 
-```bash
-generate-graph --help
+```text
 usage: generate-graph [-h] [--test] [--config CONFIG] [--output OUTPUT]
-                      [--input PATH [PATH ...]] [--from-json FILE]
-                      [--debug] [--quiet] [--no-standardize] [--no-inference]
+                      [--input PATH [PATH ...]] [--from-json FILE] [--debug]
+                      [--quiet] [--no-standardize] [--no-inference]
                       [--continue-on-error] [--no-cache] [--export FORMATS]
+                      [--library-path DIR]
 
 Knowledge Graph Generator and Visualizer
 
 options:
-  -h, --help           show this help message and exit
-  --test               Generate a test visualization with sample data
-  --config CONFIG      Path to configuration file
-  --output OUTPUT      Output HTML file path
-  --input INPUT        Path to input text file (required unless --test or
-                       --from-json is used)
-  --from-json FILE     Render a visualization from a previously saved triples
-                       JSON file (no LLM calls)
-  --debug, --verbose   Enable debug output (raw LLM responses and extracted
-                       JSON)
-  --quiet              Only show warnings and errors
-  --no-standardize     Disable entity standardization
-  --no-inference       Disable relationship inference
-  --continue-on-error  Skip chunks whose LLM call fails or is truncated
-                       instead of aborting
-  --no-cache           Do not read or write the LLM response cache
-                       (llm.cache_dir)
+  -h, --help            show this help message and exit
+  --test                Generate a test visualization with sample data
+  --config CONFIG       Path to configuration file
+  --output OUTPUT       Output HTML file path
+  --input PATH [PATH ...]
+                        Input file(s) or directories: .txt/.md/.rst, .pdf
+                        (needs [pdf] extra), .docx (needs [docx] extra).
+                        Required unless --test or --from-json is used
+  --from-json FILE      Render a visualization from a previously saved triples
+                        JSON file (no LLM calls)
+  --debug, --verbose    Enable debug output (raw LLM responses and extracted
+                        JSON)
+  --quiet               Only show warnings and errors
+  --no-standardize      Disable entity standardization
+  --no-inference        Disable relationship inference
+  --continue-on-error   Skip chunks whose LLM call fails or is truncated
+                        instead of aborting
+  --no-cache            Do not read or write the LLM response cache
+                        (llm.cache_dir)
+  --export FORMATS      Comma-separated extra outputs written next to the
+                        HTML: json (always), csv, graphml, cypher
+  --library-path DIR    Reference the vis-network library from DIR (copied
+                        there if missing) instead of embedding it; useful when
+                        publishing many pages, e.g. on GitHub Pages
+```
+
+```text
+usage: graph-chat [-h] [--config CONFIG] [--json] [--no-facts] graph [question]
+
+positional arguments:
+  graph            Triples JSON written by generate-graph (e.g. knowledge_graph.json)
+  question         Question to answer; omit for an interactive session
+
+options:
+  --config CONFIG  Path to configuration file (uses its [llm] section)
+  --json           Print the result as JSON (single-question mode)
+  --no-facts       Do not list the cited facts after the answer
+```
+
+```text
+usage: graph-serve [-h] [--config CONFIG] [--graphs DIR] [--host HOST] [--port PORT] [--open]
+
+options:
+  --config CONFIG  Path to configuration file (uses [llm], [query], [visualization])
+  --graphs DIR     Directory containing the .json graphs written by generate-graph
+  --host HOST      Bind address (default 127.0.0.1; the server has no authentication)
+  --port PORT      Port (default 8008)
+  --open           Open the library in your browser
 ```
 
 ### Example Run
@@ -220,7 +280,7 @@ options:
 ```bash
 generate-graph --input data/industrial-revolution.txt --output industrial-revolution-kg.html
 ```
-**Console Output** (gemma4 via Ollama, about 20 seconds):
+**Console Output** (gemma4 via Ollama, about 20 seconds; `--quiet` reduces this to the summary):
 
 ```text
 Using input text from file: data/industrial-revolution.txt
@@ -283,6 +343,7 @@ Found 48 inferred relationships
 Detected 13 communities using Louvain method
 Named 13 communities
 Knowledge graph visualization saved to industrial-revolution-kg.html
+Saved community names to industrial-revolution-kg.meta.json
 
 Knowledge Graph Statistics:
 Nodes: 133
@@ -299,8 +360,9 @@ file:///path/to/industrial-revolution-kg.html
 reads that JSON and answers questions from it, using the same `[llm]` settings:
 
 ```bash
-graph-chat knowledge_graph.json "How did the steam engine change cities?"
-graph-chat knowledge_graph.json            # interactive session; Ctrl-D or an empty line quits
+uv run graph-chat knowledge_graph.json "How did the steam engine change cities?"
+uv run graph-chat knowledge_graph.json            # interactive session; Ctrl-D or an empty line quits
+uv run graph-chat data/samples/apollo-program.json "Who flew on Apollo 13?"
 ```
 
 For each question it finds the entities the question mentions, retrieves the surrounding subgraph (and the
@@ -314,11 +376,19 @@ says so. Tuning lives under `[query]` in the config (`hops`, `max_triples`, `max
 
 `graph-serve` is a small local server over the same code: it lists the graphs in a directory, opens each one in
 the explorer, and adds an **Ask** panel that answers questions from the graph with cited facts (click a fact to
-jump to it in the graph). Install the extra and point it at the directory where you write your graphs:
+jump to it in the graph). It needs the `[web]` extra (`uv sync --extra web` or `pip install -e ".[web]"`).
+
+Start it with the sample graphs ready to use:
 
 ```bash
-pip install "ai-knowledge-graph[web]"      # FastAPI + uvicorn
-graph-serve --config config.toml --graphs ./out --open
+uv run graph-serve --config config.toml --graphs data/samples --open
+```
+
+or point it at the directory where you write your own graphs (any `--config` file works, e.g. your local
+`config-working.toml`):
+
+```bash
+uv run graph-serve --config config-working.toml --graphs ./out --open
 ```
 
 The library page also has a **New graph** form: paste text or upload files (`.txt`, `.md`, `.rst`, `.pdf`,
@@ -345,9 +415,9 @@ an API key. They are also the [live examples](https://robert-mcdermott.github.io
 | `la-alhambra.txt` | Spanish text | `extraction.language = "Spanish"`: entity names and predicates in Spanish | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/la-alhambra.html) |
 
 ```bash
-generate-graph --from-json data/samples/marie-curie.json --output marie-curie.html   # renders instantly
-graph-serve --graphs data/samples --open                                             # browse all four
-graph-chat data/samples/apollo-program.json "Who flew on Apollo 13?"                  # needs your LLM
+uv run generate-graph --from-json data/samples/marie-curie.json --output marie-curie.html   # renders instantly
+uv run graph-serve --config config.toml --graphs data/samples --open                        # browse all five
+uv run graph-chat data/samples/apollo-program.json "Who flew on Apollo 13?"                  # needs your LLM
 ```
 
 The graphs were generated with `deepseek-v4.1-flash` (`reasoning_effort = "low"`, `temperature = 0.2`,
@@ -386,12 +456,14 @@ JSON or CSV.
 
 ## How It Works
 
+`generate-graph` loads and validates the configuration (defaults applied, `env:` API keys resolved), reads the
+input files (text encodings detected; PDF and DOCX through optional readers), and runs the pipeline below.
+`--from-json` skips straight to the visualization step, and `--test` renders a small built-in graph.
+
 1. **Chunking**: The document is split into overlapping chunks on sentence boundaries to fit within the LLM's context window
 2. **First Pass - SPO Extraction**: 
    - Chunks are processed by the LLM in parallel (`llm.concurrency`) to extract typed Subject-Predicate-Object triplets, each tagged with the sentence it came from
-   - Implemented in the `process_with_llm` function
-   - The LLM identifies entities and their relationships within each text segment
-   - Results are collected across all chunks to form the initial knowledge graph
+   - Results are collected across all chunks (and documents) to form the initial knowledge graph
 3. **Second Pass - Entity Standardization**:
    - Variants that differ only by case, stop-words or plural form are merged ("The Steam Engines" / "steam engine")
    - Optional LLM-assisted entity alignment (`standardization.use_llm_for_entities`, one call): the LLM reviews the most frequent entities and groups the ones that refer to the same concept (e.g., "AI", "artificial intelligence", "AI system")
@@ -404,12 +476,14 @@ JSON or CSV.
    - Optional rules (off by default): transitive chains through transitive predicate families, and lexical similarity
    - Candidates are accepted in that priority order; a node pair is never connected twice, and the total is capped at `max_inferred_ratio` × the number of extracted triples. Every inferred triple records its method.
 5. **Visualization**: centrality metrics and Louvain communities are computed with NetworkX, the LLM names the communities (one call), and the interactive page is rendered from the project's own template with the vis-network library embedded
+6. **Output**: the HTML page, the JSON triples, the `.meta.json` community names, and any `--export` formats
 
 The second and third passes and community naming are optional and can be disabled in the configuration to minimize LLM usage. LLM replies are cached on disk, so re-running the same document with the same settings makes no API calls.
 
 ## Visualization Features
 
-The generated HTML is a single self-contained file (vis-network is embedded) that works offline.
+The generated HTML is a single self-contained file (vis-network is embedded) that works offline; `--library-path`
+switches to one shared library copy when you publish many pages.
 
 - **Explore by clicking**: click a node to highlight its neighbourhood and open a details panel listing every
   incoming and outgoing relationship, tagged *extracted* or with its inference method; click a row to jump to
@@ -468,82 +542,9 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
         ├── graph.html.j2           # The interactive explorer page (Jinja2)
         ├── library.html.j2         # Graph library + new-graph form for graph-serve
         ├── job.html.j2             # Generation progress page for graph-serve
+        ├── landing.html.j2         # GitHub Pages landing page (scripts/build_docs.py)
         └── vendor/                 # Embedded vis-network library
 ```
-
-## Program Flow
-
-This diagram illustrates the program flow.
-
-```mermaid
-flowchart TD
-    A[main.py - Entry Point] --> B{Parse Arguments}
-
-    B -->|--test| C[sample_data_visualization]
-    B -->|--from-json| C2[load_triples_from_json]
-    C --> O
-    C2 --> O
-    B -->|normal processing| E[load_config / validate_config]
-    E --> E2[read_input_text]
-    E2 --> F[process_text_in_chunks]
-
-    F --> G[chunk_text - sentence aware]
-    G --> H[process_with_llm - parallel]
-    H --> I[LLMClient.complete - cache, retries, truncation check]
-    I --> J[extract_json_from_text]
-    J --> J2[normalize_triple - types + source sentence]
-
-    F --> K{standardization enabled?}
-    K -->|yes| L[standardize_entities]
-    K -->|no| M{inference enabled?}
-    L --> L1[_resolve_entities_with_llm]
-    L --> L2[normalize_predicates]
-    L --> M
-
-    M -->|yes| N[infer_relationships]
-    M -->|no| O[visualize_knowledge_graph]
-    N --> N1[_identify_communities]
-    N --> N2[_infer_bridges_with_llm]
-    N --> N3[_infer_hub_relationships_with_llm]
-    N --> N4[_infer_within_community_relationships]
-    N --> N5[_infer_taxonomy]
-    N --> N6[_apply_transitive_inference - optional]
-    N --> N7[_infer_relationships_by_lexical_similarity - optional]
-    N --> N8[budget, pair dedupe, _deduplicate_triples]
-    N --> O
-
-    O --> P[build_graph_data - centrality, Louvain, types, shapes]
-    P --> P2[community namer - LLM]
-    P2 --> Q[render_html - graph.html.j2 + vis-network]
-    Q --> V[HTML explorer page]
-    F --> W[JSON triples export]
-
-    Y[prompts/] --> H
-    Y --> L1
-    Y --> N2
-    Y --> N3
-    Y --> N4
-    Y --> P2
-```
-
-## Program Flow Description
-
-1. **Entry Point**: `main.py` parses the command line and loads and validates the configuration (`config.py`), applying defaults and resolving `env:` API keys.
-
-2. **Mode Selection**:
-   - `--test` renders the built-in sample graph
-   - `--from-json` re-renders a previously saved triples file without any LLM calls
-   - Otherwise the input text file is read (UTF-8 with fallbacks; binary formats are rejected with a hint)
-
-3. **Extraction**: `text_utils.py` splits the text into sentence-aligned chunks; chunks are sent to the LLM in parallel through `LLMClient` (`llm.py`), which caches replies, retries transient failures and aborts on truncated answers. Replies are parsed with `extract_json_from_text`, typed, and tagged with their source sentence.
-
-4. **Entity Standardization** (optional): merges entity variants, optionally with an LLM pass, and normalizes predicates.
-
-5. **Relationship Inference** (optional): LLM bridging, hub enrichment and within-component passes plus the taxonomy rule (and optional transitive/lexical rules), with priority ordering, pair de-duplication and a budget.
-
-6. **Visualization**: `visualization.py` computes centrality and Louvain communities, asks the LLM to name the communities, and renders the explorer page from `templates/graph.html.j2` with vis-network embedded.
-
-7. **Output**: the HTML page and the JSON triples file, plus a statistics summary on the console.
 
 ## Troubleshooting
 
