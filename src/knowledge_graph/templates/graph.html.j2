@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<style>{{ vis_css }}</style>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --panel-border: #d0d7de;
+  --accent: #0969da; --accent-fg: #ffffff; --graph-bg: #ffffff; --shadow: 0 2px 10px rgba(0,0,0,.12);
+  --node-font: #000000; --edge-font: #333333; --edge-stroke: #ffffff; --danger: #cf222e;
+}
+body[data-theme="dark"] {
+  --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --panel-border: #30363d;
+  --accent: #388bfd; --accent-fg: #ffffff; --graph-bg: #0d1117; --shadow: 0 2px 12px rgba(0,0,0,.6);
+  --node-font: #ffffff; --edge-font: #f0c000; --edge-stroke: #0d1117;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--fg); overflow: hidden; display: flex; flex-direction: column;
+       font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+button, input, select { font: inherit; }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--panel-border);
+          background: var(--panel); flex-wrap: wrap; }
+.brand { font-weight: 650; white-space: nowrap; }
+.brand .counts { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.search { flex: 1 1 220px; min-width: 160px; display: flex; }
+.search input { width: 100%; padding: 6px 10px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.btn { padding: 5px 10px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); cursor: pointer; white-space: nowrap; }
+.btn:hover { border-color: var(--accent); }
+.btn.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.btn.small { padding: 3px 8px; font-size: 12px; }
+main { position: relative; flex: 1; min-height: 0; }
+#graph { position: absolute; inset: 0; background: var(--graph-bg); }
+.panel { position: absolute; background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; box-shadow: var(--shadow);
+         padding: 10px 12px; z-index: 20; max-height: calc(100% - 24px); overflow: auto; }
+.panel h3 { margin: 0 0 8px 0; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+.panel h3 .close { cursor: pointer; color: var(--muted); border: 0; background: none; font-size: 16px; }
+#legend { left: 12px; top: 12px; width: 260px; }
+#legend .row { display: flex; align-items: center; gap: 8px; padding: 3px 0; cursor: pointer; }
+#legend .row input { margin: 0; }
+#legend .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+#legend .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#legend .size { color: var(--muted); font-size: 12px; }
+#legend .top { color: var(--muted); font-size: 11px; margin-left: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.control { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; }
+#legend h4, #details h4 { margin: 10px 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+#legend .glyph { width: 14px; text-align: center; flex: none; }
+#details .source { display: block; color: var(--muted); font-size: 11px; font-style: italic; margin: -2px 0 4px 26px; white-space: normal; }
+#details .rel { flex-wrap: wrap; }
+#details .path-form { display: flex; gap: 6px; margin: 4px 0; }
+#details .path-form input { flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+#details .path-step { display: flex; gap: 6px; align-items: baseline; padding: 3px 6px; border-radius: 6px; cursor: pointer; }
+#details .path-step:hover { background: var(--bg); }
+#details .path-step .pred { color: var(--muted); font-style: italic; }
+#details .note { color: var(--muted); font-size: 12px; }
+.control input[type=range] { flex: 1; }
+#details { right: 12px; top: 12px; width: 320px; }
+#details .name { font-size: 16px; font-weight: 650; word-break: break-word; }
+#details .meta { color: var(--muted); font-size: 12px; margin: 4px 0 10px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#details .meta .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+#details h4 { margin: 10px 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+#details .rel { display: flex; gap: 6px; align-items: baseline; padding: 4px 6px; border-radius: 6px; cursor: pointer; }
+#details .rel:hover { background: var(--bg); }
+#details .rel .pred { color: var(--muted); font-style: italic; white-space: nowrap; }
+#details .rel .other { font-weight: 550; flex: 1; }
+#details .tag { font-size: 10px; padding: 1px 6px; border-radius: 10px; border: 1px dashed var(--muted); color: var(--muted); white-space: nowrap; }
+#details .tag.extracted { border-style: solid; }
+#stats { left: 12px; bottom: 12px; min-width: 240px; }
+#stats table { border-collapse: collapse; font-size: 13px; }
+#stats td { padding: 2px 8px 2px 0; }
+#stats td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+#physics { right: 12px; bottom: 12px; width: 280px; }
+#physics label { display: block; font-size: 12px; margin-top: 6px; color: var(--muted); }
+#physics select, #physics input[type=range] { width: 100%; }
+#progress { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); width: min(360px, 80%); z-index: 30;
+            background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px; box-shadow: var(--shadow); text-align: center; }
+#progress .bar { height: 6px; background: var(--panel-border); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+#progress .bar div { height: 100%; width: 0; background: var(--accent); transition: width .1s; }
+#help { left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, 90%); }
+#help table { font-size: 13px; }
+#help td { padding: 2px 10px 2px 0; }
+#help kbd { border: 1px solid var(--panel-border); border-radius: 4px; padding: 0 5px; background: var(--bg); }
+footer { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); z-index: 10;
+         background: var(--panel); padding: 2px 8px; border-radius: 4px; opacity: .85; }
+footer a { color: inherit; text-decoration: none; }
+.hidden { display: none !important; }
+.menu { position: relative; }
+.menu .items { position: absolute; right: 0; top: 110%; background: var(--panel); border: 1px solid var(--panel-border); border-radius: 6px;
+               box-shadow: var(--shadow); z-index: 40; min-width: 160px; }
+.menu .items button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 6px 12px; color: var(--fg); cursor: pointer; }
+.menu .items button:hover { background: var(--bg); }
+.vis-tooltip { background: var(--panel) !important; color: var(--fg) !important; border: 1px solid var(--panel-border) !important;
+               border-radius: 6px !important; padding: 6px 8px !important; font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+               white-space: pre-line !important; box-shadow: var(--shadow); }
+@media (max-width: 760px) {
+  .brand .counts { display: none; }
+  #legend, #details, #stats, #physics { left: 8px; right: 8px; width: auto; max-height: 45%; }
+  #legend { top: auto; bottom: 8px; }
+  #details { top: 8px; }
+  #stats, #physics { bottom: 8px; }
+  footer { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Knowledge Graph<span class="counts" id="counts"></span></div>
+  <div class="search"><input id="search" list="node-list" placeholder="Search nodes  ( / )" autocomplete="off"><datalist id="node-list"></datalist></div>
+  <div class="actions">
+    <button class="btn" id="btn-legend" title="Communities and filters (c)">Communities</button>
+    <button class="btn on" id="btn-physics" title="Toggle physics (p)">Physics</button>
+    <button class="btn on" id="btn-labels" title="Toggle node labels (l)">Labels</button>
+    <button class="btn" id="btn-edge-labels" title="Edge labels: all / none / on selection (e)">Edge labels</button>
+    <button class="btn on" id="btn-inferred" title="Toggle inferred relationships (i)">Inferred</button>
+    <button class="btn" id="btn-fit" title="Fit graph to view (f)">Fit</button>
+    <button class="btn" id="btn-stats" title="Statistics (s)">Stats</button>
+    <button class="btn" id="btn-physics-settings" title="Physics settings">Settings</button>
+    <div class="menu"><button class="btn" id="btn-export">Export ▾</button>
+      <div class="items hidden" id="export-menu">
+        <button id="export-png">PNG image</button>
+        <button id="export-json">JSON (visible triples)</button>
+        <button id="export-csv">CSV (visible triples)</button>
+      </div>
+    </div>
+    <button class="btn" id="btn-theme" title="Toggle dark mode (d)">Dark</button>
+    <button class="btn" id="btn-help" title="Keyboard shortcuts (?)">?</button>
+  </div>
+</header>
+<main>
+  <div id="graph"></div>
+  <div id="progress"><div>Laying out the graph…</div><div class="bar"><div id="progress-bar"></div></div></div>
+
+  <aside class="panel hidden" id="legend">
+    <h3>Communities <button class="close" data-close="legend" title="Close">×</button></h3>
+    <div id="legend-list"></div>
+    <div class="control"><button class="btn small" id="legend-all">All</button><button class="btn small" id="legend-none">None</button></div>
+    <div id="type-legend"></div>
+    <div class="control"><span>Min connections</span><input type="range" id="min-degree" min="1" max="10" value="1"><span id="min-degree-value">1</span></div>
+    <div class="control"><label><input type="checkbox" id="show-inferred" checked> Show inferred relationships</label></div>
+  </aside>
+
+  <aside class="panel hidden" id="details">
+    <h3>Node <button class="close" data-close="details" title="Close (Esc)">×</button></h3>
+    <div class="name" id="d-name"></div>
+    <div class="meta" id="d-meta"></div>
+    <div id="d-relations"></div>
+    <h4>Path to another node</h4>
+    <div class="path-form"><input id="path-target" list="node-list" placeholder="node name…" autocomplete="off"><button class="btn small" id="path-go">Find</button></div>
+    <label class="note"><input type="checkbox" id="path-extracted-only"> extracted relationships only</label>
+    <div id="path-result"></div>
+  </aside>
+
+  <div class="panel hidden" id="stats">
+    <h3>Statistics <button class="close" data-close="stats" title="Close">×</button></h3>
+    <table id="stats-table"></table>
+  </div>
+
+  <div class="panel hidden" id="physics">
+    <h3>Physics settings <button class="close" data-close="physics" title="Close">×</button></h3>
+    <label>Solver <select id="ph-solver"><option value="forceAtlas2Based">Force Atlas 2</option><option value="barnesHut">Barnes-Hut</option><option value="repulsion">Repulsion</option></select></label>
+    <label>Gravitational constant <span id="ph-grav-v"></span><input type="range" id="ph-grav" min="-200" max="0" step="1"></label>
+    <label>Central gravity <span id="ph-central-v"></span><input type="range" id="ph-central" min="0" max="1" step="0.01"></label>
+    <label>Spring length <span id="ph-spring-v"></span><input type="range" id="ph-spring" min="10" max="500" step="5"></label>
+    <label>Spring constant <span id="ph-springk-v"></span><input type="range" id="ph-springk" min="0" max="0.5" step="0.005"></label>
+    <div class="control"><button class="btn small on" id="ph-apply">Apply</button><button class="btn small" id="ph-reset">Reset</button></div>
+  </div>
+
+  <div class="panel hidden" id="help">
+    <h3>Keyboard shortcuts <button class="close" data-close="help" title="Close">×</button></h3>
+    <table>
+      <tr><td><kbd>/</kbd></td><td>Focus search</td><td><kbd>Esc</kbd></td><td>Clear selection / close panels</td></tr>
+      <tr><td><kbd>f</kbd></td><td>Fit graph to view</td><td><kbd>c</kbd></td><td>Communities &amp; filters</td></tr>
+      <tr><td><kbd>l</kbd></td><td>Toggle node labels</td><td><kbd>e</kbd></td><td>Cycle edge labels</td></tr>
+      <tr><td><kbd>i</kbd></td><td>Toggle inferred edges</td><td><kbd>p</kbd></td><td>Toggle physics</td></tr>
+      <tr><td><kbd>s</kbd></td><td>Statistics</td><td><kbd>d</kbd></td><td>Toggle dark mode</td></tr>
+    </table>
+    <p style="color: var(--muted); font-size: 12px; margin: 10px 0 0 0;">Click a node to highlight its neighbourhood and see its relationships. Double-click to zoom to it. Use "Path to another node" in the details panel to trace how two entities connect. Drag the canvas to pan, scroll to zoom.</p>
+  </div>
+  <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
+</main>
+
+<script>{{ vis_js }}</script>
+<script>
+const KG = {{ data_json }};
+</script>
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const meta = KG.meta;
+  const nodes = new vis.DataSet(KG.nodes.map(n => Object.assign({}, n)));
+  const edges = new vis.DataSet(KG.edges.map(e => Object.assign({}, e)));
+  const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
+  const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
+  const state = { labels: true, edgeLabels: meta.edgeLabels || 'all', inferred: true, minDegree: 1,
+                  hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, path: null, dark: false, physics: true };
+  const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
+
+  // ---------- theme ----------
+  function theme() { return state.dark ? { node: '#ffffff', edge: '#f0c000', stroke: '#0d1117' } : { node: '#000000', edge: '#333333', stroke: '#ffffff' }; }
+  function applyTheme(dark) {
+    state.dark = dark;
+    document.body.dataset.theme = dark ? 'dark' : 'light';
+    $('btn-theme').textContent = dark ? 'Light' : 'Dark';
+    if (window.network) applyFonts();
+  }
+  // Every node/edge style (opacity, colour, width, label size) is derived from `state` here and
+  // written per item. Per-item font settings override vis-network's global options, so this is the
+  // only place that touches them; all toggles call refreshStyles().
+  function refreshStyles() {
+    const t = theme();
+    let nodeSet = null, edgeSet = null, onPath = false;
+    if (state.path) {
+      nodeSet = new Set([state.path[0].from].concat(state.path.map(st => st.to)));
+      edgeSet = new Set(state.path.map(st => st.edge.id));
+      onPath = true;
+    } else if (state.selected) {
+      const nb = neighbourhood(state.selected);
+      nodeSet = nb.ids; edgeSet = nb.connected;
+    }
+    const focused = nodeSet !== null;
+    nodes.update(nodes.get().map(n => {
+      const on = !focused || nodeSet.has(n.id);
+      return { id: n.id, opacity: on ? 1 : 0.15, font: { color: t.node, size: state.labels && on ? 14 : 0, strokeWidth: 0 } };
+    }));
+    edges.update(edges.get().map(e => {
+      const on = !focused || edgeSet.has(e.id);
+      const showLabel = state.edgeLabels !== 'none' && on && (state.edgeLabels === 'all' || focused);
+      let color = base.edge.get(e.id).color, width = 1;
+      if (focused && !on) color = { color: '#999999', opacity: 0.08 };
+      else if (onPath) { color = { color: '#f5a623', opacity: 1 }; width = 3; }
+      else if (focused) width = 2;
+      return { id: e.id, color, width, font: { size: showLabel ? 11 : 0, color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } };
+    }));
+  }
+  const applyFonts = refreshStyles;
+  applyTheme(meta.theme === 'dark');  // initial theme comes from the config (visualization.theme)
+
+  // ---------- network ----------
+  const options = KG.options;
+  options.interaction = Object.assign({ hover: true, navigationButtons: true, keyboard: false, tooltipDelay: 150, multiselect: false }, options.interaction || {});
+  const network = new vis.Network($('graph'), { nodes, edges }, options);
+  window.network = network;
+  applyFonts();
+
+  network.on('stabilizationProgress', p => { $('progress-bar').style.width = Math.round(100 * p.iterations / p.total) + '%'; });
+  network.once('stabilizationIterationsDone', () => {
+    $('progress').classList.add('hidden');
+    network.fit();
+    if (KG.nodes.length > meta.freezePhysicsAbove) setPhysics(false);
+    updateStats();
+    applyHash();
+  });
+  if (meta.showInferred === false) setTimeout(() => setInferred(false), 0);
+  network.on('click', params => { if (params.nodes.length) select(params.nodes[0]); else clearSelection(); });
+  network.on('doubleClick', params => { if (params.nodes.length) network.focus(params.nodes[0], { scale: 1.6, animation: true }); });
+  window.addEventListener('resize', () => network.fit());
+
+  // ---------- selection & highlighting ----------
+  function neighbourhood(id) {
+    const ids = new Set([id]);
+    const connected = new Set();
+    edges.get().forEach(e => {
+      if (e.hidden) return;
+      if (e.from === id || e.to === id) { connected.add(e.id); ids.add(e.from); ids.add(e.to); }
+    });
+    return { ids, connected };
+  }
+  function highlight() { refreshStyles(); }
+  function unhighlight() { refreshStyles(); }
+  function select(id, focus) {
+    if (!nodes.get(id)) return;
+    state.selected = id;
+    state.path = null;
+    network.selectNodes([id]);
+    refreshStyles();
+    renderDetails(id);
+    if (focus) network.focus(id, { scale: Math.max(network.getScale(), 1.2), animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
+    history.replaceState(null, '', '#node=' + encodeURIComponent(id));
+  }
+  function clearSelection() {
+    if (!state.selected) return;
+    state.selected = null;
+    state.path = null;
+    $('path-result').innerHTML = '';
+    $('path-target').value = '';
+    network.unselectAll();
+    unhighlight();
+    $('details').classList.add('hidden');
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+  function applyHash() {
+    const m = location.hash.match(/^#node=(.+)$/);
+    if (m) { const id = decodeURIComponent(m[1]); if (nodes.get(id)) select(id, true); }
+  }
+
+  // ---------- shortest path ----------
+  function findPath(from, to, extractedOnly) {
+    if (from === to) return null;
+    const adj = new Map();
+    edges.get().forEach(e => {
+      if (e.hidden || (extractedOnly && e.inferred)) return;
+      if (!adj.has(e.from)) adj.set(e.from, []);
+      if (!adj.has(e.to)) adj.set(e.to, []);
+      adj.get(e.from).push({ node: e.to, edge: e });
+      adj.get(e.to).push({ node: e.from, edge: e });
+    });
+    const parent = new Map([[from, null]]);
+    const queue = [from];
+    while (queue.length) {
+      const cur = queue.shift();
+      if (cur === to) break;
+      for (const { node, edge } of (adj.get(cur) || [])) {
+        if (!parent.has(node)) { parent.set(node, { prev: cur, edge }); queue.push(node); }
+      }
+    }
+    if (!parent.has(to)) return null;
+    const steps = [];
+    for (let n = to; parent.get(n); n = parent.get(n).prev) steps.unshift({ from: parent.get(n).prev, to: n, edge: parent.get(n).edge });
+    return steps;
+  }
+  function highlightPath(steps) {
+    state.path = steps;
+    refreshStyles();
+    network.fit({ nodes: Array.from(new Set([steps[0].from].concat(steps.map(st => st.to)))), animation: true });
+  }
+  function runPath() {
+    const target = $('path-target').value.trim();
+    if (!state.selected || !target) return;
+    const id = KG.nodes.map(n => n.id).find(i => i.toLowerCase() === target.toLowerCase());
+    if (!id) { $('path-result').innerHTML = '<p class="note">No node with that name.</p>'; return; }
+    const steps = findPath(state.selected, id, $('path-extracted-only').checked);
+    if (!steps) { $('path-result').innerHTML = '<p class="note">No path found with the current filters.</p>'; return; }
+    state.path = steps;
+    $('path-result').innerHTML = `<p class="note">${steps.length} step${steps.length === 1 ? '' : 's'}</p>` + steps.map(st => {
+      const forward = st.edge.from === st.from;
+      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(st.from)}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(st.to)}</span></div>`;
+    }).join('');
+    $('path-result').querySelectorAll('.path-step').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
+    highlightPath(steps);
+  }
+  $('path-go').addEventListener('click', runPath);
+  $('path-target').addEventListener('keydown', e => { if (e.key === 'Enter') { runPath(); e.preventDefault(); } });
+  $('path-extracted-only').addEventListener('change', () => { if (state.path) runPath(); });
+
+  // ---------- details panel ----------
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  function renderDetails(id) {
+    const n = base.node.get(id);
+    $('d-name').textContent = id;
+    const comm = meta.communities[n.community] || {};
+    $('d-meta').innerHTML = (n.type ? `<span>${esc(TYPE_GLYPH[n.shape] || '●')} ${esc(n.type)}</span>` : '') +
+                            `<span><span class="dot" style="background:${esc(n.color)}"></span>${esc(comm.name || ('Community ' + (n.community + 1)))}</span>` +
+                            `<span>${degree.get(id)} connection${degree.get(id) === 1 ? '' : 's'}</span>`;
+    const out = [], inc = [];
+    edges.get().forEach(e => {
+      if (e.hidden) return;
+      if (e.from === id) out.push(e); else if (e.to === id) inc.push(e);
+    });
+    const row = (e, other, arrow) => `<div class="rel" data-node="${esc(other)}" title="${esc(e.title || '')}">` +
+      `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(other)}</span>` +
+      `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span>` +
+      (e.source ? `<span class="source">“${esc(e.source)}”</span>` : (e.via ? `<span class="source">via ${esc(e.via)}</span>` : '')) + `</div>`;
+    let html = '';
+    if (out.length) html += '<h4>Outgoing</h4>' + out.map(e => row(e, e.to, '→')).join('');
+    if (inc.length) html += '<h4>Incoming</h4>' + inc.map(e => row(e, e.from, '←')).join('');
+    if (!html) html = '<p style="color: var(--muted)">No visible relationships (check the filters).</p>';
+    $('d-relations').innerHTML = html;
+    $('d-relations').querySelectorAll('.rel').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
+    $('details').classList.remove('hidden');
+  }
+
+  // ---------- filters (communities, degree, inferred) ----------
+  function applyFilters() {
+    const nodeUpdates = [], hiddenNodes = new Set();
+    nodes.get().forEach(n => {
+      const hidden = state.hiddenCommunities.has(n.community) || (degree.get(n.id) || 0) < state.minDegree ||
+                     (n.type && state.hiddenTypes.has(n.type));
+      if (hidden) hiddenNodes.add(n.id);
+      nodeUpdates.push({ id: n.id, hidden });
+    });
+    nodes.update(nodeUpdates);
+    edges.update(edges.get().map(e => ({ id: e.id, hidden: (!state.inferred && e.inferred) || hiddenNodes.has(e.from) || hiddenNodes.has(e.to) })));
+    if (state.selected) { if (hiddenNodes.has(state.selected)) clearSelection(); else { highlight(state.selected); renderDetails(state.selected); } }
+    updateStats();
+  }
+  function renderLegend() {
+    $('legend-list').innerHTML = meta.communities.map(c =>
+      `<label class="row"><input type="checkbox" data-community="${c.id}" ${state.hiddenCommunities.has(c.id) ? '' : 'checked'}>` +
+      `<span class="dot" style="background:${esc(c.color)}"></span><span class="name" title="${esc(c.name || '')}">${esc(c.name || ('Community ' + (c.id + 1)))}</span><span class="size">${c.size}</span></label>` +
+      `<div class="top">${esc(c.top.slice(0, 3).join(', '))}</div>`).join('');
+    $('legend-list').querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
+      const id = Number(cb.dataset.community);
+      if (cb.checked) state.hiddenCommunities.delete(id); else state.hiddenCommunities.add(id);
+      applyFilters();
+    }));
+  }
+  function renderTypeLegend() {
+    if (!meta.types || !meta.types.length) { $('type-legend').innerHTML = ''; return; }
+    $('type-legend').innerHTML = '<h4>Entity types</h4>' + meta.types.map(t =>
+      `<label class="row"><input type="checkbox" data-type="${esc(t.type)}" ${state.hiddenTypes.has(t.type) ? '' : 'checked'}>` +
+      `<span class="glyph">${t.glyph}</span><span class="name">${esc(t.type)}</span><span class="size">${t.count}</span></label>`).join('');
+    $('type-legend').querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
+      if (cb.checked) state.hiddenTypes.delete(cb.dataset.type); else state.hiddenTypes.add(cb.dataset.type);
+      applyFilters();
+    }));
+  }
+  renderLegend();
+  renderTypeLegend();
+  $('legend-all').addEventListener('click', () => { state.hiddenCommunities.clear(); renderLegend(); applyFilters(); });
+  $('legend-none').addEventListener('click', () => { meta.communities.forEach(c => state.hiddenCommunities.add(c.id)); renderLegend(); applyFilters(); });
+  const maxDegree = Math.max(1, ...degree.values());
+  $('min-degree').max = Math.min(maxDegree, 25);
+  $('min-degree').addEventListener('input', () => { state.minDegree = Number($('min-degree').value); $('min-degree-value').textContent = state.minDegree; applyFilters(); });
+  $('show-inferred').addEventListener('change', () => setInferred($('show-inferred').checked));
+
+  // ---------- toolbar ----------
+  function setBtn(id, on) { $(id).classList.toggle('on', on); }
+  function showEdgeLabelMode() {
+    $('btn-edge-labels').textContent = 'Edge labels: ' + state.edgeLabels;
+    setBtn('btn-edge-labels', state.edgeLabels === 'all');
+  }
+  showEdgeLabelMode();
+  function setPhysics(on) {
+    state.physics = on;
+    network.setOptions({ physics: { enabled: on } });
+    if (on) network.startSimulation(); else network.stopSimulation();
+    setBtn('btn-physics', on);
+  }
+  function setLabels(on) { state.labels = on; setBtn('btn-labels', on); refreshStyles(); }
+  function cycleEdgeLabels() {
+    state.edgeLabels = { all: 'none', none: 'selection', selection: 'all' }[state.edgeLabels];
+    showEdgeLabelMode();
+    refreshStyles();
+  }
+  function setInferred(on) { state.inferred = on; setBtn('btn-inferred', on); $('show-inferred').checked = on; applyFilters(); }
+  function togglePanel(id) { $(id).classList.toggle('hidden'); }
+  $('btn-physics').addEventListener('click', () => setPhysics(!state.physics));
+  $('btn-labels').addEventListener('click', () => setLabels(!state.labels));
+  $('btn-edge-labels').addEventListener('click', cycleEdgeLabels);
+  $('btn-inferred').addEventListener('click', () => setInferred(!state.inferred));
+  $('btn-fit').addEventListener('click', () => network.fit({ animation: true }));
+  $('btn-legend').addEventListener('click', () => togglePanel('legend'));
+  $('btn-stats').addEventListener('click', () => { updateStats(); togglePanel('stats'); });
+  $('btn-physics-settings').addEventListener('click', () => { syncPhysicsPanel(); togglePanel('physics'); });
+  $('btn-theme').addEventListener('click', () => applyTheme(!state.dark));
+  $('btn-help').addEventListener('click', () => togglePanel('help'));
+  $('btn-export').addEventListener('click', e => { e.stopPropagation(); $('export-menu').classList.toggle('hidden'); });
+  document.addEventListener('click', () => $('export-menu').classList.add('hidden'));
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => { $(b.dataset.close).classList.add('hidden'); if (b.dataset.close === 'details') clearSelection(); }));
+
+  // ---------- search ----------
+  const list = $('node-list');
+  KG.nodes.map(n => n.id).sort((a, b) => a.localeCompare(b)).forEach(id => { const o = document.createElement('option'); o.value = id; list.appendChild(o); });
+  function search(q) {
+    q = q.trim().toLowerCase();
+    if (!q) return;
+    const ids = KG.nodes.map(n => n.id);
+    const id = ids.find(i => i.toLowerCase() === q) || ids.find(i => i.toLowerCase().startsWith(q)) || ids.find(i => i.toLowerCase().includes(q));
+    if (id) select(id, true);
+  }
+  $('search').addEventListener('change', e => search(e.target.value));
+  $('search').addEventListener('keydown', e => { if (e.key === 'Enter') { search(e.target.value); e.target.blur(); } if (e.key === 'Escape') e.target.blur(); });
+
+  // ---------- stats ----------
+  function visibleTriples() {
+    return edges.get().filter(e => !e.hidden).map(e => {
+      const t = { subject: e.from, predicate: e.label, object: e.to };
+      if (e.inferred) { t.inferred = true; t.method = e.method || null; if (e.via) t.via = e.via; }
+      if (e.chunk) t.chunk = e.chunk;
+      if (e.source) t.source = e.source;
+      const sn = base.node.get(e.from), on = base.node.get(e.to);
+      if (sn && sn.type) t.subject_type = sn.type;
+      if (on && on.type) t.object_type = on.type;
+      return t;
+    });
+  }
+  function updateStats() {
+    const visN = nodes.get().filter(n => !n.hidden).length, visE = edges.get().filter(e => !e.hidden);
+    const inf = visE.filter(e => e.inferred).length;
+    const methods = {};
+    visE.forEach(e => { if (e.inferred) methods[e.method || 'unknown'] = (methods[e.method || 'unknown'] || 0) + 1; });
+    const rows = [['Nodes', `${visN} / ${KG.nodes.length}`], ['Relationships', `${visE.length} / ${KG.edges.length}`],
+                  ['Extracted', visE.length - inf], ['Inferred', inf]]
+      .concat(Object.entries(methods).map(([m, n]) => ['  ' + m, n]))
+      .concat(meta.types && meta.types.length ? [['Typed entities', meta.types.reduce((a, t) => a + t.count, 0)]] : [])
+      .concat([['Communities', meta.communities.length], ['Generated', meta.generated || '']]);
+    $('stats-table').innerHTML = rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
+    $('counts').textContent = ` ${KG.nodes.length} nodes · ${KG.edges.length} relationships · ${meta.communities.length} communities`;
+  }
+  updateStats();
+
+  // ---------- physics settings ----------
+  const PH_DEFAULTS = {
+    forceAtlas2Based: { gravitationalConstant: -50, centralGravity: 0.01, springLength: 100, springConstant: 0.08 },
+    barnesHut: { gravitationalConstant: -8000, centralGravity: 0.3, springLength: 250, springConstant: 0.04 },
+    repulsion: { nodeDistance: 100, centralGravity: 0.2, springLength: 200, springConstant: 0.05 }
+  };
+  function syncPhysicsPanel() {
+    const solver = $('ph-solver').value, d = PH_DEFAULTS[solver];
+    const grav = $('ph-grav');
+    grav.min = solver === 'barnesHut' ? -30000 : -300; grav.max = solver === 'repulsion' ? 300 : 0; grav.step = solver === 'barnesHut' ? 100 : 1;
+    $('ph-grav').value = solver === 'repulsion' ? d.nodeDistance : d.gravitationalConstant;
+    $('ph-central').value = d.centralGravity; $('ph-spring').value = d.springLength; $('ph-springk').value = d.springConstant;
+    ['grav', 'central', 'spring', 'springk'].forEach(k => { $('ph-' + k + '-v').textContent = $('ph-' + k).value; });
+  }
+  ['grav', 'central', 'spring', 'springk'].forEach(k => $('ph-' + k).addEventListener('input', () => { $('ph-' + k + '-v').textContent = $('ph-' + k).value; }));
+  $('ph-solver').addEventListener('change', syncPhysicsPanel);
+  $('ph-apply').addEventListener('click', () => {
+    const solver = $('ph-solver').value, p = { enabled: true, solver };
+    const s = { centralGravity: Number($('ph-central').value), springLength: Number($('ph-spring').value), springConstant: Number($('ph-springk').value) };
+    if (solver === 'repulsion') s.nodeDistance = Number($('ph-grav').value); else s.gravitationalConstant = Number($('ph-grav').value);
+    p[solver] = s;
+    network.setOptions({ physics: p }); setPhysics(true);
+  });
+  $('ph-reset').addEventListener('click', () => { $('ph-solver').value = 'forceAtlas2Based'; syncPhysicsPanel(); $('ph-apply').click(); });
+  syncPhysicsPanel();
+
+  // ---------- export ----------
+  function download(name, blob) {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  $('export-png').addEventListener('click', () => {
+    const canvas = $('graph').querySelector('canvas');
+    canvas.toBlob(b => download('knowledge-graph.png', b), 'image/png');
+  });
+  $('export-json').addEventListener('click', () => download('knowledge-graph.json', new Blob([JSON.stringify(visibleTriples(), null, 2)], { type: 'application/json' })));
+  $('export-csv').addEventListener('click', () => {
+    const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+    const lines = ['subject,predicate,object,inferred,method,via'].concat(visibleTriples().map(t => [t.subject, t.predicate, t.object, !!t.inferred, t.method || '', t.via || ''].map(q).join(',')));
+    download('knowledge-graph.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
+  });
+
+  // ---------- keyboard ----------
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.metaKey || e.ctrlKey || e.altKey) return;
+    switch (e.key) {
+      case '/': e.preventDefault(); $('search').focus(); $('search').select(); break;
+      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help'].forEach(id => $(id).classList.add('hidden')); break;
+      case 'f': network.fit({ animation: true }); break;
+      case 'l': setLabels(!state.labels); break;
+      case 'e': cycleEdgeLabels(); break;
+      case 'i': setInferred(!state.inferred); break;
+      case 'p': setPhysics(!state.physics); break;
+      case 'd': applyTheme(!state.dark); break;
+      case 'c': togglePanel('legend'); break;
+      case 's': updateStats(); togglePanel('stats'); break;
+      case '?': togglePanel('help'); break;
+    }
+  });
+})();
+</script>
+</body>
+</html>

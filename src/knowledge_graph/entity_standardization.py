@@ -1,752 +1,650 @@
-"""Entity standardization and relationship inference for knowledge graphs."""
-import re
-from collections import defaultdict
-from src.knowledge_graph.llm import call_llm
-from src.knowledge_graph.prompts import prompt_factory
+"""Entity standardization and relationship inference for knowledge graphs.
 
+Two public entry points:
+
+* :func:`standardize_entities` merges different surface forms of the same entity.
+* :func:`infer_relationships` adds *inferred* triples. Every inferred triple carries
+  ``inferred: True`` and a ``method``: ``llm_bridge`` (links an isolated component to
+  the main graph), ``llm_hub`` (general-knowledge links between central entities),
+  ``llm_within`` (lexically related pairs inside a component), ``taxonomy``
+  (``quantum computing`` is a ``computing``), ``transitive`` (with the intermediate
+  node in ``via``) or ``lexical``.
+
+Inference is deliberately conservative. Rule-based methods are opt-in, the total
+number of inferred edges is capped relative to the extracted ones, and a node pair
+is never connected twice.
+"""
+from __future__ import annotations
+
+import logging
+import re
+from collections import Counter, defaultdict, deque
+
+from knowledge_graph.llm import LLMClient, extract_json_from_text
+from knowledge_graph.prompts import prompt_factory, system_prompt_for
+
+logger = logging.getLogger(__name__)
+
+REQUIRED_KEYS = ("subject", "predicate", "object")
+
+# Predicate families for which A -p-> B -p-> C reasonably implies A -p-> C.
+# Keys are the canonical predicate written on the inferred edge.
+TRANSITIVE_PREDICATE_GROUPS: dict[str, set[str]] = {
+    "is a": {"is a", "is an", "is", "is type of", "type of", "subclass of", "kind of", "instance of"},
+    "part of": {"part of", "component of", "belongs to", "member of", "included in", "contained in",
+                "within"},
+    "located in": {"located in", "in", "situated in", "based in", "city in", "country in", "region of"},
+    "led to": {"led to", "leads to", "lead to", "resulted in", "results in", "caused", "causes",
+               "enabled", "enables", "gave rise to", "paved way for", "contributed to", "drove",
+               "fueled", "spurred", "triggered"},
+}
+
+INFERENCE_PRIORITY = ("llm_bridge", "llm_hub", "llm_within", "taxonomy", "transitive", "lexical")
+
+# Words that, when they immediately precede a candidate head noun, mean the phrase is
+# not "<modifier> <head>" ("developments in electronics" is not a kind of electronics).
+_PHRASE_BREAKERS = {"in", "of", "for", "on", "at", "to", "with", "by", "from", "and", "or", "the", "a", "an"}
+
+_PLURAL_EXCEPTIONS = {"physics", "economics", "politics", "mathematics", "ethics", "news", "series",
+                      "species", "analysis", "crisis", "basis", "thesis", "bus", "gas", "plus", "status"}
+
+_LEXICAL_STOPWORDS = {
+    "about", "above", "after", "again", "against", "along", "among", "around", "because", "before",
+    "being", "below", "between", "during", "early", "first", "great", "having", "later", "major",
+    "modern", "other", "second", "several", "since", "their", "there", "these", "third", "those",
+    "through", "under", "until", "where", "which", "while", "would", "years", "system", "systems",
+    "process", "processes", "industry", "industries", "industrial", "revolution", "revolutions",
+    "technology", "technologies", "development", "developments", "production",
+}
+
+
+# --------------------------------------------------------------------------- #
+# Shared helpers
+# --------------------------------------------------------------------------- #
 def limit_predicate_length(predicate, max_words=3):
-    """
-    Enforce a maximum word limit on predicates.
-    
-    Args:
-        predicate: The original predicate string
-        max_words: Maximum number of words allowed (default: 3)
-        
-    Returns:
-        Shortened predicate with no more than max_words
-    """
+    """Enforce a maximum word limit on predicates (drops a trailing stop-word)."""
     words = predicate.split()
     if len(words) <= max_words:
         return predicate
-    
-    # If too long, use only the first max_words words
-    shortened = ' '.join(words[:max_words])
-    
-    # Remove trailing prepositions or articles if they're the last word
-    stop_words = {'a', 'an', 'the', 'of', 'with', 'by', 'to', 'from', 'in', 'on', 'for'}
-    last_word = shortened.split()[-1].lower()
-    if last_word in stop_words and len(words) > 1:
-        shortened = ' '.join(shortened.split()[:-1])
-    
+    shortened = " ".join(words[:max_words])
+    stop_words = {"a", "an", "the", "of", "with", "by", "to", "from", "in", "on", "for", "via"}
+    if shortened.split()[-1].lower() in stop_words and len(words) > 1:
+        shortened = " ".join(shortened.split()[:-1])
     return shortened
 
+
+def _valid_triples(triples, context):
+    valid, invalid = [], 0
+    for triple in triples:
+        if isinstance(triple, dict) and all(k in triple for k in REQUIRED_KEYS):
+            valid.append(triple)
+        else:
+            invalid += 1
+    if invalid:
+        print(f"Warning: filtered out {invalid} invalid triples missing required fields ({context})", flush=True)
+    return valid
+
+
+def _pair_key(subject, obj):
+    """Order-independent key so A→B and B→A count as the same connection."""
+    return (subject, obj) if subject <= obj else (obj, subject)
+
+
+def _norm_pred(predicate):
+    return re.sub(r"\s+", " ", predicate.strip().lower())
+
+
+def _degrees(triples):
+    degree = Counter()
+    for t in triples:
+        degree[t["subject"]] += 1
+        degree[t["object"]] += 1
+    return degree
+
+
+def _make_inferred(subject, predicate, obj, method, **extra):
+    triple = {"subject": subject, "predicate": limit_predicate_length(predicate), "object": obj,
+              "inferred": True, "method": method}
+    triple.update(extra)
+    return triple
+
+
+# --------------------------------------------------------------------------- #
+# Standardization
+# --------------------------------------------------------------------------- #
 def standardize_entities(triples, config):
-    """
-    Standardize entity names across all triples.
-    
-    Args:
-        triples: List of dictionaries with 'subject', 'predicate', and 'object' keys
-        config: Configuration dictionary
-        
-    Returns:
-        List of triples with standardized entity names
+    """Standardize entity names across all triples.
+
+    Always merges forms that differ only by case, whitespace or stop-words
+    ("The Steam Engine" / "steam engine"). Merging by shared words or word stems
+    ("steam engine factories" → "steam engine") is aggressive and only runs when
+    ``standardization.merge_word_subsets`` is true. LLM-based resolution runs when
+    ``standardization.use_llm_for_entities`` is true.
     """
     if not triples:
         return triples
-    
-    print("Standardizing entity names across all triples...")
-    
-    # Validate input triples to ensure they have the required fields
-    valid_triples = []
-    invalid_count = 0
-    
-    for triple in triples:
-        if isinstance(triple, dict) and "subject" in triple and "predicate" in triple and "object" in triple:
-            valid_triples.append(triple)
-        else:
-            invalid_count += 1
-    
-    if invalid_count > 0:
-        print(f"Warning: Filtered out {invalid_count} invalid triples missing required fields")
-    
+
+    print("Standardizing entity names across all triples...", flush=True)
+    std_cfg = config.get("standardization", {})
+    valid_triples = _valid_triples(triples, "standardization")
     if not valid_triples:
-        print("Error: No valid triples found for entity standardization")
+        print("Error: No valid triples found for entity standardization", flush=True)
         return []
-    
-    # 1. Extract all unique entities
+
     all_entities = set()
     for triple in valid_triples:
         all_entities.add(triple["subject"].lower())
         all_entities.add(triple["object"].lower())
-    
-    # 2. Group similar entities - first by exact match after lowercasing and removing stopwords
-    standardized_entities = {}
-    entity_groups = defaultdict(list)
-    
-    # Helper function to normalize text for comparison
+
+    counts = Counter()
+    for triple in valid_triples:
+        counts[triple["subject"].lower()] += 1
+        counts[triple["object"].lower()] += 1
+
+    # Pass 1: exact match after lower-casing and stop-word removal.
+    stopwords = {"the", "a", "an", "of", "and", "or", "in", "on", "at", "to", "for", "with", "by", "as"}
+
     def normalize_text(text):
-        # Convert to lowercase
-        text = text.lower()
-        # Remove common stopwords that might appear in entity names
-        stopwords = {"the", "a", "an", "of", "and", "or", "in", "on", "at", "to", "for", "with", "by", "as"}
-        words = [word for word in re.findall(r'\b\w+\b', text) if word not in stopwords]
+        words = [_singularize(w) for w in re.findall(r"\b\w+\b", text.lower()) if w not in stopwords]
         return " ".join(words)
-    
-    # Process entities in order of complexity (longer entities first)
-    sorted_entities = sorted(all_entities, key=lambda x: (-len(x), x))
-    
-    # First pass: Standard normalization
-    for entity in sorted_entities:
+
+    groups = defaultdict(list)
+    for entity in sorted(all_entities, key=lambda x: (-len(x), x)):
         normalized = normalize_text(entity)
-        if normalized:  # Skip empty strings
-            entity_groups[normalized].append(entity)
-    
-    # 3. For each group, choose the most representative name
-    for group_key, variants in entity_groups.items():
-        if len(variants) == 1:
-            # Only one variant, use it directly
-            standardized_entities[variants[0]] = variants[0]
-        else:
-            # Multiple variants, choose the most common or the shortest one as standard
-            # Sort by frequency in triples, then by length (shorter is better)
-            variant_counts = defaultdict(int)
-            for triple in valid_triples:
-                for variant in variants:
-                    if triple["subject"].lower() == variant:
-                        variant_counts[variant] += 1
-                    if triple["object"].lower() == variant:
-                        variant_counts[variant] += 1
-            
-            # Choose the most common variant as the standard form
-            standard_form = sorted(variants, key=lambda x: (-variant_counts[x], len(x)))[0]
-            for variant in variants:
-                standardized_entities[variant] = standard_form
-    
-    # 4. Second pass: check for root word relationships
-    # This handles cases like "capitalism" and "capitalist decay"
-    additional_standardizations = {}
-    
-    # Get all standardized entity names (after first pass)
-    standard_forms = set(standardized_entities.values())
+        if normalized:
+            groups[normalized].append(entity)
+
+    mapping = {}
+    for variants in groups.values():
+        standard = sorted(variants, key=lambda v: (-counts[v], len(v)))[0]
+        for variant in variants:
+            mapping[variant] = standard
+            if variant != standard:
+                logger.debug("standardize (normalize): %r -> %r", variant, standard)
+
+    # Pass 2 (opt-in): shared-word / shared-stem merging.
+    if std_cfg.get("merge_word_subsets", False):
+        for entity, standard in _word_subset_merges(set(mapping.values())).items():
+            logger.debug("standardize (word subset): %r -> %r", entity, standard)
+            mapping[entity] = standard
+        # Re-point anything that mapped to a now-merged standard.
+        for entity, standard in list(mapping.items()):
+            while mapping.get(standard, standard) != standard:
+                standard = mapping[standard]
+            mapping[entity] = standard
+
+    standardized = []
+    for triple in valid_triples:
+        new_triple = dict(triple)
+        new_triple["subject"] = mapping.get(triple["subject"].lower(), triple["subject"])
+        new_triple["object"] = mapping.get(triple["object"].lower(), triple["object"])
+        new_triple["predicate"] = limit_predicate_length(triple["predicate"])
+        new_triple.setdefault("chunk", 0)
+        standardized.append(new_triple)
+
+    if std_cfg.get("use_llm_for_entities", False):
+        standardized = _resolve_entities_with_llm(standardized, config)
+
+    filtered = [t for t in standardized if t["subject"] != t["object"]]
+    if len(filtered) < len(standardized):
+        print(f"Removed {len(standardized) - len(filtered)} self-referencing triples", flush=True)
+    normalize_predicates(filtered)
+
+    print(f"Standardized {len(all_entities)} entities into {len(set(mapping.values()))} standard forms", flush=True)
+    return filtered
+
+
+def normalize_predicates(triples):
+    """Canonicalize predicates in place: case/whitespace, and merge tense variants
+    that differ only by a trailing "s" on the verb ("involve" / "involves") when both occur,
+    keeping the more frequent form."""
+    counts = Counter()
+    for t in triples:
+        t["predicate"] = _norm_pred(t["predicate"])
+        counts[t["predicate"]] += 1
+
+    def key(pred):
+        words = pred.split()
+        if not words:
+            return pred
+        first = words[0]
+        if first.endswith("ies") and len(first) > 4:
+            first = first[:-3] + "y"
+        elif first.endswith(("ses", "xes", "ches", "shes")):
+            first = first[:-2]
+        elif first.endswith("s") and not first.endswith("ss") and len(first) > 3:
+            first = first[:-1]
+        return " ".join([first] + words[1:])
+
+    groups = defaultdict(list)
+    for pred in counts:
+        groups[key(pred)].append(pred)
+    canonical = {}
+    merged = 0
+    for variants in groups.values():
+        best = max(variants, key=lambda v: (counts[v], -len(v)))
+        for v in variants:
+            canonical[v] = best
+            if v != best:
+                merged += 1
+    if merged:
+        for t in triples:
+            t["predicate"] = canonical[t["predicate"]]
+        print(f"Merged {merged} predicate variants (e.g. tense forms)", flush=True)
+    return triples
+
+
+def _singularize(word):
+    """Cheap English singularization used only to *group* variants ("factories"/"factory")."""
+    if len(word) <= 3 or word in _PLURAL_EXCEPTIONS or word.endswith(("ss", "us", "is")):
+        return word
+    if word.endswith("ies") and len(word) > 4:
+        return word[:-3] + "y"
+    if word.endswith(("sses", "xes", "ches", "shes", "zes")):
+        return word[:-2]
+    if word.endswith("s"):
+        return word[:-1]
+    return word
+
+
+def _word_subset_merges(standard_forms):
+    """Aggressive merges: one name's words are a subset of another's, or they share word stems."""
+    merges = {}
     sorted_standards = sorted(standard_forms, key=len)
-    
     for i, entity1 in enumerate(sorted_standards):
         e1_words = set(entity1.split())
-        
-        for entity2 in sorted_standards[i+1:]:
-            if entity1 == entity2:
-                continue
-                
-            # Check if one entity is a subset of the other
+        for entity2 in sorted_standards[i + 1:]:
             e2_words = set(entity2.split())
-            
-            # If one entity contains all words from the other
-            if e1_words.issubset(e2_words) and len(e1_words) > 0:
-                # The shorter one is likely the more general concept
-                additional_standardizations[entity2] = entity1
-            elif e2_words.issubset(e1_words) and len(e2_words) > 0:
-                additional_standardizations[entity1] = entity2
+            if e1_words and e1_words.issubset(e2_words):
+                merges[entity2] = entity1
+            elif e2_words and e2_words.issubset(e1_words):
+                merges[entity1] = entity2
             else:
-                # Check for stemming/root similarities
-                stems1 = {word[:4] for word in e1_words if len(word) > 4}
-                stems2 = {word[:4] for word in e2_words if len(word) > 4}
-                
-                shared_stems = stems1.intersection(stems2)
-                
-                if shared_stems and (len(shared_stems) / max(len(stems1), len(stems2))) > 0.5:
-                    # Use the shorter entity as the standard
+                stems1 = {w[:4] for w in e1_words if len(w) > 4}
+                stems2 = {w[:4] for w in e2_words if len(w) > 4}
+                shared = stems1 & stems2
+                if shared and len(shared) / max(len(stems1), len(stems2)) > 0.5:
                     if len(entity1) <= len(entity2):
-                        additional_standardizations[entity2] = entity1
+                        merges[entity2] = entity1
                     else:
-                        additional_standardizations[entity1] = entity2
-    
-    # Apply additional standardizations
-    for entity, standard in additional_standardizations.items():
-        standardized_entities[entity] = standard
-    
-    # 5. Apply standardization to all triples
-    standardized_triples = []
-    for triple in valid_triples:
-        subj_lower = triple["subject"].lower()
-        obj_lower = triple["object"].lower()
-        
-        standardized_triple = {
-            "subject": standardized_entities.get(subj_lower, triple["subject"]),
-            "predicate": limit_predicate_length(triple["predicate"]),
-            "object": standardized_entities.get(obj_lower, triple["object"]),
-            "chunk": triple.get("chunk", 0)
-        }
-        standardized_triples.append(standardized_triple)
-    
-    # 6. Optional: Use LLM to help with entity resolution for ambiguous cases
-    if config.get("standardization", {}).get("use_llm_for_entities", False):
-        standardized_triples = _resolve_entities_with_llm(standardized_triples, config)
-    
-    # 7. Filter out self-referencing triples
-    filtered_triples = [triple for triple in standardized_triples if triple["subject"] != triple["object"]]
-    if len(filtered_triples) < len(standardized_triples):
-        print(f"Removed {len(standardized_triples) - len(filtered_triples)} self-referencing triples")
-    
-    print(f"Standardized {len(all_entities)} entities into {len(set(standardized_entities.values()))} standard forms")
-    return filtered_triples
+                        merges[entity1] = entity2
+    return merges
 
+
+def _resolve_entities_with_llm(triples, config):
+    """Ask the LLM to group variants of the same entity and apply the mapping."""
+    counts = _degrees(triples)
+    entities = [e for e, _ in counts.most_common(100)]  # cap prompt size
+
+    system_prompt = system_prompt_for("entity_resolution_system", config)
+    user_prompt = prompt_factory.get_prompt("entity_resolution_user", "\n".join(sorted(entities)))
+
+    try:
+        response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+        entity_mapping = extract_json_from_text(response, expect="object")
+        if not entity_mapping:
+            print("Could not extract valid entity mapping from LLM response", flush=True)
+            return triples
+
+        entity_to_standard = {}
+        for standard, variants in entity_mapping.items():
+            if not isinstance(variants, list):
+                continue
+            for variant in variants:
+                if isinstance(variant, str) and variant != standard:
+                    entity_to_standard[variant] = standard
+                    logger.debug("standardize (llm): %r -> %r", variant, standard)
+            entity_to_standard[standard] = standard
+
+        for triple in triples:
+            triple["subject"] = entity_to_standard.get(triple["subject"], triple["subject"])
+            triple["object"] = entity_to_standard.get(triple["object"], triple["object"])
+        print(f"Applied LLM-based entity standardization for {len(entity_mapping)} entity groups", flush=True)
+    except Exception as e:  # optional phase: never abort the run
+        print(f"Error in LLM-based entity resolution: {e}", flush=True)
+    return triples
+
+
+# --------------------------------------------------------------------------- #
+# Inference
+# --------------------------------------------------------------------------- #
 def infer_relationships(triples, config):
-    """
-    Infer additional relationships between entities to reduce isolated communities.
-    
-    Args:
-        triples: List of dictionaries with standardized entity names
-        config: Configuration dictionary
-        
-    Returns:
-        List of triples with additional inferred relationships
+    """Add inferred triples according to the ``[inference]`` config.
+
+    Methods run in priority order (LLM between communities, LLM within
+    communities, transitive rules, lexical similarity). Candidates that would
+    connect an already-connected node pair are dropped, and the total is capped
+    at ``max_inferred_ratio`` × the number of extracted triples.
     """
     if not triples or len(triples) < 2:
         return triples
-    
-    print("Inferring additional relationships between entities...")
-    
-    # Validate input triples to ensure they have the required fields
-    valid_triples = []
-    invalid_count = 0
-    
-    for triple in triples:
-        if isinstance(triple, dict) and "subject" in triple and "predicate" in triple and "object" in triple:
-            valid_triples.append(triple)
-        else:
-            invalid_count += 1
-    
-    if invalid_count > 0:
-        print(f"Warning: Filtered out {invalid_count} invalid triples missing required fields")
-    
+
+    print("Inferring additional relationships between entities...", flush=True)
+    inf_cfg = config.get("inference", {})
+    valid_triples = _valid_triples(triples, "inference")
     if not valid_triples:
-        print("Error: No valid triples found for relationship inference")
+        print("Error: No valid triples found for relationship inference", flush=True)
         return []
-    
-    # Create a graph representation for easier traversal
+
     graph = defaultdict(set)
     all_entities = set()
-    for triple in valid_triples:
-        subj = triple["subject"]
-        obj = triple["object"]
-        graph[subj].add(obj)
-        all_entities.add(subj)
-        all_entities.add(obj)
-    
-    # Find disconnected communities
+    for t in valid_triples:
+        graph[t["subject"]].add(t["object"])
+        all_entities.update((t["subject"], t["object"]))
+    degree = _degrees(valid_triples)
+
     communities = _identify_communities(graph)
-    print(f"Identified {len(communities)} disconnected communities in the graph")
-    
-    new_triples = []
-    
-    # Use LLM to infer relationships between isolated communities if configured
-    if config.get("inference", {}).get("use_llm_for_inference", True):
-        # Infer relationships between different communities
-        community_triples = _infer_relationships_with_llm(valid_triples, communities, config)
-        if community_triples:
-            new_triples.extend(community_triples)
-            
-        # Infer relationships within the same communities for semantically related entities
-        within_community_triples = _infer_within_community_relationships(valid_triples, communities, config)
-        if within_community_triples:
-            new_triples.extend(within_community_triples)
-    
-    # Apply transitive inference rules
-    transitive_triples = _apply_transitive_inference(valid_triples, graph)
-    if transitive_triples:
-        new_triples.extend(transitive_triples)
-    
-    # Infer relationships based on lexical similarity
-    lexical_triples = _infer_relationships_by_lexical_similarity(all_entities, valid_triples)
-    if lexical_triples:
-        new_triples.extend(lexical_triples)
-    
-    # Add new triples to the original set
-    if new_triples:
-        valid_triples.extend(new_triples)
-    
-    # De-duplicate triples
-    unique_triples = _deduplicate_triples(valid_triples)
-    
-    # Final pass: ensure all predicates follow the 3-word limit
-    for triple in unique_triples:
-        triple["predicate"] = limit_predicate_length(triple["predicate"])
-    
-    # Filter out self-referencing triples
-    filtered_triples = [triple for triple in unique_triples if triple["subject"] != triple["object"]]
-    if len(filtered_triples) < len(unique_triples):
-        print(f"Removed {len(unique_triples) - len(filtered_triples)} self-referencing triples")
-    
-    print(f"Added {len(filtered_triples) - len(triples)} inferred relationships")
-    return filtered_triples
+    print(f"Identified {len(communities)} disconnected components in the graph", flush=True)
+
+    candidates: dict[str, list] = {m: [] for m in INFERENCE_PRIORITY}
+    if inf_cfg.get("use_llm_for_inference", True):
+        if inf_cfg.get("llm_bridge", True):
+            candidates["llm_bridge"] = _infer_bridges_with_llm(valid_triples, communities, degree, config)
+        if inf_cfg.get("llm_hub", True):
+            candidates["llm_hub"] = _infer_hub_relationships_with_llm(valid_triples, degree, config)
+        candidates["llm_within"] = _infer_within_community_relationships(valid_triples, communities, config)
+    if inf_cfg.get("taxonomy", True):
+        candidates["taxonomy"] = _infer_taxonomy(all_entities, valid_triples)
+    if inf_cfg.get("apply_transitive", False):
+        candidates["transitive"] = _apply_transitive_inference(valid_triples, graph, degree, inf_cfg)
+    if inf_cfg.get("lexical", False):
+        candidates["lexical"] = _infer_relationships_by_lexical_similarity(
+            all_entities, valid_triples, min_word_length=int(inf_cfg.get("lexical_min_word_length", 5)))
+
+    extracted_count = sum(1 for t in valid_triples if not t.get("inferred"))
+    ratio = float(inf_cfg.get("max_inferred_ratio", 0.5))
+    budget = int(extracted_count * ratio) if ratio >= 0 else None
+
+    connected = {_pair_key(t["subject"], t["object"]) for t in valid_triples}
+    accepted, dropped_dup, dropped_budget = [], 0, 0
+    per_method = Counter()
+    for method in INFERENCE_PRIORITY:
+        for t in candidates[method]:
+            if t["subject"] == t["object"]:
+                continue
+            key = _pair_key(t["subject"], t["object"])
+            if key in connected:
+                dropped_dup += 1
+                continue
+            if budget is not None and len(accepted) >= budget:
+                dropped_budget += 1
+                continue
+            connected.add(key)
+            accepted.append(t)
+            per_method[method] += 1
+
+    breakdown = ", ".join(f"{m}: {per_method[m]}" for m in INFERENCE_PRIORITY if candidates[m])
+    print(f"Accepted {len(accepted)} inferred relationships ({breakdown or 'none'}); "
+          f"dropped {dropped_dup} already-connected pairs"
+          + (f", {dropped_budget} over the budget of {budget} ({ratio:g} x {extracted_count} extracted)"
+             if dropped_budget else ""), flush=True)
+
+    result = _deduplicate_triples(valid_triples + accepted)
+    for t in result:
+        t["predicate"] = limit_predicate_length(t["predicate"])
+    result = [t for t in result if t["subject"] != t["object"]]
+    normalize_predicates(result)
+    return _deduplicate_triples(result)
+
 
 def _identify_communities(graph):
-    """
-    Identify disconnected communities in the graph.
-    
-    Args:
-        graph: Dictionary representing the graph structure
-        
-    Returns:
-        List of sets, where each set contains nodes in a community
-    """
-    # Get all nodes
-    all_nodes = set(graph.keys()).union(*[graph[node] for node in graph])
-    
-    # Track visited nodes
-    visited = set()
-    communities = []
-    
-    # Depth-first search to find connected components
-    def dfs(node, community):
+    """Connected components of the (undirected view of the) graph, as a list of sets."""
+    adjacency = defaultdict(set)
+    for source, targets in graph.items():
+        for target in targets:
+            adjacency[source].add(target)
+            adjacency[target].add(source)
+    visited, communities = set(), []
+    for node in sorted(adjacency):  # sorted for deterministic output
+        if node in visited:
+            continue
+        component, queue = set(), deque([node])
         visited.add(node)
-        community.add(node)
-        
-        # Visit outgoing edges
-        for neighbor in graph.get(node, []):
-            if neighbor not in visited:
-                dfs(neighbor, community)
-        
-        # Visit incoming edges (we need to check all nodes)
-        for source, targets in graph.items():
-            if node in targets and source not in visited:
-                dfs(source, community)
-    
-    # Find all communities
-    for node in all_nodes:
-        if node not in visited:
-            community = set()
-            dfs(node, community)
-            communities.append(community)
-    
+        while queue:
+            current = queue.popleft()
+            component.add(current)
+            for neighbor in adjacency[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+        communities.append(component)
     return communities
 
-def _apply_transitive_inference(triples, graph):
+
+def _transitive_group(predicate):
+    normalized = _norm_pred(predicate)
+    for canonical, members in TRANSITIVE_PREDICATE_GROUPS.items():
+        if normalized in members:
+            return canonical
+    return None
+
+
+def _apply_transitive_inference(triples, graph, degree, inf_cfg):
+    """A -p-> B -p-> C  ⇒  A -p-> C (via B), for transitive predicate families only.
+
+    Skips hub intermediates (degree above ``transitive_max_hub_degree``) because
+    they connect everything to everything, and caps new edges per subject.
     """
-    Apply transitive inference to find new relationships.
-    
-    Args:
-        triples: List of triple dictionaries
-        graph: Dictionary representing the graph structure
-        
-    Returns:
-        List of new inferred triples
-    """
-    new_triples = []
-    
-    # Predicates by subject-object pairs
-    predicates = {}
-    for triple in triples:
-        key = (triple["subject"], triple["object"])
-        predicates[key] = triple["predicate"]
-    
-    # Find transitive relationships: A -> B -> C implies A -> C
-    for subj in graph:
-        for mid in graph[subj]:
-            for obj in graph.get(mid, []):
-                # Only consider paths where A->B->C and A!=C
-                if subj != obj and (subj, obj) not in predicates:
-                    # Create a new predicate combining the two relationships
-                    pred1 = predicates.get((subj, mid), "relates to")
-                    pred2 = predicates.get((mid, obj), "relates to")
-                    
-                    # Generate a new predicate based on the transitive relationship
-                    new_pred = f"indirectly {pred1}" if pred1 == pred2 else f"{pred1} via {mid}"
-                    
-                    # Add the new transitive relationship
-                    new_triples.append({
-                        "subject": subj,
-                        "predicate": limit_predicate_length(new_pred),
-                        "object": obj,
-                        "inferred": True  # Mark as inferred
-                    })
-    
+    allowed = set(inf_cfg.get("transitive_predicate_groups", list(TRANSITIVE_PREDICATE_GROUPS)))
+    max_hub = int(inf_cfg.get("transitive_max_hub_degree", 10))
+    max_per_subject = int(inf_cfg.get("transitive_max_per_subject", 5))
+
+    predicates = defaultdict(set)
+    for t in triples:
+        predicates[(t["subject"], t["object"])].add(t["predicate"])
+    connected = {_pair_key(t["subject"], t["object"]) for t in triples}
+
+    new_triples, per_subject, skipped_hubs = [], Counter(), 0
+    for subj in sorted(graph):
+        for mid in sorted(graph[subj]):
+            groups1 = {_transitive_group(p) for p in predicates[(subj, mid)]} & allowed
+            if not groups1:
+                continue
+            if degree.get(mid, 0) > max_hub:
+                skipped_hubs += 1
+                continue
+            for obj in sorted(graph.get(mid, ())):
+                if obj == subj or _pair_key(subj, obj) in connected:
+                    continue
+                groups2 = {_transitive_group(p) for p in predicates[(mid, obj)]}
+                shared = groups1 & groups2
+                if not shared or per_subject[subj] >= max_per_subject:
+                    continue
+                canonical = sorted(shared)[0]
+                new_triples.append(_make_inferred(subj, canonical, obj, "transitive", via=mid))
+                connected.add(_pair_key(subj, obj))
+                per_subject[subj] += 1
+    print(f"Transitive inference proposed {len(new_triples)} relationships"
+          + (f" (skipped {skipped_hubs} paths through hub nodes)" if skipped_hubs else ""), flush=True)
     return new_triples
+
 
 def _deduplicate_triples(triples):
-    """
-    Remove duplicate triples, keeping the original (non-inferred) ones.
-    
-    Args:
-        triples: List of triple dictionaries
-        
-    Returns:
-        List of unique triples
-    """
-    # Use tuple of (subject, predicate, object) as key
-    unique_triples = {}
-    
+    """Remove exact duplicate triples, preferring extracted over inferred."""
+    unique = {}
     for triple in triples:
-        key = (triple["subject"], triple["predicate"], triple["object"])
-        # Keep original triples (not inferred) when duplicates exist
-        if key not in unique_triples or not triple.get("inferred", False):
-            unique_triples[key] = triple
-    
-    return list(unique_triples.values())
+        key = (triple["subject"], _norm_pred(triple["predicate"]), triple["object"])
+        if key not in unique or not triple.get("inferred", False):
+            unique[key] = triple
+    return list(unique.values())
 
-def _resolve_entities_with_llm(triples, config):
-    """
-    Use LLM to help resolve entity references and standardize entity names.
-    
-    Args:
-        triples: List of triples with potentially non-standardized entities
-        config: Configuration dictionary
-        
-    Returns:
-        List of triples with LLM-assisted entity standardization
-    """
-    # Extract all unique entities
-    all_entities = set()
-    for triple in triples:
-        all_entities.add(triple["subject"])
-        all_entities.add(triple["object"])
-    
-    # If there are too many entities, limit to the most frequent ones
-    if len(all_entities) > 100:
-        # Count entity occurrences
-        entity_counts = defaultdict(int)
-        for triple in triples:
-            entity_counts[triple["subject"]] += 1
-            entity_counts[triple["object"]] += 1
-        
-        # Keep only the top 100 most frequent entities
-        all_entities = {entity for entity, count in 
-                       sorted(entity_counts.items(), key=lambda x: -x[1])[:100]}
-    
-    # Prepare prompt for LLM
-    entity_list = "\n".join(sorted(all_entities))
-    system_prompt = prompt_factory.get_prompt("entity_resolution_system")
-    user_prompt = prompt_factory.get_prompt("entity_resolution_user", entity_list)
-    
+
+def _llm_infer(config, system_prompt, user_prompt, method, context):
+    """Shared LLM call + parsing for the two LLM inference methods."""
     try:
-        # LLM configuration
-        model = config["llm"]["model"]
-        api_key = config["llm"]["api_key"]
-        max_tokens = config["llm"]["max_tokens"]
-        temperature = config["llm"]["temperature"]
-        base_url = config["llm"]["base_url"]
-        
-        # Call LLM
-        response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-        
-        # Extract JSON mapping
-        import json
-        from src.knowledge_graph.llm import extract_json_from_text
-        
-        entity_mapping = extract_json_from_text(response)
-        
-        if entity_mapping and isinstance(entity_mapping, dict):
-            # Apply the mapping to standardize entities
-            entity_to_standard = {}
-            for standard, variants in entity_mapping.items():
-                for variant in variants:
-                    entity_to_standard[variant] = standard
-                # Also map the standard form to itself
-                entity_to_standard[standard] = standard
-            
-            # Apply standardization to triples
-            for triple in triples:
-                triple["subject"] = entity_to_standard.get(triple["subject"], triple["subject"])
-                triple["object"] = entity_to_standard.get(triple["object"], triple["object"])
-                
-            print(f"Applied LLM-based entity standardization for {len(entity_mapping)} entity groups")
-        else:
-            print("Could not extract valid entity mapping from LLM response")
-    
-    except Exception as e:
-        print(f"Error in LLM-based entity resolution: {e}")
-    
-    return triples
-
-def _infer_relationships_with_llm(triples, communities, config):
-    """
-    Use LLM to infer relationships between disconnected communities.
-    
-    Args:
-        triples: List of existing triples
-        communities: List of community sets
-        config: Configuration dictionary
-        
-    Returns:
-        List of new inferred triples
-    """
-    # Skip if there's only one community
-    if len(communities) <= 1:
-        print("Only one community found, skipping LLM-based relationship inference")
+        response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+        parsed = extract_json_from_text(response, expect="array")
+    except Exception as e:  # optional phase: never abort the run
+        print(f"Error in LLM-based relationship inference ({context}): {e}", flush=True)
         return []
-    
-    # Focus on the largest communities
-    large_communities = sorted(communities, key=len, reverse=True)[:5]
-    
-    # For each pair of large communities, try to infer relationships
-    new_triples = []
-    
-    for i, comm1 in enumerate(large_communities):
-        for j, comm2 in enumerate(large_communities):
-            if i >= j:
-                continue  # Skip self-comparisons and duplicates
-            
-            # Select representative entities from each community
-            rep1 = list(comm1)[:min(5, len(comm1))]
-            rep2 = list(comm2)[:min(5, len(comm2))]
-            
-            # Prepare relevant existing triples for context
-            context_triples = []
-            for triple in triples:
-                if triple["subject"] in rep1 or triple["subject"] in rep2 or \
-                   triple["object"] in rep1 or triple["object"] in rep2:
-                    context_triples.append(triple)
-            
-            # Limit context size
-            if len(context_triples) > 20:
-                context_triples = context_triples[:20]
-            
-            # Convert triples to text for prompt
-            triples_text = "\n".join([
-                f"{t['subject']} {t['predicate']} {t['object']}"
-                for t in context_triples
-            ])
-            
-            # Prepare entity lists
-            entities1 = ", ".join(rep1)
-            entities2 = ", ".join(rep2)
-            
-            # Create prompt for LLM
-            system_prompt = prompt_factory.get_prompt("relationship_inference_system")
-            user_prompt = prompt_factory.get_prompt(
-                "relationship_inference_user", entities1, entities2, triples_text
-            )
-            
-            try:
-                # LLM configuration
-                model = config["llm"]["model"]
-                api_key = config["llm"]["api_key"]
-                max_tokens = config["llm"]["max_tokens"]
-                temperature = config["llm"]["temperature"]
-                base_url = config["llm"]["base_url"]
-                
-                # Call LLM
-                response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-                
-                # Extract JSON results
-                from src.knowledge_graph.llm import extract_json_from_text
-                inferred_triples = extract_json_from_text(response)
-                
-                if inferred_triples and isinstance(inferred_triples, list):
-                    # Mark as inferred and add to new triples
-                    for triple in inferred_triples:
-                        if "subject" in triple and "predicate" in triple and "object" in triple:
-                            # Skip self-referencing triples
-                            if triple["subject"] == triple["object"]:
-                                continue
-                            triple["inferred"] = True
-                            triple["predicate"] = limit_predicate_length(triple["predicate"])
-                            new_triples.append(triple)
-                    
-                    print(f"Inferred {len(new_triples)} new relationships between communities")
-                else:
-                    print("Could not extract valid inferred relationships from LLM response")
-            
-            except Exception as e:
-                print(f"Error in LLM-based relationship inference: {e}")
-    
-    return new_triples 
+    if not parsed:
+        print(f"Could not extract valid inferred relationships from LLM response ({context})", flush=True)
+        return []
+    results = []
+    for t in parsed:
+        if isinstance(t, dict) and all(k in t for k in REQUIRED_KEYS) and t["subject"] != t["object"]:
+            results.append(_make_inferred(str(t["subject"]), str(t["predicate"]), str(t["object"]), method))
+    return results
 
-def _infer_within_community_relationships(triples, communities, config):
+
+def _format_triples(triples, limit):
+    return "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in triples[:limit])
+
+
+def _infer_bridges_with_llm(triples, communities, degree, config):
+    """Ask the LLM to connect every isolated component to the largest one.
+
+    Small components are batched several per call. Representatives are the
+    highest-degree entities of each component.
     """
-    Use LLM to infer relationships between entities within the same community.
-    Focus on entities that might be semantically related but not directly connected.
-    
-    Args:
-        triples: List of existing triples
-        communities: List of community sets
-        config: Configuration dictionary
-        
-    Returns:
-        List of new inferred triples
-    """
+    if len(communities) <= 1:
+        print("Only one connected component found, skipping LLM bridging", flush=True)
+        return []
+    inf_cfg = config.get("inference", {})
+    max_components = int(inf_cfg.get("max_bridge_components", 20))
+    per_call = max(1, int(inf_cfg.get("bridge_groups_per_call", 5)))
+
+    ordered = sorted(communities, key=len, reverse=True)
+    main, others = ordered[0], ordered[1:1 + max_components]
+    main_reps = sorted(main, key=lambda n: (-degree.get(n, 0), n))[:20]
+    main_text = ", ".join(main_reps)
+    system_prompt = system_prompt_for("bridge_inference_system", config)
+
     new_triples = []
-    
-    # Process larger communities
-    for community in sorted(communities, key=len, reverse=True)[:3]:
-        # Skip small communities
-        if len(community) < 5:
-            continue
-            
-        # Get all entities in this community
-        community_entities = list(community)
-        
-        # Create an adjacency matrix to identify disconnected entity pairs
-        connections = {(a, b): False for a in community_entities for b in community_entities if a != b}
-        
-        # Mark existing connections
-        for triple in triples:
-            if triple["subject"] in community_entities and triple["object"] in community_entities:
-                connections[(triple["subject"], triple["object"])] = True
-        
-        # Find disconnected pairs that might be semantically related
-        disconnected_pairs = []
-        for (a, b), connected in connections.items():
-            if not connected and a != b:  # Ensure a and b are different entities
-                # Check for potential semantic relationship (e.g., shared words)
-                a_words = set(a.lower().split())
-                b_words = set(b.lower().split())
-                shared_words = a_words.intersection(b_words)
-                
-                # If they share words or one is contained in the other, they might be related
-                if shared_words or a.lower() in b.lower() or b.lower() in a.lower():
-                    disconnected_pairs.append((a, b))
-        
-        # Limit to the most promising pairs
-        disconnected_pairs = disconnected_pairs[:10]
-        
-        if not disconnected_pairs:
-            continue
-            
-        # Get relevant context
-        context_triples = []
-        entities_of_interest = set()
-        for a, b in disconnected_pairs:
-            entities_of_interest.add(a)
-            entities_of_interest.add(b)
-            
-        for triple in triples:
-            if triple["subject"] in entities_of_interest or triple["object"] in entities_of_interest:
-                context_triples.append(triple)
-        
-        # Limit context size
-        if len(context_triples) > 20:
-            context_triples = context_triples[:20]
-            
-        # Convert triples to text for prompt
-        triples_text = "\n".join([
-            f"{t['subject']} {t['predicate']} {t['object']}"
-            for t in context_triples
-        ])
-        
-        # Create pairs text
-        pairs_text = "\n".join([f"{a} and {b}" for a, b in disconnected_pairs])
-        
-        # Create prompt for LLM
-        system_prompt = prompt_factory.get_prompt("within_community_system")
-        user_prompt = prompt_factory.get_prompt(
-            "within_community_user", pairs_text, triples_text
-        )
-        
-        try:
-            # LLM configuration
-            model = config["llm"]["model"]
-            api_key = config["llm"]["api_key"]
-            max_tokens = config["llm"]["max_tokens"]
-            temperature = config["llm"]["temperature"]
-            base_url = config["llm"]["base_url"]
-            
-            # Call LLM
-            response = call_llm(model, user_prompt, api_key, system_prompt, max_tokens, temperature, base_url)
-            
-            # Extract JSON results
-            from src.knowledge_graph.llm import extract_json_from_text
-            inferred_triples = extract_json_from_text(response)
-            
-            if inferred_triples and isinstance(inferred_triples, list):
-                # Mark as inferred and add to new triples
-                for triple in inferred_triples:
-                    if "subject" in triple and "predicate" in triple and "object" in triple:
-                        # Skip self-referencing triples
-                        if triple["subject"] == triple["object"]:
-                            continue
-                        triple["inferred"] = True
-                        triple["predicate"] = limit_predicate_length(triple["predicate"])
-                        new_triples.append(triple)
-                
-                print(f"Inferred {len(inferred_triples)} new relationships within communities")
-            else:
-                print("Could not extract valid inferred relationships from LLM response")
-        
-        except Exception as e:
-            print(f"Error in LLM-based relationship inference within communities: {e}")
-    
+    for batch_start in range(0, len(others), per_call):
+        batch = others[batch_start:batch_start + per_call]
+        groups = []
+        for i, comp in enumerate(batch, start=batch_start + 1):
+            reps = sorted(comp, key=lambda n: (-degree.get(n, 0), n))[:5]
+            comp_triples = [t for t in triples if t["subject"] in comp and t["object"] in comp]
+            groups.append(f"Group {i}: {', '.join(reps)}\n  known: " + _format_triples(comp_triples, 6).replace("\n", "; "))
+        user_prompt = prompt_factory.get_prompt("bridge_inference_user", main_text, "\n".join(groups))
+        found = _llm_infer(config, system_prompt, user_prompt, "llm_bridge", f"bridging groups {batch_start + 1}-{batch_start + len(batch)}")
+        new_triples.extend(found)
+    print(f"LLM bridging proposed {len(new_triples)} relationships for {len(others)} isolated components", flush=True)
     return new_triples
 
-def _infer_relationships_by_lexical_similarity(entities, triples):
+
+def _infer_hub_relationships_with_llm(triples, degree, config):
+    """Ask the LLM for well-known relationships between the most central entities."""
+    inf_cfg = config.get("inference", {})
+    top_n = int(inf_cfg.get("hub_entities", 25))
+    max_new = int(inf_cfg.get("hub_max_new", 25))
+    hubs = [n for n, _ in sorted(degree.items(), key=lambda kv: (-kv[1], kv[0]))[:top_n]]
+    if len(hubs) < 3:
+        return []
+    hub_set = set(hubs)
+    existing = [t for t in triples if t["subject"] in hub_set and t["object"] in hub_set]
+    user_prompt = prompt_factory.get_prompt(
+        "hub_inference_user", "\n".join(hubs), _format_triples(existing, 60) or "(none)", max_new)
+    found = _llm_infer(config, system_prompt_for("hub_inference_system", config), user_prompt, "llm_hub", "hub enrichment")
+    found = [t for t in found if t["subject"] in hub_set and t["object"] in hub_set][:max_new]
+    print(f"LLM hub enrichment proposed {len(found)} relationships among the {len(hubs)} most central entities", flush=True)
+    return found
+
+
+def _infer_taxonomy(entities, triples):
+    """Deterministic ``<modifier> <head>`` → ``is a`` ``<head>`` links, plus containment.
+
+    ``quantum computing`` is a ``computing``; ``internet of things`` involves ``internet``.
+    Only fires when the head/contained term already exists as an entity, so it never
+    invents nodes. Nearly always true, hence enabled by default.
     """
-    Infer relationships between entities based on lexical similarity.
-    This can help connect entities like "capitalism" and "capitalist decay".
-    
-    Args:
-        entities: Set of all entities
-        triples: List of existing triples
-        
-    Returns:
-        List of new inferred triples
-    """
+    by_lower = {e.lower(): e for e in entities}
+    connected = {_pair_key(t["subject"], t["object"]) for t in triples}
     new_triples = []
-    processed_pairs = set()
-    
-    # Create a dictionary to track existing relationships
-    existing_relationships = set()
-    for triple in triples:
-        existing_relationships.add((triple["subject"], triple["object"]))
-    
-    # Check for lexical similarity between entities
-    entities_list = list(entities)
-    for i, entity1 in enumerate(entities_list):
-        for entity2 in entities_list[i+1:]:
-            # Skip if already connected
-            if (entity1, entity2) in existing_relationships or (entity2, entity1) in existing_relationships:
+    for entity in sorted(entities):
+        words = entity.lower().split()
+        if len(words) < 2:
+            continue
+        linked = None
+        # 1. Longest suffix that is itself an entity and is a true head noun.
+        for k in range(1, len(words)):
+            head = " ".join(words[k:])
+            if head in by_lower and by_lower[head] != entity and words[k - 1] not in _PHRASE_BREAKERS:
+                linked = by_lower[head]
+                if _pair_key(entity, linked) not in connected:
+                    new_triples.append(_make_inferred(entity, "is a", linked, "taxonomy"))
+                    connected.add(_pair_key(entity, linked))
+                break
+        # 2. Another entity appears as a whole phrase inside this one (not as its head).
+        padded = f" {' '.join(words)} "
+        for other_lower, other in by_lower.items():
+            if other == entity or other == linked or len(other_lower) < 5:
                 continue
-                
-            # Skip if already processed this pair
-            if (entity1, entity2) in processed_pairs or (entity2, entity1) in processed_pairs:
+            if f" {other_lower} " in padded and _pair_key(entity, other) not in connected:
+                new_triples.append(_make_inferred(entity, "involves", other, "taxonomy"))
+                connected.add(_pair_key(entity, other))
+    print(f"Taxonomy rule proposed {len(new_triples)} relationships", flush=True)
+    return new_triples
+
+
+def _infer_within_community_relationships(triples, communities, config):
+    """Ask the LLM about lexically related but unconnected pairs inside large components."""
+    new_triples = []
+    connected = {_pair_key(t["subject"], t["object"]) for t in triples}
+    system_prompt = system_prompt_for("within_community_system", config)
+
+    for community in sorted(communities, key=len, reverse=True)[:3]:
+        if len(community) < 5:
+            continue
+        members = sorted(community)
+        pairs = []
+        for i, a in enumerate(members):
+            a_words = set(a.lower().split())
+            for b in members[i + 1:]:
+                if _pair_key(a, b) in connected:
+                    continue
+                b_words = set(b.lower().split())
+                if (a_words & b_words) or a.lower() in b.lower() or b.lower() in a.lower():
+                    pairs.append((a, b))
+        pairs = pairs[:10]
+        if not pairs:
+            continue
+
+        of_interest = {n for pair in pairs for n in pair}
+        context = [t for t in triples if t["subject"] in of_interest or t["object"] in of_interest][:20]
+        triples_text = "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in context)
+        pairs_text = "\n".join(f"{a} and {b}" for a, b in pairs)
+        user_prompt = prompt_factory.get_prompt("within_community_user", pairs_text, triples_text)
+        found = _llm_infer(config, system_prompt, user_prompt, "llm_within", "within community")
+        new_triples.extend(found)
+    print(f"Within-community LLM inference proposed {len(new_triples)} relationships", flush=True)
+    return new_triples
+
+
+def _infer_relationships_by_lexical_similarity(entities, triples, min_word_length=5):
+    """Connect entities that share a significant content word or contain one another.
+
+    Opt-in: produces generic ``related to`` / ``is type of`` edges, which are weak
+    evidence. Stop-words and very common domain words are ignored.
+    """
+    connected = {_pair_key(t["subject"], t["object"]) for t in triples}
+    new_triples = []
+    entities_list = sorted(entities)
+    for i, e1 in enumerate(entities_list):
+        e1_lower = e1.lower()
+        e1_words = {w for w in e1_lower.split() if len(w) >= min_word_length and w not in _LEXICAL_STOPWORDS}
+        for e2 in entities_list[i + 1:]:
+            if _pair_key(e1, e2) in connected:
                 continue
-                
-            # Skip if the entities are the same (prevent self-reference)
-            if entity1 == entity2:
+            e2_lower = e2.lower()
+            e2_words = {w for w in e2_lower.split() if len(w) >= min_word_length and w not in _LEXICAL_STOPWORDS}
+            shared = e1_words & e2_words
+            if shared:
+                main = max(shared, key=len)
+                if e1_lower.startswith(main) and not e2_lower.startswith(main):
+                    new_triples.append(_make_inferred(e2, "relates to", e1, "lexical"))
+                elif e2_lower.startswith(main) and not e1_lower.startswith(main):
+                    new_triples.append(_make_inferred(e1, "relates to", e2, "lexical"))
+                else:
+                    new_triples.append(_make_inferred(e1, "related to", e2, "lexical"))
+            elif len(e1_lower) >= min_word_length and f" {e1_lower} " in f" {e2_lower} ":
+                new_triples.append(_make_inferred(e2, "is type of", e1, "lexical"))
+            elif len(e2_lower) >= min_word_length and f" {e2_lower} " in f" {e1_lower} ":
+                new_triples.append(_make_inferred(e1, "is type of", e2, "lexical"))
+            else:
                 continue
-                
-            processed_pairs.add((entity1, entity2))
-            
-            # Check for containment or shared roots
-            e1_lower = entity1.lower()
-            e2_lower = entity2.lower()
-            
-            # Simple word overlap check
-            e1_words = set(e1_lower.split())
-            e2_words = set(e2_lower.split())
-            shared_words = e1_words.intersection(e2_words)
-            
-            if shared_words:
-                # Create relationships based on shared words
-                main_shared = max(shared_words, key=len)
-                
-                if len(main_shared) >= 4:  # Only consider significant shared words
-                    if e1_lower.startswith(main_shared) and not e2_lower.startswith(main_shared):
-                        new_triples.append({
-                            "subject": entity2,
-                            "predicate": "relates to",
-                            "object": entity1,
-                            "inferred": True
-                        })
-                    elif e2_lower.startswith(main_shared) and not e1_lower.startswith(main_shared):
-                        new_triples.append({
-                            "subject": entity1,
-                            "predicate": "relates to",
-                            "object": entity2,
-                            "inferred": True
-                        })
-                    else:
-                        new_triples.append({
-                            "subject": entity1,
-                            "predicate": "related to",
-                            "object": entity2,
-                            "inferred": True
-                        })
-            
-            # Check if one entity contains the other
-            elif e1_lower in e2_lower:
-                new_triples.append({
-                    "subject": entity2,
-                    "predicate": "is type of",
-                    "object": entity1,
-                    "inferred": True
-                })
-            elif e2_lower in e1_lower:
-                new_triples.append({
-                    "subject": entity1,
-                    "predicate": "is type of",
-                    "object": entity2,
-                    "inferred": True
-                })
-    
-    print(f"Inferred {len(new_triples)} relationships based on lexical similarity")
-    return new_triples 
+            connected.add(_pair_key(e1, e2))
+    print(f"Lexical similarity proposed {len(new_triples)} relationships", flush=True)
+    return new_triples

@@ -1,28 +1,59 @@
 [llm]
-model = "gemma3"
-#model = "claude-3.5-sonnet-v2"
-#model = "gpt4o"
-#model = "llama3-2-90b-instruct-v1:0"
+model = "gemma4:31b"
 api_key = "sk-1234"
 base_url = "http://localhost:11434/v1/chat/completions"
-#base_url = "http://localhost:4000/v1/chat/completions"
-max_tokens = 8192
-#max_tokens = 4096
-temperature = 0.8
+max_tokens = 32768  # Reasoning models (deepseek, qwen3, gpt-5, o-series) spend most of this on hidden
+                    # reasoning; 8192 is NOT enough for them and the run will abort with a truncation error.
+temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit this line for models that only accept the default temperature (e.g. gpt-5)
+#timeout = 300              # Seconds to wait for one completion (default 300)
+#max_retries = 3            # Retries on 429/5xx/connection errors with exponential back-off (default 3)
+#token_param = "auto"       # "auto" (default) switches to max_completion_tokens when the server asks for it
+#json_mode = false          # Send response_format = json_object (OpenAI, Ollama, vLLM, LiteLLM support it)
+#reasoning_effort = "low"   # Passed through as-is for models/servers that support it
+concurrency = 1            # Chunks extracted in parallel (default 4); lower it if your server rate-limits
+#cache_dir = ".kg-cache"    # LLM replies are cached here so re-runs with the same settings are free; "" disables
+#api_key = "env:OPENAI_API_KEY"  # Read the key from an environment variable instead of this file
+#[llm.extra_body]           # Any extra JSON fields for the request body, e.g. Ollama's think switch
+#think = false
 
 [chunking]
 chunk_size = 100  # Number of words per chunk
 overlap = 20      # Number of words to overlap between chunks
 
+[extraction]
+language = "auto"        # Language for entity names and predicates, e.g. "Chinese", "German"; "auto" keeps the
+                         # model's default (usually the document's language)
+
 [standardization]
-enabled = true             # Whether to enable entity standardization
+enabled = true               # Whether to enable entity standardization
 use_llm_for_entities = true  # Whether to use LLM for additional entity resolution
+#merge_word_subsets = false  # Aggressive heuristic merging by shared words/stems
+                             # ("steam engine factories" -> "steam engine"); off by default
 
 [inference]
-enabled = true             # Whether to enable relationship inference
-use_llm_for_inference = true  # Whether to use LLM for relationship inference
-apply_transitive = true    # Whether to apply transitive inference rules
+enabled = true               # Whether to enable relationship inference
+use_llm_for_inference = true # Master switch for the LLM-based methods below
+#llm_bridge = true            # LLM links every isolated component to the main graph
+#max_bridge_components = 20   # ...for up to this many components, batched
+#bridge_groups_per_call = 5   #    this many per call
+#llm_hub = true               # LLM adds well-known relationships among the most central entities
+#hub_entities = 25            #    how many central entities to consider
+#hub_max_new = 25             #    cap on new hub relationships
+#taxonomy = true              # Rule: "quantum computing" is a "computing", "internet of things" involves "internet"
+apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for transitive predicate
+                             # families (is a / part of / located in / led to). Off by default:
+                             # it produced ~70% of all edges in testing and buried the real ones.
+#transitive_predicate_groups = ["is a", "part of", "located in", "led to"]
+#transitive_max_hub_degree = 10   # never chain through nodes with more connections than this
+#transitive_max_per_subject = 5   # cap new transitive edges per subject
+#lexical = false                  # Rule: connect names sharing a content word ("related to"); off by default
+#lexical_min_word_length = 5
+#max_inferred_ratio = 0.5         # Cap inferred edges at this fraction of extracted edges
 
 [visualization]
+name_communities = true  # Ask the LLM for a short name per community (one call); shown in the Communities panel
+show_inferred = true     # Whether inferred (dashed) relationships are visible when the page opens
+theme = "light"          # Initial theme: "light" or "dark" (the page has a toggle)
+edge_labels = "all"      # Initial edge label mode: "all", "selection" (only around the selected node) or "none"
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 
                          # "straightCross", "horizontal", "vertical", "curvedCW", "curvedCCW", "cubicBezier": true = "continuous"

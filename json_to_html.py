@@ -1,57 +1,36 @@
 #!/usr/bin/env python3
-"""
-Utility script to convert existing JSON knowledge graph data to HTML visualization.
-This allows testing the visualization features without running the full pipeline.
-"""
+"""Convert a saved triples JSON file to an HTML visualization (no LLM calls).
 
-import json
-import sys
+Equivalent to: generate-graph --from-json input.json --output output.html
+"""
 import os
+import sys
 
-# Add the src directory to Python path so we can import our modules
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
+if os.path.isdir(_SRC) and _SRC not in sys.path:
+    sys.path.insert(0, _SRC)
 
-from knowledge_graph.visualization import visualize_knowledge_graph
+from knowledge_graph.config import load_config  # noqa: E402
+from knowledge_graph.main import InputError, load_triples_from_json  # noqa: E402
+from knowledge_graph.visualization import visualize_knowledge_graph  # noqa: E402
 
-def json_to_html(json_file, output_file):
-    """
-    Convert JSON knowledge graph data to HTML visualization.
-    
-    Args:
-        json_file: Path to JSON file containing triples data
-        output_file: Path to save the HTML visualization
-    """
+
+def json_to_html(json_file, output_file, config_file="config.toml"):
     try:
-        # Load JSON data
-        with open(json_file, 'r', encoding='utf-8') as f:
-            triples = json.load(f)
-        
-        print(f"Loaded {len(triples)} triples from {json_file}")
-        
-        # Generate HTML visualization
-        stats = visualize_knowledge_graph(triples, output_file)
-        
-        print(f"Generated HTML visualization: {output_file}")
-        print("Graph Statistics:")
-        print(f"  Nodes: {stats['nodes']}")
-        print(f"  Edges: {stats['edges']}")
-        print(f"  Original Edges: {stats.get('original_edges', 'N/A')}")
-        print(f"  Inferred Edges: {stats.get('inferred_edges', 'N/A')}")
-        print(f"  Communities: {stats['communities']}")
-        
-        print(f"\nTo view the visualization, open: file://{os.path.abspath(output_file)}")
-        
-    except Exception as e:
+        triples = load_triples_from_json(json_file)
+    except InputError as e:
         print(f"Error: {e}")
         sys.exit(1)
+    print(f"Loaded {len(triples)} triples from {json_file}")
+    config = load_config(config_file) if os.path.exists(config_file) else None
+    stats = visualize_knowledge_graph(triples, output_file, config=config)
+    print(f"Nodes: {stats['nodes']}  Edges: {stats['edges']}  Extracted: {stats['original_edges']}  "
+          f"Inferred: {stats['inferred_edges']}  Communities: {stats['communities']}")
+    print(f"\nTo view the visualization, open: file://{os.path.abspath(output_file)}")
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python json_to_html.py <input.json> <output.html>")
-        print("Example: python json_to_html.py docs/industrialRev.json test_inferred_filter.html")
+    if len(sys.argv) not in (3, 4):
+        print("Usage: python json_to_html.py <input.json> <output.html> [config.toml]")
         sys.exit(1)
-    
-    json_file = sys.argv[1]
-    output_file = sys.argv[2]
-    
-    json_to_html(json_file, output_file)
+    json_to_html(*sys.argv[1:])
