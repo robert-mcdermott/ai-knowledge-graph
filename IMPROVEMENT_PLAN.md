@@ -84,6 +84,9 @@ is stale (`prompts.py` is now a package).
 > provenance (source sentence per extracted edge, shown in tooltips and the details panel),
 > sentence-aware chunking, parallel chunk extraction (`llm.concurrency`), LLM-named communities.
 > Live run: 143/143 extracted triples typed and sourced; 11 communities named; extraction 2x faster.
+> **Wave 8 (done):** shortest-path finder in the details panel, sqrt node sizing, `visualization.show_inferred`,
+> predicate tense normalization, on-disk LLM response cache (`llm.cache_dir`, `--no-cache`; a cached re-run
+> takes ~3 s instead of ~20 s), deterministic representative ordering so prompts and cache keys are stable.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -203,13 +206,13 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [ ] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
       the confirmed run) with a count badge, and list all predicates in the tooltip /
       details panel. Use `smooth: curvedCW/CCW` only when two directions exist. `P1 S`
-- [ ] **Inferred edges hidden by default** in the page (a one-click *Hide Inferred* toggle exists since wave 4; default is still visible), with a count
+- [x] **Inferred edges visibility** is configurable (`visualization.show_inferred`, default true because inference is now conservative and traceable); the page has a one-click toggle and a count
       in the legend, so the first impression is the extracted graph. `P1 S`
 - [x] **Community legend with toggles**: click a color to isolate/hide a community; show
       counts. `P1 S`
 - [x] **Quick filters**: "Show inferred edges" toggle, minimum-degree slider, predicate
       multi-select, "hide leaf nodes". Replace the current three-dropdown filter form. `P1 M`
-- [ ] **Path finder**: pick two nodes and highlight the shortest path (reuse BFS in JS);
+- [x] **Path finder**: pick two nodes and highlight the shortest path (reuse BFS in JS);
       option to exclude inferred edges. Directly serves "find relationships between
       concepts". `P1 M`
 - [x] **Rich tooltips**: name, type, community, degree, top relationships, and the source
@@ -221,7 +224,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [x] **URL state** (`#node=steam%20engine&hide=inferred`) so views can be shared. `P2 S`
 
 ### Visual quality
-- [ ] **Node sizing**: use a log/sqrt scale of degree so hubs don't dwarf everything;
+- [x] **Node sizing**: use a log/sqrt scale of degree so hubs don't dwarf everything;
       current mix of degree/betweenness/eigenvector is fine but scale it 8–40 px. `P1 S`
 - [x] **Edge styling**: extracted edges solid and slightly thicker; inferred edges thin,
       dashed, lower opacity; arrows scaled to node size; `smooth: continuous` for parallel
@@ -247,7 +250,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       via a cheap estimator) so relationships aren't cut mid-sentence. `P1 S`
 - [x] **Parallel chunk extraction** with a configurable worker count (`llm.concurrency`,
       default 4); order-preserving results. Cuts wall-clock time 3–5×. `P1 S`
-- [ ] **Response cache** keyed by hash(model, prompt) in `.kg-cache/`, so re-running
+- [x] **Response cache** keyed by hash(model, prompt) in `.kg-cache/`, so re-running
       visualization changes or tweaking inference doesn't re-pay for extraction.
       Promote `json_to_html.py` to `generate-graph --from-json graph.json`. `P1 S`
 - [x] **Smarter inference budget**: cap inferred edges to a configurable fraction of extracted
@@ -256,7 +259,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [x] **LLM-named communities**: after Louvain, ask the LLM for a 2–4 word label per
       community from its top nodes; show labels in the legend and as optional cluster
       captions. Cheap (one call) and a strong "AI-powered" differentiator. `P1 S`
-- [ ] **Predicate normalization**: lower-case, lemmatize simple tense variants
+- [x] **Predicate normalization**: lower-case, lemmatize simple tense variants
       (`involve` / `involves`), and merge synonyms via an LLM pass on the predicate list;
       the run above produced both `involve` and `involves`. `P2 S`
 - [x] **Use `networkx.community.louvain_communities`** (built in) and drop `python-louvain`;

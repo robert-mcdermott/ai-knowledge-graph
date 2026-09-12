@@ -17,3 +17,6 @@ config.local.toml
 
 # Test/tooling caches
 .pytest_cache/
+
+# LLM response cache
+.kg-cache/

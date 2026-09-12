@@ -21,6 +21,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "token_param": "auto",
         "json_mode": False,
         "concurrency": 4,
+        "cache_dir": ".kg-cache",
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
@@ -41,7 +42,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "hub_entities": 25,
         "hub_max_new": 25,
     },
-    "visualization": {"edge_smooth": False, "name_communities": True},
+    "visualization": {"edge_smooth": False, "name_communities": True, "show_inferred": True},
 }
 
 

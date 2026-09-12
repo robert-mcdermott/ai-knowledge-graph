@@ -50,6 +50,12 @@ main { position: relative; flex: 1; min-height: 0; }
 #legend .glyph { width: 14px; text-align: center; flex: none; }
 #details .source { display: block; color: var(--muted); font-size: 11px; font-style: italic; margin: -2px 0 4px 26px; white-space: normal; }
 #details .rel { flex-wrap: wrap; }
+#details .path-form { display: flex; gap: 6px; margin: 4px 0; }
+#details .path-form input { flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+#details .path-step { display: flex; gap: 6px; align-items: baseline; padding: 3px 6px; border-radius: 6px; cursor: pointer; }
+#details .path-step:hover { background: var(--bg); }
+#details .path-step .pred { color: var(--muted); font-style: italic; }
+#details .note { color: var(--muted); font-size: 12px; }
 .control input[type=range] { flex: 1; }
 #details { right: 12px; top: 12px; width: 320px; }
 #details .name { font-size: 16px; font-weight: 650; word-break: break-word; }
@@ -141,6 +147,10 @@ footer a { color: inherit; text-decoration: none; }
     <div class="name" id="d-name"></div>
     <div class="meta" id="d-meta"></div>
     <div id="d-relations"></div>
+    <h4>Path to another node</h4>
+    <div class="path-form"><input id="path-target" list="node-list" placeholder="node name…" autocomplete="off"><button class="btn small" id="path-go">Find</button></div>
+    <label class="note"><input type="checkbox" id="path-extracted-only"> extracted relationships only</label>
+    <div id="path-result"></div>
   </aside>
 
   <div class="panel hidden" id="stats">
@@ -167,7 +177,7 @@ footer a { color: inherit; text-decoration: none; }
       <tr><td><kbd>i</kbd></td><td>Toggle inferred edges</td><td><kbd>p</kbd></td><td>Toggle physics</td></tr>
       <tr><td><kbd>s</kbd></td><td>Statistics</td><td><kbd>d</kbd></td><td>Toggle dark mode</td></tr>
     </table>
-    <p style="color: var(--muted); font-size: 12px; margin: 10px 0 0 0;">Click a node to highlight its neighbourhood and see its relationships. Double-click to zoom to it. Drag the canvas to pan, scroll to zoom.</p>
+    <p style="color: var(--muted); font-size: 12px; margin: 10px 0 0 0;">Click a node to highlight its neighbourhood and see its relationships. Double-click to zoom to it. Use "Path to another node" in the details panel to trace how two entities connect. Drag the canvas to pan, scroll to zoom.</p>
   </div>
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
 </main>
@@ -186,7 +196,7 @@ const KG = {{ data_json }};
   const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
   const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
   const state = { labels: true, edgeLabels: 'selection', inferred: true, minDegree: 1,
-                  hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, dark: false, physics: true };
+                  hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, path: null, dark: false, physics: true };
   const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
 
   // ---------- theme ----------
@@ -198,14 +208,36 @@ const KG = {{ data_json }};
     try { localStorage.setItem('kg-theme', dark ? 'dark' : 'light'); } catch (e) {}
     if (window.network) applyFonts();
   }
-  function applyFonts() {
+  // Every node/edge style (opacity, colour, width, label size) is derived from `state` here and
+  // written per item. Per-item font settings override vis-network's global options, so this is the
+  // only place that touches them; all toggles call refreshStyles().
+  function refreshStyles() {
     const t = theme();
-    network.setOptions({
-      nodes: { font: { color: t.node, size: state.labels ? 14 : 0, strokeWidth: 0 } },
-      edges: { font: { color: t.edge, strokeColor: t.stroke, strokeWidth: 3, size: state.edgeLabels === 'all' ? 11 : 0 } }
-    });
-    if (state.edgeLabels === 'selection' && state.selected) highlight(state.selected);
+    let nodeSet = null, edgeSet = null, onPath = false;
+    if (state.path) {
+      nodeSet = new Set([state.path[0].from].concat(state.path.map(st => st.to)));
+      edgeSet = new Set(state.path.map(st => st.edge.id));
+      onPath = true;
+    } else if (state.selected) {
+      const nb = neighbourhood(state.selected);
+      nodeSet = nb.ids; edgeSet = nb.connected;
+    }
+    const focused = nodeSet !== null;
+    nodes.update(nodes.get().map(n => {
+      const on = !focused || nodeSet.has(n.id);
+      return { id: n.id, opacity: on ? 1 : 0.15, font: { color: t.node, size: state.labels && on ? 14 : 0, strokeWidth: 0 } };
+    }));
+    edges.update(edges.get().map(e => {
+      const on = !focused || edgeSet.has(e.id);
+      const showLabel = state.edgeLabels !== 'none' && on && (state.edgeLabels === 'all' || focused);
+      let color = base.edge.get(e.id).color, width = 1;
+      if (focused && !on) color = { color: '#999999', opacity: 0.08 };
+      else if (onPath) { color = { color: '#f5a623', opacity: 1 }; width = 3; }
+      else if (focused) width = 2;
+      return { id: e.id, color, width, font: { size: showLabel ? 11 : 0, color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } };
+    }));
   }
+  const applyFonts = refreshStyles;
   let initialDark = false;
   try { const saved = localStorage.getItem('kg-theme'); initialDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
   applyTheme(initialDark);
@@ -225,6 +257,7 @@ const KG = {{ data_json }};
     updateStats();
     applyHash();
   });
+  if (meta.showInferred === false) setTimeout(() => setInferred(false), 0);
   network.on('click', params => { if (params.nodes.length) select(params.nodes[0]); else clearSelection(); });
   network.on('doubleClick', params => { if (params.nodes.length) network.focus(params.nodes[0], { scale: 1.6, animation: true }); });
   window.addEventListener('resize', () => network.fit());
@@ -239,29 +272,14 @@ const KG = {{ data_json }};
     });
     return { ids, connected };
   }
-  function highlight(id) {
-    const { ids, connected } = neighbourhood(id);
-    const t = theme();
-    nodes.update(nodes.get().map(n => ({ id: n.id, opacity: ids.has(n.id) ? 1 : 0.15,
-                                           font: { color: t.node, size: state.labels && ids.has(n.id) ? 14 : 0 } })));
-    edges.update(edges.get().map(e => {
-      const on = connected.has(e.id);
-      const b = base.edge.get(e.id);
-      return { id: e.id, color: on ? b.color : { color: '#999999', opacity: 0.08 }, width: on ? 2 : 1,
-               font: { size: on && state.edgeLabels !== 'none' ? 11 : (state.edgeLabels === 'all' ? 11 : 0), color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } };
-    }));
-  }
-  function unhighlight() {
-    const t = theme();
-    nodes.update(nodes.get().map(n => ({ id: n.id, opacity: 1, font: { color: t.node, size: state.labels ? 14 : 0 } })));
-    edges.update(edges.get().map(e => ({ id: e.id, color: base.edge.get(e.id).color, width: 1,
-                                           font: { size: state.edgeLabels === 'all' ? 11 : 0, color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } })));
-  }
+  function highlight() { refreshStyles(); }
+  function unhighlight() { refreshStyles(); }
   function select(id, focus) {
     if (!nodes.get(id)) return;
     state.selected = id;
+    state.path = null;
     network.selectNodes([id]);
-    highlight(id);
+    refreshStyles();
     renderDetails(id);
     if (focus) network.focus(id, { scale: Math.max(network.getScale(), 1.2), animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
     history.replaceState(null, '', '#node=' + encodeURIComponent(id));
@@ -269,6 +287,9 @@ const KG = {{ data_json }};
   function clearSelection() {
     if (!state.selected) return;
     state.selected = null;
+    state.path = null;
+    $('path-result').innerHTML = '';
+    $('path-target').value = '';
     network.unselectAll();
     unhighlight();
     $('details').classList.add('hidden');
@@ -278,6 +299,55 @@ const KG = {{ data_json }};
     const m = location.hash.match(/^#node=(.+)$/);
     if (m) { const id = decodeURIComponent(m[1]); if (nodes.get(id)) select(id, true); }
   }
+
+  // ---------- shortest path ----------
+  function findPath(from, to, extractedOnly) {
+    if (from === to) return null;
+    const adj = new Map();
+    edges.get().forEach(e => {
+      if (e.hidden || (extractedOnly && e.inferred)) return;
+      if (!adj.has(e.from)) adj.set(e.from, []);
+      if (!adj.has(e.to)) adj.set(e.to, []);
+      adj.get(e.from).push({ node: e.to, edge: e });
+      adj.get(e.to).push({ node: e.from, edge: e });
+    });
+    const parent = new Map([[from, null]]);
+    const queue = [from];
+    while (queue.length) {
+      const cur = queue.shift();
+      if (cur === to) break;
+      for (const { node, edge } of (adj.get(cur) || [])) {
+        if (!parent.has(node)) { parent.set(node, { prev: cur, edge }); queue.push(node); }
+      }
+    }
+    if (!parent.has(to)) return null;
+    const steps = [];
+    for (let n = to; parent.get(n); n = parent.get(n).prev) steps.unshift({ from: parent.get(n).prev, to: n, edge: parent.get(n).edge });
+    return steps;
+  }
+  function highlightPath(steps) {
+    state.path = steps;
+    refreshStyles();
+    network.fit({ nodes: Array.from(new Set([steps[0].from].concat(steps.map(st => st.to)))), animation: true });
+  }
+  function runPath() {
+    const target = $('path-target').value.trim();
+    if (!state.selected || !target) return;
+    const id = KG.nodes.map(n => n.id).find(i => i.toLowerCase() === target.toLowerCase());
+    if (!id) { $('path-result').innerHTML = '<p class="note">No node with that name.</p>'; return; }
+    const steps = findPath(state.selected, id, $('path-extracted-only').checked);
+    if (!steps) { $('path-result').innerHTML = '<p class="note">No path found with the current filters.</p>'; return; }
+    state.path = steps;
+    $('path-result').innerHTML = `<p class="note">${steps.length} step${steps.length === 1 ? '' : 's'}</p>` + steps.map(st => {
+      const forward = st.edge.from === st.from;
+      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(st.from)}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(st.to)}</span></div>`;
+    }).join('');
+    $('path-result').querySelectorAll('.path-step').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
+    highlightPath(steps);
+  }
+  $('path-go').addEventListener('click', runPath);
+  $('path-target').addEventListener('keydown', e => { if (e.key === 'Enter') { runPath(); e.preventDefault(); } });
+  $('path-extracted-only').addEventListener('change', () => { if (state.path) runPath(); });
 
   // ---------- details panel ----------
   function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -358,12 +428,12 @@ const KG = {{ data_json }};
     if (on) network.startSimulation(); else network.stopSimulation();
     setBtn('btn-physics', on);
   }
-  function setLabels(on) { state.labels = on; setBtn('btn-labels', on); applyFonts(); if (state.selected) highlight(state.selected); }
+  function setLabels(on) { state.labels = on; setBtn('btn-labels', on); refreshStyles(); }
   function cycleEdgeLabels() {
     state.edgeLabels = { selection: 'all', all: 'none', none: 'selection' }[state.edgeLabels];
     $('btn-edge-labels').textContent = 'Edge labels: ' + state.edgeLabels;
     setBtn('btn-edge-labels', state.edgeLabels === 'all');
-    applyFonts(); if (state.selected) highlight(state.selected); else unhighlight();
+    refreshStyles();
   }
   function setInferred(on) { state.inferred = on; setBtn('btn-inferred', on); $('show-inferred').checked = on; applyFilters(); }
   function togglePanel(id) { $(id).classList.toggle('hidden'); }

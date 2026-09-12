@@ -145,6 +145,9 @@ def process_text_in_chunks(config, full_text, debug=False, continue_on_error=Fal
 
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         outcomes = list(pool.map(run_chunk, enumerate(text_chunks)))
+    cache_hits = getattr(client, "cache_hits", 0)
+    if cache_hits:
+        print(f"Served {cache_hits} of {len(text_chunks)} chunks from the LLM cache ({client.cache_dir})", flush=True)
 
     all_results = []
     failed_chunks = []
@@ -329,6 +332,8 @@ def main():
     parser.add_argument('--no-inference', action='store_true', help='Disable relationship inference')
     parser.add_argument('--continue-on-error', action='store_true',
                         help='Skip chunks whose LLM call fails or is truncated instead of aborting')
+    parser.add_argument('--no-cache', action='store_true',
+                        help='Do not read or write the LLM response cache (llm.cache_dir)')
 
     args = parser.parse_args()
 
@@ -367,6 +372,8 @@ def main():
         sys.exit(2)
 
     # Override configuration settings with command line arguments
+    if args.no_cache:
+        config.setdefault("llm", {})["cache_dir"] = None
     if args.no_standardize:
         config.setdefault("standardization", {})["enabled"] = False
     if args.no_inference:

@@ -15,6 +15,7 @@ temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit 
 #json_mode = false          # Send response_format = json_object (OpenAI, Ollama, vLLM, LiteLLM support it)
 #reasoning_effort = "low"   # Passed through as-is for models/servers that support it
 #concurrency = 4            # Chunks extracted in parallel (default 4); lower it if your server rate-limits
+#cache_dir = ".kg-cache"    # LLM replies are cached here so re-runs with the same settings are free; "" disables
 #api_key = "env:OPENAI_API_KEY"  # Read the key from an environment variable instead of this file
 #[llm.extra_body]           # Any extra JSON fields for the request body, e.g. Ollama's think switch
 #think = false
@@ -51,5 +52,6 @@ apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for tra
 
 [visualization]
 name_communities = true  # Ask the LLM for a short name per community (one call); shown in the Communities panel
+show_inferred = true     # Whether inferred (dashed) relationships are visible when the page opens
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 
                          # "straightCross", "horizontal", "vertical", "curvedCW", "curvedCCW", "cubicBezier": true = "continuous"

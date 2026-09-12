@@ -17,8 +17,10 @@ Design goals:
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
+import os
 import re
 import time
 from collections.abc import Callable
@@ -96,6 +98,8 @@ class LLMClient:
     reasoning_effort: str | None = None
     extra_body: dict[str, Any] = field(default_factory=dict)
     extra_headers: dict[str, str] = field(default_factory=dict)
+    cache_dir: str | None = None  # directory for cached completions; None/"" disables caching
+    cache_hits: int = field(default=0, repr=False)
 
     # Internal collaborators; overridable in tests.
     _session: Any = field(default_factory=lambda: requests.Session(), repr=False)
@@ -133,18 +137,65 @@ class LLMClient:
             reasoning_effort=llm.get("reasoning_effort"),
             extra_body=dict(llm.get("extra_body", {}) or {}),
             extra_headers=dict(llm.get("extra_headers", {}) or {}),
+            cache_dir=llm.get("cache_dir") or None,
         )
 
     # ---- public API ------------------------------------------------------- #
     def complete(self, user_prompt: str, system_prompt: str | None = None, *,
                  allow_truncated: bool = False) -> str:
-        """Return the model's text reply, raising on truncation or empty output."""
+        """Return the model's text reply, raising on truncation or empty output.
+
+        Successful replies are cached on disk when ``cache_dir`` is set, keyed by the
+        model and the full request parameters, so re-running the same document with the
+        same settings does not call the API again.
+        """
+        cache_path = self._cache_path(user_prompt, system_prompt)
+        cached = self._cache_read(cache_path)
+        if cached is not None:
+            self.cache_hits += 1
+            return cached
         response = self.complete_raw(user_prompt, system_prompt)
         if response.truncated and not allow_truncated:
             raise LLMTruncatedError(self._truncation_message(response))
         if not response.content.strip():
             raise LLMEmptyResponseError(self._empty_message(response))
+        if not response.truncated:
+            self._cache_write(cache_path, response.content)
         return response.content
+
+    # ---- cache ------------------------------------------------------------ #
+    def _cache_path(self, user_prompt: str, system_prompt: str | None) -> str | None:
+        if not self.cache_dir:
+            return None
+        key_material = json.dumps({
+            "model": self.model, "system": system_prompt, "user": user_prompt, "max_tokens": self.max_tokens,
+            "temperature": self.temperature, "json_mode": self.json_mode, "reasoning_effort": self.reasoning_effort,
+            "extra_body": self.extra_body,
+        }, sort_keys=True, ensure_ascii=False)
+        digest = hashlib.sha256(key_material.encode("utf-8")).hexdigest()
+        return os.path.join(self.cache_dir, f"{digest}.json")
+
+    @staticmethod
+    def _cache_read(path: str | None) -> str | None:
+        if not path or not os.path.exists(path):
+            return None
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            content = data.get("content")
+            return content if isinstance(content, str) and content.strip() else None
+        except (OSError, ValueError):
+            return None
+
+    def _cache_write(self, path: str | None, content: str) -> None:
+        if not path:
+            return
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump({"model": self.model, "created": time.strftime("%Y-%m-%dT%H:%M:%S"), "content": content}, f)
+        except OSError as exc:
+            logger.warning("Could not write LLM cache entry %s: %s", path, exc)
 
     def complete_raw(self, user_prompt: str, system_prompt: str | None = None) -> LLMResponse:
         """Perform the request with retries and return the normalized response."""

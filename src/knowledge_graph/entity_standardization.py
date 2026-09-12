@@ -188,9 +188,50 @@ def standardize_entities(triples, config):
     filtered = [t for t in standardized if t["subject"] != t["object"]]
     if len(filtered) < len(standardized):
         print(f"Removed {len(standardized) - len(filtered)} self-referencing triples", flush=True)
+    normalize_predicates(filtered)
 
     print(f"Standardized {len(all_entities)} entities into {len(set(mapping.values()))} standard forms", flush=True)
     return filtered
+
+
+def normalize_predicates(triples):
+    """Canonicalize predicates in place: case/whitespace, and merge tense variants
+    that differ only by a trailing "s" on the verb ("involve" / "involves") when both occur,
+    keeping the more frequent form."""
+    counts = Counter()
+    for t in triples:
+        t["predicate"] = _norm_pred(t["predicate"])
+        counts[t["predicate"]] += 1
+
+    def key(pred):
+        words = pred.split()
+        if not words:
+            return pred
+        first = words[0]
+        if first.endswith("ies") and len(first) > 4:
+            first = first[:-3] + "y"
+        elif first.endswith(("ses", "xes", "ches", "shes")):
+            first = first[:-2]
+        elif first.endswith("s") and not first.endswith("ss") and len(first) > 3:
+            first = first[:-1]
+        return " ".join([first] + words[1:])
+
+    groups = defaultdict(list)
+    for pred in counts:
+        groups[key(pred)].append(pred)
+    canonical = {}
+    merged = 0
+    for variants in groups.values():
+        best = max(variants, key=lambda v: (counts[v], -len(v)))
+        for v in variants:
+            canonical[v] = best
+            if v != best:
+                merged += 1
+    if merged:
+        for t in triples:
+            t["predicate"] = canonical[t["predicate"]]
+        print(f"Merged {merged} predicate variants (e.g. tense forms)", flush=True)
+    return triples
 
 
 def _singularize(word):
@@ -341,7 +382,9 @@ def infer_relationships(triples, config):
     result = _deduplicate_triples(valid_triples + accepted)
     for t in result:
         t["predicate"] = limit_predicate_length(t["predicate"])
-    return [t for t in result if t["subject"] != t["object"]]
+    result = [t for t in result if t["subject"] != t["object"]]
+    normalize_predicates(result)
+    return _deduplicate_triples(result)
 
 
 def _identify_communities(graph):
@@ -463,7 +506,7 @@ def _infer_bridges_with_llm(triples, communities, degree, config):
 
     ordered = sorted(communities, key=len, reverse=True)
     main, others = ordered[0], ordered[1:1 + max_components]
-    main_reps = sorted(main, key=lambda n: -degree.get(n, 0))[:20]
+    main_reps = sorted(main, key=lambda n: (-degree.get(n, 0), n))[:20]
     main_text = ", ".join(main_reps)
     system_prompt = prompt_factory.get_prompt("bridge_inference_system")
 
@@ -472,7 +515,7 @@ def _infer_bridges_with_llm(triples, communities, degree, config):
         batch = others[batch_start:batch_start + per_call]
         groups = []
         for i, comp in enumerate(batch, start=batch_start + 1):
-            reps = sorted(comp, key=lambda n: -degree.get(n, 0))[:5]
+            reps = sorted(comp, key=lambda n: (-degree.get(n, 0), n))[:5]
             comp_triples = [t for t in triples if t["subject"] in comp and t["object"] in comp]
             groups.append(f"Group {i}: {', '.join(reps)}\n  known: " + _format_triples(comp_triples, 6).replace("\n", "; "))
         user_prompt = prompt_factory.get_prompt("bridge_inference_user", main_text, "\n".join(groups))
@@ -487,7 +530,7 @@ def _infer_hub_relationships_with_llm(triples, degree, config):
     inf_cfg = config.get("inference", {})
     top_n = int(inf_cfg.get("hub_entities", 25))
     max_new = int(inf_cfg.get("hub_max_new", 25))
-    hubs = [n for n, _ in degree.most_common(top_n)]
+    hubs = [n for n, _ in sorted(degree.items(), key=lambda kv: (-kv[1], kv[0]))[:top_n]]
     if len(hubs) < 3:
         return []
     hub_set = set(hubs)

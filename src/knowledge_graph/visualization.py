@@ -74,7 +74,8 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         return {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
 
     print(f"Processing {len(triples)} triples for visualization")
-    graph_data = build_graph_data(triples, edge_smooth)
+    show_inferred = (config or {}).get("visualization", {}).get("show_inferred", True)
+    graph_data = build_graph_data(triples, edge_smooth, show_inferred=show_inferred)
     stats = graph_data["meta"]["stats"]
     print(f"Found {stats['nodes']} unique nodes")
     print(f"Found {stats['inferred_edges']} inferred relationships")
@@ -99,7 +100,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
     return stats
 
 
-def build_graph_data(triples, edge_smooth=False, community_names=None):
+def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
@@ -174,7 +175,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None):
         members.setdefault(community, []).append(node)
     communities = []
     for community in range(community_count):
-        names = sorted(members.get(community, []), key=lambda n: -degree.get(n, 0))
+        names = sorted(members.get(community, []), key=lambda n: (-degree.get(n, 0), n))
         entry = {"id": community, "color": community_color(community), "size": len(names), "top": names[:8]}
         if community_names and community_names.get(community):
             entry["name"] = community_names[community]
@@ -201,6 +202,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None):
             "communities": communities,
             "types": type_legend,
             "freezePhysicsAbove": FREEZE_PHYSICS_ABOVE,
+            "showInferred": bool(show_inferred),
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
     }
@@ -259,7 +261,7 @@ def _calculate_node_sizes(all_nodes, betweenness, degree, eigenvector):
         betweenness_norm = betweenness.get(node, 0) / max_betweenness if max_betweenness > 0 else 0
         eigenvector_norm = eigenvector.get(node, 0) / max_eigenvector if max_eigenvector > 0 else 0
         importance = 0.5 * degree_norm + 0.3 * betweenness_norm + 0.2 * eigenvector_norm
-        node_sizes[node] = 10 + (20 * importance)
+        node_sizes[node] = 8 + (24 * importance ** 0.5)  # sqrt scale: hubs stand out without dwarfing the rest
     return node_sizes
 
 

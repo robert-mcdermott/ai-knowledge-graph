@@ -68,6 +68,7 @@ temperature = 0.2                # omit for models that only accept the default 
 #token_param = "auto"            # auto-switches to max_completion_tokens for newer OpenAI models
 #json_mode = false               # request response_format = json_object
 #concurrency = 4                 # chunks extracted in parallel
+#cache_dir = ".kg-cache"         # cache LLM replies; re-running the same input is free ("" disables, or --no-cache)
 #reasoning_effort = "low"        # passed through to servers/models that support it
 #[llm.extra_body]                # arbitrary extra request fields, e.g. Ollama's think switch
 #think = false
@@ -117,6 +118,7 @@ incomplete graph.
 - `--no-inference`: Disable relationship inference
 - `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
 - `--from-json FILE`: Re-render the visualization from a previously saved `.json` triples file (no LLM calls)
+- `--no-cache`: Bypass the LLM response cache for this run
 - `--test`: Generate sample visualization using test data
 
 ### Usage message (--help)
@@ -281,6 +283,8 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
   the details panel, so inferred edges are easy to tell apart from what the text actually says.
 - **Named communities**: after community detection the LLM gives each community a short name (one call;
   disable with `visualization.name_communities = false`).
+- **Path finder**: from any selected node, type another node's name to highlight the shortest chain of
+  relationships between them, optionally through extracted relationships only.
 - **Search** with autocomplete (`/`), and shareable links: the selected node is kept in the URL (`#node=...`).
 - **Communities panel**: colour-coded Louvain communities with their top entities, toggle any of them on/off,
   a minimum-connections slider, and a switch for inferred relationships.
