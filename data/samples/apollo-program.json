@@ -1,0 +1,2398 @@
+[
+  {
+    "subject": "apollo program",
+    "predicate": "was",
+    "object": "human spaceflight program",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "associated with",
+    "object": "united states",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "landed on",
+    "object": "moon",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "landed",
+    "object": "first people",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "first people",
+    "predicate": "on",
+    "object": "moon",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "nasa",
+    "predicate": "conceived",
+    "object": "apollo program",
+    "subject_type": "organization",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "conceived in",
+    "object": "1960",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "followed",
+    "object": "project mercury",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "goal fixed",
+    "object": "25 may 1961",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "john f. kennedy",
+    "predicate": "told",
+    "object": "congress",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "john f. kennedy",
+    "predicate": "was",
+    "object": "president",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "john f. kennedy",
+    "predicate": "advocated",
+    "object": "moon landing",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "congress",
+    "predicate": "heard",
+    "object": "moon landing",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "nation",
+    "predicate": "committed to",
+    "object": "moon landing",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "nation",
+    "predicate": "committed to",
+    "object": "earth return",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "NASA conceived Apollo in 1960 as a follow-on to Project Mercury, but its goal was fixed on 25 May 1961, when President John F. Kennedy told Congress that the nation should commit itself to landing a man on the Moon and returning him safely to Earth before the end of the decade.",
+    "chunk": 1
+  },
+  {
+    "subject": "moon landing",
+    "predicate": "before",
+    "object": "end of decade",
+    "subject_type": "concept",
+    "object_type": "date",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "goal was",
+    "object": "moon landing",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "goal was",
+    "object": "earth return",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "yuri gagarin",
+    "predicate": "from",
+    "object": "soviet union",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "The announcement came weeks after Yuri Gagarin of the Soviet Union became the first human in space and Alan Shepard made the first American suborbital flight.",
+    "chunk": 1
+  },
+  {
+    "subject": "yuri gagarin",
+    "predicate": "became",
+    "object": "first human in space",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The announcement came weeks after Yuri Gagarin of the Soviet Union became the first human in space and Alan Shepard made the first American suborbital flight.",
+    "chunk": 1
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "made",
+    "object": "suborbital flight",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "The announcement came weeks after Yuri Gagarin of the Soviet Union became the first human in space and Alan Shepard made the first American suborbital flight.",
+    "chunk": 1
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "was",
+    "object": "first american",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The announcement came weeks after Yuri Gagarin of the Soviet Union became the first human in space and Alan Shepard made the first American suborbital flight.",
+    "chunk": 1
+  },
+  {
+    "subject": "suborbital flight",
+    "predicate": "was",
+    "object": "first american",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The announcement came weeks after Yuri Gagarin of the Soviet Union became the first human in space and Alan Shepard made the first American suborbital flight.",
+    "chunk": 1
+  },
+  {
+    "subject": "nasa",
+    "predicate": "chose",
+    "object": "lunar orbit rendezvous",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "lunar orbit rendezvous",
+    "predicate": "was",
+    "object": "mission mode",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "nasa",
+    "predicate": "chose",
+    "object": "mission mode",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "mission mode",
+    "predicate": "chosen in",
+    "object": "1962",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "john houbolt",
+    "predicate": "advocated",
+    "object": "lunar orbit rendezvous",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "john houbolt",
+    "predicate": "was",
+    "object": "engineer",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "john houbolt",
+    "predicate": "worked at",
+    "object": "langley research center",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "NASA chose lunar orbit rendezvous as the mission mode in 1962, largely through the advocacy of engineer John Houbolt of the Langley Research Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "command and service module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "lunar module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "lunar module",
+    "predicate": "descended to",
+    "object": "surface",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "command module",
+    "predicate": "remained in",
+    "object": "lunar orbit",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "lunar module",
+    "predicate": "separate from",
+    "object": "command module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "command and service module",
+    "predicate": "separate from",
+    "object": "lunar module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Under this plan a Saturn V rocket would launch a command and service module together with a separate lunar module; the lunar module would descend to the surface while the command module remained in lunar orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "developed at",
+    "object": "marshall space flight center",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "marshall space flight center",
+    "predicate": "located in",
+    "object": "huntsville",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "huntsville",
+    "predicate": "located in",
+    "object": "alabama",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "developed under",
+    "object": "wernher von braun",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "wernher von braun",
+    "predicate": "led",
+    "object": "saturn v",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "f-1 engines",
+    "predicate": "part of",
+    "object": "saturn v",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "f-1 engines",
+    "predicate": "built by",
+    "object": "rocketdyne",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "rocketdyne",
+    "predicate": "built",
+    "object": "f-1 engines",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "The Saturn V was developed at the Marshall Space Flight Center in Huntsville, Alabama, under Wernher von Braun, and its F-1 engines were built by Rocketdyne.",
+    "chunk": 1
+  },
+  {
+    "subject": "north american aviation",
+    "predicate": "built",
+    "object": "command and service module",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "grumman",
+    "predicate": "built",
+    "object": "lunar module",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "lunar module",
+    "predicate": "built on",
+    "object": "long island",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "mit instrumentation laboratory",
+    "predicate": "designed",
+    "object": "apollo guidance computer",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "margaret hamilton",
+    "predicate": "led",
+    "object": "flight software",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "flight software",
+    "predicate": "part of",
+    "object": "apollo guidance computer",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "North American Aviation built the command and service module, Grumman built the lunar module on Long Island, and the MIT Instrumentation Laboratory designed the Apollo Guidance Computer, whose flight software was led by Margaret Hamilton.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo guidance computer",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "launched from",
+    "object": "launch complex 39",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "launch complex 39",
+    "predicate": "located at",
+    "object": "kennedy space center",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "kennedy space center",
+    "predicate": "located in",
+    "object": "florida",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "flights directed from",
+    "object": "mission control",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "mission control",
+    "predicate": "located at",
+    "object": "manned spacecraft center",
+    "subject_type": "place",
+    "object_type": "organization",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "manned spacecraft center",
+    "predicate": "located in",
+    "object": "houston",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "manned spacecraft center",
+    "predicate": "renamed",
+    "object": "johnson space center",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "johnson space center",
+    "predicate": "located in",
+    "object": "houston",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "Launches took place from Launch Complex 39 at the Kennedy Space Center in Florida, and flights were directed from Mission Control at the Manned Spacecraft Center in Houston, later renamed the Johnson Space Center.",
+    "chunk": 1
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "tested",
+    "object": "rendezvous",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Project Gemini, flown between 1965 and 1966, tested rendezvous, docking and spacewalks that Apollo would depend on.",
+    "chunk": 1
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "tested",
+    "object": "docking",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Project Gemini, flown between 1965 and 1966, tested rendezvous, docking and spacewalks that Apollo would depend on.",
+    "chunk": 1
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "tested",
+    "object": "spacewalks",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Project Gemini, flown between 1965 and 1966, tested rendezvous, docking and spacewalks that Apollo would depend on.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "depended on",
+    "object": "rendezvous",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "depended on",
+    "object": "docking",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "depended on",
+    "object": "spacewalks",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "occurred in",
+    "object": "1965",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Project Gemini, flown between 1965 and 1966, tested rendezvous, docking and spacewalks that Apollo would depend on.",
+    "chunk": 1
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "occurred in",
+    "object": "1966",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Project Gemini, flown between 1965 and 1966, tested rendezvous, docking and spacewalks that Apollo would depend on.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "suffered setback",
+    "object": "27 january 1967",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "fire",
+    "predicate": "occurred in",
+    "object": "command module",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "fire",
+    "predicate": "occurred during",
+    "object": "launch rehearsal",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "fire",
+    "predicate": "killed",
+    "object": "gus grissom",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "fire",
+    "predicate": "killed",
+    "object": "ed white",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "fire",
+    "predicate": "killed",
+    "object": "roger chaffee",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "gus grissom",
+    "predicate": "was",
+    "object": "astronaut",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "ed white",
+    "predicate": "was",
+    "object": "astronaut",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "roger chaffee",
+    "predicate": "was",
+    "object": "astronaut",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The program suffered its worst setback on 27 January 1967, when a fire in the command module during a launch rehearsal killed astronauts Gus Grissom, Ed White and Roger Chaffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 1",
+    "predicate": "was",
+    "object": "mission",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "mission",
+    "predicate": "designated",
+    "object": "apollo 1",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 1",
+    "predicate": "associated with",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "investigation",
+    "predicate": "led to",
+    "object": "redesigned hatch",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "investigation",
+    "predicate": "led to",
+    "object": "fireproof materials",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "investigation",
+    "predicate": "led to",
+    "object": "cabin atmosphere",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "cabin atmosphere",
+    "predicate": "was not",
+    "object": "pure oxygen",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The mission was later designated Apollo 1. The investigation led to a redesigned hatch, fireproof materials and a cabin atmosphere that was no longer pure oxygen at launch.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 7",
+    "predicate": "commanded by",
+    "object": "wally schirra",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "Apollo 7, commanded by Wally Schirra in October 1968, was the first crewed flight and tested the command module in Earth orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 7",
+    "predicate": "occurred in",
+    "object": "october 1968",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 7, commanded by Wally Schirra in October 1968, was the first crewed flight and tested the command module in Earth orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 7",
+    "predicate": "was",
+    "object": "first crewed flight",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Apollo 7, commanded by Wally Schirra in October 1968, was the first crewed flight and tested the command module in Earth orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 7",
+    "predicate": "tested",
+    "object": "command module",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 7, commanded by Wally Schirra in October 1968, was the first crewed flight and tested the command module in Earth orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "command module",
+    "predicate": "tested in",
+    "object": "earth orbit",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Apollo 7, commanded by Wally Schirra in October 1968, was the first crewed flight and tested the command module in Earth orbit.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 7",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "occurred in",
+    "object": "december 1968",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "carried",
+    "object": "frank borman",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "carried",
+    "object": "jim lovell",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "carried",
+    "object": "william anders",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "went around",
+    "object": "moon",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "frank borman",
+    "predicate": "left",
+    "object": "earth orbit",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "jim lovell",
+    "predicate": "left",
+    "object": "earth orbit",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "william anders",
+    "predicate": "left",
+    "object": "earth orbit",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "frank borman",
+    "predicate": "saw",
+    "object": "far side of moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "jim lovell",
+    "predicate": "saw",
+    "object": "far side of moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "william anders",
+    "predicate": "saw",
+    "object": "far side of moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "william anders",
+    "predicate": "took",
+    "object": "earthrise",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "earthrise",
+    "predicate": "is",
+    "object": "photograph",
+    "subject_type": "work",
+    "object_type": "work",
+    "source": "In December 1968 Apollo 8 carried Frank Borman, Jim Lovell and William Anders around the Moon; they became the first humans to leave Earth orbit and see the far side of the Moon, and Anders took the photograph known as Earthrise.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 8",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 9",
+    "predicate": "tested",
+    "object": "lunar module",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 9 tested the lunar module in Earth orbit, and Apollo 10 flew a full dress rehearsal in lunar orbit in May 1969.",
+    "chunk": 1
+  },
+  {
+    "subject": "lunar module",
+    "predicate": "tested in",
+    "object": "earth orbit",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Apollo 9 tested the lunar module in Earth orbit, and Apollo 10 flew a full dress rehearsal in lunar orbit in May 1969.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 10",
+    "predicate": "flew",
+    "object": "dress rehearsal",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Apollo 9 tested the lunar module in Earth orbit, and Apollo 10 flew a full dress rehearsal in lunar orbit in May 1969.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 10",
+    "predicate": "occurred in",
+    "object": "may 1969",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 9 tested the lunar module in Earth orbit, and Apollo 10 flew a full dress rehearsal in lunar orbit in May 1969.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 10",
+    "predicate": "flew in",
+    "object": "lunar orbit",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "Apollo 9 tested the lunar module in Earth orbit, and Apollo 10 flew a full dress rehearsal in lunar orbit in May 1969.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 9",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 10",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "launched on",
+    "object": "16 july 1969",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "carried",
+    "object": "neil armstrong",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "carried",
+    "object": "buzz aldrin",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "carried",
+    "object": "michael collins",
+    "subject_type": "event",
+    "object_type": "person",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "eagle",
+    "predicate": "landed on",
+    "object": "20 july",
+    "subject_type": "technology",
+    "object_type": "date",
+    "source": "On 20 July the lunar module Eagle, flown by Armstrong and Aldrin, landed in the Sea of Tranquility while Collins orbited in the command module Columbia.",
+    "chunk": 1
+  },
+  {
+    "subject": "eagle",
+    "predicate": "landed in",
+    "object": "sea of tranquility",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "On 20 July the lunar module Eagle, flown by Armstrong and Aldrin, landed in the Sea of Tranquility while Collins orbited in the command module Columbia.",
+    "chunk": 1
+  },
+  {
+    "subject": "eagle",
+    "predicate": "flown by",
+    "object": "neil armstrong",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "eagle",
+    "predicate": "flown by",
+    "object": "buzz aldrin",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "michael collins",
+    "predicate": "orbited in",
+    "object": "columbia",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "columbia",
+    "predicate": "was",
+    "object": "command module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "On 20 July the lunar module Eagle, flown by Armstrong and Aldrin, landed in the Sea of Tranquility while Collins orbited in the command module Columbia.",
+    "chunk": 1
+  },
+  {
+    "subject": "eagle",
+    "predicate": "was",
+    "object": "lunar module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "On 20 July the lunar module Eagle, flown by Armstrong and Aldrin, landed in the Sea of Tranquility while Collins orbited in the command module Columbia.",
+    "chunk": 1
+  },
+  {
+    "subject": "sea of tranquility",
+    "predicate": "located on",
+    "object": "moon",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "The Apollo program was the United States human spaceflight program that landed the first people on the Moon.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "used",
+    "object": "eagle",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "used",
+    "object": "columbia",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "became",
+    "object": "first person on moon",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Apollo 11 launched on 16 July 1969 with Neil Armstrong, Buzz Aldrin and Michael Collins.",
+    "chunk": 1
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "walked on",
+    "object": "moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "walked on",
+    "object": "moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "followed",
+    "object": "neil armstrong",
+    "subject_type": "person",
+    "object_type": "person",
+    "chunk": 2
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "collected",
+    "object": "samples",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "collected",
+    "object": "samples",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "deployed",
+    "object": "experiments",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "deployed",
+    "object": "experiments",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "experiments",
+    "predicate": "included",
+    "object": "seismometer",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "experiments",
+    "predicate": "included",
+    "object": "laser reflector",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "seismometer",
+    "predicate": "part of",
+    "object": "experiments",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 1
+  },
+  {
+    "subject": "laser reflector",
+    "predicate": "part of",
+    "object": "experiments",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 1
+  },
+  {
+    "subject": "samples",
+    "predicate": "from",
+    "object": "moon",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 1
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "was first",
+    "object": "person",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "member of",
+    "object": "apollo 11 crew",
+    "subject_type": "person",
+    "object_type": "organization",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "member of",
+    "object": "apollo 11 crew",
+    "subject_type": "person",
+    "object_type": "organization",
+    "chunk": 2
+  },
+  {
+    "subject": "neil armstrong",
+    "predicate": "spent",
+    "object": "two and a half hours",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "buzz aldrin",
+    "predicate": "spent",
+    "object": "two and a half hours",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "samples",
+    "predicate": "weighed",
+    "object": "21.5 kilograms",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 11 crew",
+    "predicate": "splashed down in",
+    "object": "pacific ocean",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "The crew splashed down in the Pacific Ocean on 24 July and was recovered by the aircraft carrier USS Hornet.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 11 crew",
+    "predicate": "splashed down on",
+    "object": "24 july",
+    "subject_type": "organization",
+    "object_type": "date",
+    "source": "The crew splashed down in the Pacific Ocean on 24 July and was recovered by the aircraft carrier USS Hornet.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 11 crew",
+    "predicate": "recovered by",
+    "object": "uss hornet",
+    "subject_type": "organization",
+    "object_type": "product",
+    "source": "The crew splashed down in the Pacific Ocean on 24 July and was recovered by the aircraft carrier USS Hornet.",
+    "chunk": 2
+  },
+  {
+    "subject": "uss hornet",
+    "predicate": "is",
+    "object": "aircraft carrier",
+    "subject_type": "product",
+    "object_type": "technology",
+    "source": "The crew splashed down in the Pacific Ocean on 24 July and was recovered by the aircraft carrier USS Hornet.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 12",
+    "predicate": "landed in",
+    "object": "november 1969",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 12",
+    "predicate": "landed near",
+    "object": "surveyor 3",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "pete conrad",
+    "predicate": "retrieved",
+    "object": "parts",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "alan bean",
+    "predicate": "retrieved",
+    "object": "parts",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "parts",
+    "predicate": "part of",
+    "object": "surveyor 3",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "pete conrad",
+    "predicate": "studied",
+    "object": "parts",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "alan bean",
+    "predicate": "studied",
+    "object": "parts",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "surveyor 3",
+    "predicate": "is",
+    "object": "probe",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Apollo 12 landed in November 1969 near the Surveyor 3 probe, and Pete Conrad and Alan Bean retrieved parts of it for study.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 13",
+    "predicate": "launched in",
+    "object": "april 1970",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "jim lovell",
+    "predicate": "member of",
+    "object": "apollo 13",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "jack swigert",
+    "predicate": "member of",
+    "object": "apollo 13",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "fred haise",
+    "predicate": "member of",
+    "object": "apollo 13",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 13",
+    "predicate": "aborted after",
+    "object": "oxygen tank explosion",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "oxygen tank",
+    "predicate": "exploded in",
+    "object": "service module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "oxygen tank",
+    "predicate": "part of",
+    "object": "service module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "service module",
+    "predicate": "part of",
+    "object": "apollo 13",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 13",
+    "predicate": "traveled to",
+    "object": "moon",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "Apollo 13, launched in April 1970 with Jim Lovell, Jack Swigert and Fred Haise, was aborted after an oxygen tank in the service module exploded on the way to the Moon.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 13 crew",
+    "predicate": "used",
+    "object": "aquarius",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "aquarius",
+    "predicate": "is",
+    "object": "lunar module",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "aquarius",
+    "predicate": "used as",
+    "object": "lifeboat",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene kranz",
+    "predicate": "is",
+    "object": "flight director",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene kranz",
+    "predicate": "part of",
+    "object": "mission control team",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "mission control team",
+    "predicate": "improvised",
+    "object": "procedures",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "procedures",
+    "predicate": "brought home",
+    "object": "apollo 13 crew",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "procedures",
+    "predicate": "saved",
+    "object": "apollo 13 crew",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "The crew used the lunar module Aquarius as a lifeboat, and flight director Gene Kranz and the Mission Control team improvised procedures that brought the astronauts home safely.",
+    "chunk": 2
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "commanded",
+    "object": "apollo 14",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 14, commanded by Alan Shepard in 1971, reached the Fra Mauro highlands.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 14",
+    "predicate": "reached",
+    "object": "fra mauro highlands",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "Apollo 14, commanded by Alan Shepard in 1971, reached the Fra Mauro highlands.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 14",
+    "predicate": "occurred in",
+    "object": "1971",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 14, commanded by Alan Shepard in 1971, reached the Fra Mauro highlands.",
+    "chunk": 2
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "commander of",
+    "object": "apollo 14",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 14, commanded by Alan Shepard in 1971, reached the Fra Mauro highlands.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 15",
+    "predicate": "introduced",
+    "object": "lunar roving vehicle",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "lunar roving vehicle",
+    "predicate": "built by",
+    "object": "boeing",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "david scott",
+    "predicate": "explored",
+    "object": "hadley rille region",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "james irwin",
+    "predicate": "explored",
+    "object": "hadley rille region",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "david scott",
+    "predicate": "used",
+    "object": "lunar roving vehicle",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "james irwin",
+    "predicate": "used",
+    "object": "lunar roving vehicle",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "lunar roving vehicle",
+    "predicate": "enabled",
+    "object": "exploration",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Apollo 15 introduced the Lunar Roving Vehicle, built by Boeing, which let David Scott and James Irwin explore the Hadley Rille region.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 16",
+    "predicate": "landed in",
+    "object": "descartes highlands",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "Apollo 16 landed in the Descartes Highlands in 1972.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 16",
+    "predicate": "landed in",
+    "object": "1972",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 16 landed in the Descartes Highlands in 1972.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 17",
+    "predicate": "launched in",
+    "object": "december 1972",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo 17",
+    "predicate": "was final",
+    "object": "lunar landing",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "commanded",
+    "object": "apollo 17",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "is",
+    "object": "geologist",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "walked on",
+    "object": "moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "is",
+    "object": "professional scientist",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "spent in",
+    "object": "taurus-littrow valley",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "spent in",
+    "object": "taurus-littrow valley",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "spent",
+    "object": "three days",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "spent",
+    "object": "three days",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "ronald evans",
+    "predicate": "orbited",
+    "object": "moon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "ronald evans",
+    "predicate": "member of",
+    "object": "apollo 17",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "member of",
+    "object": "apollo 17",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "member of",
+    "object": "apollo 17",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "Apollo 17, launched in December 1972, was the final lunar landing.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "left",
+    "object": "lunar surface",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Commander Gene Cernan and geologist Harrison Schmitt, the only professional scientist to walk on the Moon, spent three days in the Taurus-Littrow valley while Ronald Evans orbited above.",
+    "chunk": 2
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "was last",
+    "object": "person",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Armstrong became the first person to walk on the Moon, followed by Aldrin; they spent about two and a half hours outside, collected 21.5 kilograms of samples and deployed experiments including a seismometer and a laser reflector.",
+    "chunk": 2
+  },
+  {
+    "subject": "twelve astronauts",
+    "predicate": "walked on",
+    "object": "moon",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "twelve astronauts",
+    "predicate": "brought back",
+    "object": "lunar rock",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "twelve astronauts",
+    "predicate": "brought back",
+    "object": "lunar soil",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "lunar rock",
+    "predicate": "weighed",
+    "object": "382 kilograms",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "lunar soil",
+    "predicate": "weighed",
+    "object": "382 kilograms",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "twelve astronauts",
+    "predicate": "walked across",
+    "object": "six landings",
+    "subject_type": "concept",
+    "object_type": "event",
+    "source": "In total, twelve astronauts walked on the Moon across six landings and brought back 382 kilograms of lunar rock and soil.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo hardware",
+    "predicate": "launched",
+    "object": "skylab space station",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo hardware",
+    "predicate": "launched in",
+    "object": "1973",
+    "subject_type": "technology",
+    "object_type": "date",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo hardware",
+    "predicate": "flew",
+    "object": "apollo-soyuz test project",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo-soyuz test project",
+    "predicate": "with",
+    "object": "soviet union",
+    "subject_type": "event",
+    "object_type": "organization",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo-soyuz test project",
+    "predicate": "occurred in",
+    "object": "1975",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo-soyuz test project",
+    "predicate": "was first",
+    "object": "international crewed space mission",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Apollo hardware later launched the Skylab space station in 1973 and flew the Apollo-Soyuz Test Project with the Soviet Union in 1975, the first international crewed space mission.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "cost",
+    "object": "25.4 billion dollars",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "employed",
+    "object": "400,000 people",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "employed at peak",
+    "object": "400,000 people",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "part of",
+    "object": "apollo program",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "is",
+    "object": "most powerful rocket",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "flown until",
+    "object": "2020s",
+    "subject_type": "technology",
+    "object_type": "date",
+    "source": "The program cost about 25.4 billion dollars, employed some 400,000 people at its peak, and its Saturn V remains the most powerful rocket successfully flown until the 2020s.",
+    "chunk": 2
+  },
+  {
+    "subject": "apollo-soyuz test project",
+    "predicate": "used",
+    "object": "command module",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo hardware",
+    "predicate": "used in",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 12",
+    "predicate": "part of",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 12",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "alan bean",
+    "predicate": "walked on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 15",
+    "predicate": "part of",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 15",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "lunar roving vehicle",
+    "predicate": "used on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 14",
+    "predicate": "part of",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 14",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "walked on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "investigation",
+    "predicate": "followed",
+    "object": "fire",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "redesigned hatch",
+    "predicate": "used on",
+    "object": "command module",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "cabin atmosphere",
+    "predicate": "contained in",
+    "object": "command module",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 16",
+    "predicate": "part of",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 16",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "apollo 16",
+    "predicate": "preceded",
+    "object": "apollo 17",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "project gemini",
+    "predicate": "preceded",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "alan shepard",
+    "predicate": "member of",
+    "object": "apollo program",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "achieved",
+    "object": "moon landing",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "collected",
+    "object": "samples",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 11",
+    "predicate": "deployed",
+    "object": "experiments",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "apollo 11",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "apollo 8",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "apollo 13",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "saturn v",
+    "predicate": "launched",
+    "object": "apollo 17",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "command module",
+    "predicate": "carried",
+    "object": "apollo 11 crew",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "command module",
+    "predicate": "orbited",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "lunar module",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "eagle",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "eagle",
+    "predicate": "separated from",
+    "object": "command module",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 13",
+    "predicate": "used",
+    "object": "lunar module",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 13",
+    "predicate": "aborted",
+    "object": "moon landing",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 17",
+    "predicate": "landed on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 17",
+    "predicate": "used",
+    "object": "lunar roving vehicle",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo 17",
+    "predicate": "collected",
+    "object": "samples",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "gene cernan",
+    "predicate": "walked on",
+    "object": "moon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "harrison schmitt",
+    "predicate": "collected",
+    "object": "samples",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "included",
+    "object": "apollo 13",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "apollo program",
+    "predicate": "included",
+    "object": "apollo 17",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "16 july 1969",
+    "predicate": "preceded",
+    "object": "20 july",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "16 july 1969",
+    "predicate": "preceded",
+    "object": "24 july",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "16 july 1969",
+    "predicate": "occurred after",
+    "object": "may 1969",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "20 july",
+    "predicate": "preceded",
+    "object": "24 july",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "21.5 kilograms",
+    "predicate": "part of",
+    "object": "382 kilograms",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "25 may 1961",
+    "predicate": "preceded",
+    "object": "may 1969",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "400,000 people",
+    "predicate": "supported",
+    "object": "first people",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "apollo 1",
+    "predicate": "preceded",
+    "object": "apollo 10",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "apollo 1",
+    "predicate": "preceded",
+    "object": "apollo 11",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "apollo 1",
+    "predicate": "preceded",
+    "object": "apollo 11 crew",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "first human in space",
+    "predicate": "preceded",
+    "object": "international crewed space mission",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "first human in space",
+    "predicate": "preceded",
+    "object": "skylab space station",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "international crewed space mission",
+    "predicate": "followed",
+    "object": "skylab space station",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "command and service module",
+    "predicate": "involves",
+    "object": "service module",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "first person on moon",
+    "predicate": "involves",
+    "object": "person",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "international crewed space mission",
+    "predicate": "is a",
+    "object": "mission",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "lunar orbit rendezvous",
+    "predicate": "is a",
+    "object": "rendezvous",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "lunar orbit rendezvous",
+    "predicate": "involves",
+    "object": "lunar orbit",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "mission mode",
+    "predicate": "involves",
+    "object": "mission",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "oxygen tank explosion",
+    "predicate": "involves",
+    "object": "oxygen tank",
+    "inferred": true,
+    "method": "taxonomy"
+  }
+]

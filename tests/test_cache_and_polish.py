@@ -85,3 +85,22 @@ def test_show_inferred_option_reaches_the_page(tmp_path):
     assert "localStorage" not in html2
     assert 'id="path-target"' in html and "function findPath" in html
     assert build_graph_data(SAMPLE_TRIPLES)["meta"]["showInferred"] is True
+
+
+def test_display_name_title_cases_lowercase_names_only():
+    from knowledge_graph.visualization import display_name
+    assert display_name("steam engine") == "Steam Engine"
+    assert display_name("internet of things") == "Internet of Things"
+    assert display_name("mid-20th century") == "Mid-20th Century"
+    assert display_name("self-driving cars") == "Self-Driving Cars"
+    assert display_name("IBM") == "IBM" and display_name("Digital Revolution") == "Digital Revolution"
+    assert display_name("") == ""
+
+
+def test_graph_data_labels_are_display_names_but_ids_unchanged():
+    triples = [{"subject": "steam engine", "predicate": "powered", "object": "railways"}]
+    data = build_graph_data(triples)
+    by_id = {n["id"]: n["label"] for n in data["nodes"]}
+    assert by_id == {"steam engine": "Steam Engine", "railways": "Railways"}
+    assert {n["label"] for n in build_graph_data(triples, title_case=False)["nodes"]} == {"steam engine", "railways"}
+    assert data["edges"][0]["from"] == "steam engine"

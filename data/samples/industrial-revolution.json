@@ -1,0 +1,3032 @@
+[
+  {
+    "subject": "industrial revolution",
+    "predicate": "originated in",
+    "object": "great britain",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "occurred in",
+    "object": "late 18th century",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "represented",
+    "object": "turning point",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "affected",
+    "object": "human history",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "marked by",
+    "object": "transition",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "transitioned from",
+    "object": "manual labor",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "transitioned from",
+    "object": "agrarian economies",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "transitioned to",
+    "object": "machine-based manufacturing",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "driven by",
+    "object": "inventions",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "driven by",
+    "object": "socioeconomic shifts",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "machine-based manufacturing",
+    "predicate": "replaced",
+    "object": "manual labor",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Marked by a transition from manual labor and agrarian economies to machine-based manufacturing, this era was driven by groundbreaking inventions and socioeconomic shifts.",
+    "chunk": 1
+  },
+  {
+    "subject": "agrarian economies",
+    "predicate": "based on",
+    "object": "manual labor",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Marked by a transition from manual labor and agrarian economies to machine-based manufacturing, this era was driven by groundbreaking inventions and socioeconomic shifts.",
+    "chunk": 1
+  },
+  {
+    "subject": "innovations",
+    "predicate": "occurred in",
+    "object": "textiles",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "spinning jenny",
+    "predicate": "invented by",
+    "object": "james hargreaves",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "water frame",
+    "predicate": "invented by",
+    "object": "richard arkwright",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "spinning jenny",
+    "predicate": "used in",
+    "object": "textiles",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "water frame",
+    "predicate": "used in",
+    "object": "textiles",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "spinning jenny",
+    "predicate": "accelerated",
+    "object": "production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "water frame",
+    "predicate": "accelerated",
+    "object": "production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "innovations",
+    "predicate": "accelerated",
+    "object": "production",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "factories",
+    "predicate": "replaced",
+    "object": "cottage industries",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Early innovations, particularly in textiles, such as James Hargreaves' spinning jenny and Richard Arkwright's water frame, accelerated production dramatically, enabling factories to replace cottage industries.",
+    "chunk": 1
+  },
+  {
+    "subject": "first industrial revolution",
+    "predicate": "part of",
+    "object": "industrial revolution",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "catalyst of",
+    "object": "first industrial revolution",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "james watt",
+    "predicate": "refined",
+    "object": "steam engine",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "james watt",
+    "predicate": "was",
+    "object": "engineer",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "adopted in",
+    "object": "manufacturing",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "adopted in",
+    "object": "mining",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "adopted in",
+    "object": "transportation",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam-powered locomotives",
+    "predicate": "revolutionized",
+    "object": "transport",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Steam-powered locomotives and ships revolutionized transport, linking previously distant markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam-powered ships",
+    "predicate": "revolutionized",
+    "object": "transport",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "transport",
+    "predicate": "linked",
+    "object": "markets",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Steam-powered locomotives and ships revolutionized transport, linking previously distant markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "railway",
+    "predicate": "interconnected",
+    "object": "continents",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "railway",
+    "predicate": "facilitated",
+    "object": "urbanization",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "liverpool-manchester railway",
+    "predicate": "is",
+    "object": "railway",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "transcontinental railroad",
+    "predicate": "is",
+    "object": "railway",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "liverpool-manchester railway",
+    "predicate": "located in",
+    "object": "great britain",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "transcontinental railroad",
+    "predicate": "located in",
+    "object": "america",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "manchester",
+    "predicate": "is",
+    "object": "industrial cities",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Railways, exemplified by Britain's Liverpool-Manchester Railway and America's Transcontinental Railroad, interconnected continents and facilitated rapid urbanization.",
+    "chunk": 1
+  },
+  {
+    "subject": "birmingham",
+    "predicate": "is",
+    "object": "industrial cities",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "pittsburgh",
+    "predicate": "is",
+    "object": "industrial cities",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "lowell",
+    "predicate": "is",
+    "object": "industrial cities",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial cities",
+    "predicate": "became epicenters of",
+    "object": "production",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial cities",
+    "predicate": "became epicenters of",
+    "object": "trade",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial cities",
+    "predicate": "became epicenters of",
+    "object": "migration",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial cities",
+    "predicate": "suffered",
+    "object": "overcrowded conditions",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial cities",
+    "predicate": "suffered",
+    "object": "unsanitary conditions",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Industrial cities such as Manchester, Birmingham, Pittsburgh, and Lowell became epicenters of production, trade, and migration, although often suffering from overcrowded and unsanitary conditions.",
+    "chunk": 1
+  },
+  {
+    "subject": "agriculture advances",
+    "predicate": "allowed",
+    "object": "food production",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "chunk": 1
+  },
+  {
+    "subject": "agriculture advances",
+    "predicate": "allowed",
+    "object": "raw material production",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "eli whitney",
+    "predicate": "invented",
+    "object": "cotton gin",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "cyrus mccormick",
+    "predicate": "invented",
+    "object": "mechanical reaper",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "cotton gin",
+    "predicate": "enabled",
+    "object": "raw material production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "mechanical reaper",
+    "predicate": "enabled",
+    "object": "food production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "food production",
+    "predicate": "fed",
+    "object": "urban expansion",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "raw material production",
+    "predicate": "fed",
+    "object": "urban expansion",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Simultaneously, advances in agriculture, notably the development of Eli Whitney's cotton gin and Cyrus McCormick’s mechanical reaper, allowed more efficient food and raw material production, feeding urban expansion.",
+    "chunk": 1
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "shaped",
+    "object": "capitalism",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Economically, capitalism matured significantly, shaped by thinkers like Adam Smith, whose seminal work, The Wealth of Nations, laid ideological foundations for free-market economies.",
+    "chunk": 1
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "wrote",
+    "object": "the wealth of nations",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "Economically, capitalism matured significantly, shaped by thinkers like Adam Smith, whose seminal work, The Wealth of Nations, laid ideological foundations for free-market economies.",
+    "chunk": 1
+  },
+  {
+    "subject": "the wealth of nations",
+    "predicate": "laid foundations for",
+    "object": "free-market economies",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "Economically, capitalism matured significantly, shaped by thinkers like Adam Smith, whose seminal work, The Wealth of Nations, laid ideological foundations for free-market economies.",
+    "chunk": 1
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "influenced",
+    "object": "free-market economies",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Economically, capitalism matured significantly, shaped by thinkers like Adam Smith, whose seminal work, The Wealth of Nations, laid ideological foundations for free-market economies.",
+    "chunk": 1
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "was",
+    "object": "thinker",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Economically, capitalism matured significantly, shaped by thinkers like Adam Smith, whose seminal work, The Wealth of Nations, laid ideological foundations for free-market economies.",
+    "chunk": 1
+  },
+  {
+    "subject": "industrial boom",
+    "predicate": "led to",
+    "object": "labor conditions",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "However, the initial industrial boom led to harsh labor conditions, prompting social movements for reform.",
+    "chunk": 1
+  },
+  {
+    "subject": "labor conditions",
+    "predicate": "prompted",
+    "object": "social movements",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "However, the initial industrial boom led to harsh labor conditions, prompting social movements for reform.",
+    "chunk": 1
+  },
+  {
+    "subject": "social movements",
+    "predicate": "advocated",
+    "object": "reform",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "However, the initial industrial boom led to harsh labor conditions, prompting social movements for reform.",
+    "chunk": 1
+  },
+  {
+    "subject": "robert owen",
+    "predicate": "was",
+    "object": "activist",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Activists such as Robert Owen promoted improved worker conditions, founding utopian communities like New Lanark.",
+    "chunk": 1
+  },
+  {
+    "subject": "robert owen",
+    "predicate": "promoted",
+    "object": "worker conditions",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Activists such as Robert Owen promoted improved worker conditions, founding utopian communities like New Lanark.",
+    "chunk": 1
+  },
+  {
+    "subject": "robert owen",
+    "predicate": "founded",
+    "object": "new lanark",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Activists such as Robert Owen promoted improved worker conditions, founding utopian communities like New Lanark.",
+    "chunk": 1
+  },
+  {
+    "subject": "activism",
+    "predicate": "spurred",
+    "object": "legislation",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "This activism spurred legislation like Britain's Factory Acts, which limited child labor and introduced workplace safety regulations.",
+    "chunk": 1
+  },
+  {
+    "subject": "factory acts",
+    "predicate": "were",
+    "object": "legislation",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "This activism spurred legislation like Britain's Factory Acts, which limited child labor and introduced workplace safety regulations.",
+    "chunk": 1
+  },
+  {
+    "subject": "factory acts",
+    "predicate": "limited",
+    "object": "child labor",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "This activism spurred legislation like Britain's Factory Acts, which limited child labor and introduced workplace safety regulations.",
+    "chunk": 1
+  },
+  {
+    "subject": "factory acts",
+    "predicate": "introduced",
+    "object": "workplace safety regulations",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "This activism spurred legislation like Britain's Factory Acts, which limited child labor and introduced workplace safety regulations.",
+    "chunk": 1
+  },
+  {
+    "subject": "factory acts",
+    "predicate": "located in",
+    "object": "great britain",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "The Industrial Revolution, originating in Great Britain during the late 18th century, represented one of the most significant turning points in human history.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "part of",
+    "object": "industrial revolution",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "occurred in",
+    "object": "late 19th century",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "occurred in",
+    "object": "early 20th century",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "built upon",
+    "object": "first industrial revolution",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "A key catalyst of the First Industrial Revolution was the refinement of the steam engine by Scottish engineer James Watt, enabling widespread adoption in manufacturing, mining, and transportation.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "involved",
+    "object": "electricity",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "involved",
+    "object": "steel",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "involved",
+    "object": "chemicals",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "involved",
+    "object": "communications",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "henry ford",
+    "predicate": "pioneered",
+    "object": "mass-production methods",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "henry ford",
+    "predicate": "pioneered",
+    "object": "assembly line",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "assembly line",
+    "predicate": "reduced",
+    "object": "costs",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "assembly line",
+    "predicate": "reshaped",
+    "object": "consumer markets",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "mass-production methods",
+    "predicate": "reduced",
+    "object": "costs",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "mass-production methods",
+    "predicate": "reshaped",
+    "object": "consumer markets",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Innovations included the mass-production methods pioneered by Henry Ford, notably the assembly line, dramatically reducing costs and reshaping consumer markets.",
+    "chunk": 1
+  },
+  {
+    "subject": "alexander graham bell",
+    "predicate": "invented",
+    "object": "telephone",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "guglielmo marconi",
+    "predicate": "invented",
+    "object": "radio",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "telephone",
+    "predicate": "revolutionized",
+    "object": "global communications",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "radio",
+    "predicate": "revolutionized",
+    "object": "global communications",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "global communications",
+    "predicate": "enhanced",
+    "object": "interconnectedness",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "global communications",
+    "predicate": "enhanced",
+    "object": "cultural exchange",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Simultaneously, the invention of the telephone by Alexander Graham Bell and the radio by Guglielmo Marconi revolutionized global communications, enhancing interconnectedness and cultural exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "henry bessemer",
+    "predicate": "developed",
+    "object": "bessemer process",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Technological advancements like the Bessemer Process, developed by Henry Bessemer, revolutionized steel production, driving construction and infrastructure projects such as skyscrapers and bridges.",
+    "chunk": 1
+  },
+  {
+    "subject": "bessemer process",
+    "predicate": "revolutionized",
+    "object": "steel production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Technological advancements like the Bessemer Process, developed by Henry Bessemer, revolutionized steel production, driving construction and infrastructure projects such as skyscrapers and bridges.",
+    "chunk": 1
+  },
+  {
+    "subject": "steel production",
+    "predicate": "drove",
+    "object": "construction",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Technological advancements like the Bessemer Process, developed by Henry Bessemer, revolutionized steel production, driving construction and infrastructure projects such as skyscrapers and bridges.",
+    "chunk": 1
+  },
+  {
+    "subject": "steel production",
+    "predicate": "drove",
+    "object": "infrastructure projects",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Technological advancements like the Bessemer Process, developed by Henry Bessemer, revolutionized steel production, driving construction and infrastructure projects such as skyscrapers and bridges.",
+    "chunk": 1
+  },
+  {
+    "subject": "thomas edison",
+    "predicate": "spearheaded",
+    "object": "electrification",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "nikola tesla",
+    "predicate": "spearheaded",
+    "object": "electrification",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrification",
+    "predicate": "brought",
+    "object": "electric lighting",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrification",
+    "predicate": "brought",
+    "object": "motors",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrification",
+    "predicate": "brought",
+    "object": "appliances",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electric lighting",
+    "predicate": "used in",
+    "object": "homes",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "motors",
+    "predicate": "used in",
+    "object": "factories",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "appliances",
+    "predicate": "used in",
+    "object": "homes",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrification",
+    "predicate": "transformed",
+    "object": "daily life",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrification",
+    "predicate": "accelerated",
+    "object": "urban growth",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Electrification, spearheaded by inventors like Thomas Edison and Nikola Tesla, brought electric lighting, motors, and appliances into homes and factories, transforming daily life and further accelerating urban growth.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "experienced",
+    "object": "labor movements",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "experienced",
+    "object": "workers' rights organizations",
+    "subject_type": "event",
+    "object_type": "organization",
+    "source": "The Second Industrial Revolution, occurring roughly between the late 19th and early 20th centuries, built upon these foundations through breakthroughs in electricity, steel, chemicals, and communications.",
+    "chunk": 1
+  },
+  {
+    "subject": "labor movements",
+    "predicate": "responded to",
+    "object": "industrial enterprises",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "This period also experienced the rise of significant labor movements and workers' rights organizations, responding to conditions in rapidly growing industrial enterprises.",
+    "chunk": 1
+  },
+  {
+    "subject": "workers' rights organizations",
+    "predicate": "responded to",
+    "object": "industrial enterprises",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "This period also experienced the rise of significant labor movements and workers' rights organizations, responding to conditions in rapidly growing industrial enterprises.",
+    "chunk": 1
+  },
+  {
+    "subject": "karl marx",
+    "predicate": "was",
+    "object": "philosopher",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "friedrich engels",
+    "predicate": "was",
+    "object": "philosopher",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "karl marx",
+    "predicate": "critiqued",
+    "object": "capitalism",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "friedrich engels",
+    "predicate": "critiqued",
+    "object": "capitalism",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "karl marx",
+    "predicate": "wrote",
+    "object": "the communist manifesto",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "friedrich engels",
+    "predicate": "wrote",
+    "object": "the communist manifesto",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "the communist manifesto",
+    "predicate": "impacted",
+    "object": "political systems",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "Ideological critiques of capitalism emerged prominently through philosophers and activists like Karl Marx and Friedrich Engels, whose influential works, including The Communist Manifesto, profoundly impacted political systems worldwide.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "part of",
+    "object": "industrial revolution",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "followed",
+    "object": "world war ii",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "humanity",
+    "predicate": "entered",
+    "object": "third industrial revolution",
+    "subject_type": "concept",
+    "object_type": "event",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "occurred in",
+    "object": "mid-20th century",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "occurred in",
+    "object": "late 20th century",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "termed",
+    "object": "digital revolution",
+    "subject_type": "event",
+    "object_type": "event",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "characterized by",
+    "object": "electronics",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "characterized by",
+    "object": "computing",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "characterized by",
+    "object": "automation",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Following World War II, humanity entered the Third Industrial Revolution, often termed the Digital Revolution, beginning around the mid-20th century and extending into the late 20th century.",
+    "chunk": 1
+  },
+  {
+    "subject": "bell labs",
+    "predicate": "invented",
+    "object": "transistor",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "transistor",
+    "predicate": "paved way for",
+    "object": "modern computing devices",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "integrated circuit",
+    "predicate": "paved way for",
+    "object": "modern computing devices",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "altered",
+    "object": "industries",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "altered",
+    "object": "manufacturing",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "altered",
+    "object": "finance",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "altered",
+    "object": "entertainment",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "altered",
+    "object": "healthcare",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 1
+  },
+  {
+    "subject": "era",
+    "predicate": "characterized by",
+    "object": "electronics",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "This era was characterized by transformative developments in electronics, computing, and automation.",
+    "chunk": 2
+  },
+  {
+    "subject": "era",
+    "predicate": "characterized by",
+    "object": "computing",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "This era was characterized by transformative developments in electronics, computing, and automation.",
+    "chunk": 2
+  },
+  {
+    "subject": "era",
+    "predicate": "characterized by",
+    "object": "automation",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "This era was characterized by transformative developments in electronics, computing, and automation.",
+    "chunk": 2
+  },
+  {
+    "subject": "transistor",
+    "predicate": "invented by",
+    "object": "bell labs",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "transistor",
+    "predicate": "paved way",
+    "object": "modern computing devices",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "integrated circuit",
+    "predicate": "paved way",
+    "object": "modern computing devices",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "industries",
+    "predicate": "include",
+    "object": "manufacturing",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "industries",
+    "predicate": "include",
+    "object": "finance",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "industries",
+    "predicate": "include",
+    "object": "entertainment",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "industries",
+    "predicate": "include",
+    "object": "healthcare",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The invention of the transistor by researchers at Bell Labs and later, the integrated circuit, paved the way for modern computing devices, drastically altering industries, from manufacturing and finance to entertainment and healthcare.",
+    "chunk": 2
+  },
+  {
+    "subject": "steve jobs",
+    "predicate": "popularized",
+    "object": "personal computing",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "steve wozniak",
+    "predicate": "popularized",
+    "object": "personal computing",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "bill gates",
+    "predicate": "popularized",
+    "object": "personal computing",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "democratized",
+    "object": "information technology",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "transformed",
+    "object": "societal interactions",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "transformed",
+    "object": "business practices",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Personal computing, popularized by pioneers like Steve Jobs, Steve Wozniak, and Bill Gates, democratized access to information technology, transforming societal interactions and business practices.",
+    "chunk": 2
+  },
+  {
+    "subject": "internet",
+    "predicate": "developed by",
+    "object": "darpa",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "The creation of the Internet, initially developed by agencies like DARPA and expanded globally with contributions from visionaries such as Tim Berners-Lee, enabled instantaneous communication and unprecedented information sharing worldwide, ushering in the Information Age.",
+    "chunk": 2
+  },
+  {
+    "subject": "tim berners-lee",
+    "predicate": "contributed to",
+    "object": "internet",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "The creation of the Internet, initially developed by agencies like DARPA and expanded globally with contributions from visionaries such as Tim Berners-Lee, enabled instantaneous communication and unprecedented information sharing worldwide, ushering in the Information Age.",
+    "chunk": 2
+  },
+  {
+    "subject": "internet",
+    "predicate": "enabled",
+    "object": "instantaneous communication",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The creation of the Internet, initially developed by agencies like DARPA and expanded globally with contributions from visionaries such as Tim Berners-Lee, enabled instantaneous communication and unprecedented information sharing worldwide, ushering in the Information Age.",
+    "chunk": 2
+  },
+  {
+    "subject": "internet",
+    "predicate": "enabled",
+    "object": "information sharing",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The creation of the Internet, initially developed by agencies like DARPA and expanded globally with contributions from visionaries such as Tim Berners-Lee, enabled instantaneous communication and unprecedented information sharing worldwide, ushering in the Information Age.",
+    "chunk": 2
+  },
+  {
+    "subject": "internet",
+    "predicate": "ushered in",
+    "object": "information age",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "The creation of the Internet, initially developed by agencies like DARPA and expanded globally with contributions from visionaries such as Tim Berners-Lee, enabled instantaneous communication and unprecedented information sharing worldwide, ushering in the Information Age.",
+    "chunk": 2
+  },
+  {
+    "subject": "automation",
+    "predicate": "altered",
+    "object": "manufacturing industries",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "robotics",
+    "predicate": "altered",
+    "object": "manufacturing industries",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "toyota",
+    "predicate": "pioneered",
+    "object": "robotic assembly lines",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "robotic assembly lines",
+    "predicate": "improved",
+    "object": "efficiency",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "robotic assembly lines",
+    "predicate": "improved",
+    "object": "product consistency",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "technology",
+    "predicate": "enabled",
+    "object": "mass customization",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "technology",
+    "predicate": "enabled",
+    "object": "just-in-time production",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "mass customization",
+    "predicate": "reshaped",
+    "object": "global supply chains",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "just-in-time production",
+    "predicate": "reshaped",
+    "object": "global supply chains",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "mass customization",
+    "predicate": "reshaped",
+    "object": "economic structures",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "just-in-time production",
+    "predicate": "reshaped",
+    "object": "economic structures",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "These technologies enabled mass customization and just-in-time production, reshaping global supply chains and economic structures.",
+    "chunk": 2
+  },
+  {
+    "subject": "digital revolution",
+    "predicate": "preceded",
+    "object": "mobile communications",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "mobile communications",
+    "predicate": "represented by",
+    "object": "cellular technologies",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "cellular technologies",
+    "predicate": "developed by",
+    "object": "motorola",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "cellular technologies",
+    "predicate": "developed by",
+    "object": "nokia",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "cellular technologies",
+    "predicate": "developed by",
+    "object": "apple",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "cellular technologies",
+    "predicate": "developed by",
+    "object": "samsung",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "mobile communications",
+    "predicate": "reshaped",
+    "object": "global interactions",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "As the Digital Revolution matured, the emergence of mobile communications, represented by the development of cellular technologies by companies such as Motorola, Nokia, and later Apple and Samsung, further reshaped global interactions.",
+    "chunk": 2
+  },
+  {
+    "subject": "amazon",
+    "predicate": "spearheaded",
+    "object": "e-commerce",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "The rise of e-commerce, spearheaded by platforms like Amazon and Alibaba, transformed retail, logistics, and consumer behavior at a global scale.",
+    "chunk": 2
+  },
+  {
+    "subject": "alibaba",
+    "predicate": "spearheaded",
+    "object": "e-commerce",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "The rise of e-commerce, spearheaded by platforms like Amazon and Alibaba, transformed retail, logistics, and consumer behavior at a global scale.",
+    "chunk": 2
+  },
+  {
+    "subject": "e-commerce",
+    "predicate": "transformed",
+    "object": "retail",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The rise of e-commerce, spearheaded by platforms like Amazon and Alibaba, transformed retail, logistics, and consumer behavior at a global scale.",
+    "chunk": 2
+  },
+  {
+    "subject": "e-commerce",
+    "predicate": "transformed",
+    "object": "logistics",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The rise of e-commerce, spearheaded by platforms like Amazon and Alibaba, transformed retail, logistics, and consumer behavior at a global scale.",
+    "chunk": 2
+  },
+  {
+    "subject": "e-commerce",
+    "predicate": "transformed",
+    "object": "consumer behavior",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The rise of e-commerce, spearheaded by platforms like Amazon and Alibaba, transformed retail, logistics, and consumer behavior at a global scale.",
+    "chunk": 2
+  },
+  {
+    "subject": "humanity",
+    "predicate": "experiencing",
+    "object": "fourth industrial revolution",
+    "subject_type": "concept",
+    "object_type": "event",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "involves",
+    "object": "physical domains",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "involves",
+    "object": "digital domains",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "involves",
+    "object": "biological domains",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "artificial intelligence",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "machine learning",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "robotics",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "Advancements in automation and robotics significantly altered manufacturing industries, exemplified by companies like Toyota, which pioneered robotic assembly lines to improve efficiency and product consistency.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "biotechnology",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "quantum computing",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "blockchain",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "centers around",
+    "object": "internet of things",
+    "subject_type": "event",
+    "object_type": "technology",
+    "source": "In recent decades, humanity has begun experiencing the Fourth Industrial Revolution, distinguished by the fusion of physical, digital, and biological domains.",
+    "chunk": 2
+  },
+  {
+    "subject": "openai",
+    "predicate": "advanced",
+    "object": "artificial intelligence",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "google",
+    "predicate": "advanced",
+    "object": "artificial intelligence",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "microsoft",
+    "predicate": "advanced",
+    "object": "artificial intelligence",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "ibm",
+    "predicate": "advanced",
+    "object": "artificial intelligence",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "enabled",
+    "object": "natural language processing",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "enabled",
+    "object": "predictive analytics",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "enabled",
+    "object": "autonomous vehicles",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "enabled",
+    "object": "smart assistant",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "chatgpt",
+    "predicate": "is",
+    "object": "smart assistant",
+    "subject_type": "product",
+    "object_type": "technology",
+    "source": "AI development, advanced by research institutions and corporations including OpenAI, Google, Microsoft, and IBM, has enabled capabilities such as natural language processing, predictive analytics, autonomous vehicles, and smart assistants like ChatGPT.",
+    "chunk": 2
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "fundamental in",
+    "object": "healthcare",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Machine learning algorithms are now fundamental in fields like healthcare, finance, and manufacturing, enabling sophisticated predictive modeling and optimization of processes.",
+    "chunk": 2
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "fundamental in",
+    "object": "finance",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Machine learning algorithms are now fundamental in fields like healthcare, finance, and manufacturing, enabling sophisticated predictive modeling and optimization of processes.",
+    "chunk": 2
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "fundamental in",
+    "object": "manufacturing",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Machine learning algorithms are now fundamental in fields like healthcare, finance, and manufacturing, enabling sophisticated predictive modeling and optimization of processes.",
+    "chunk": 2
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "enables",
+    "object": "predictive modeling",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Machine learning algorithms are now fundamental in fields like healthcare, finance, and manufacturing, enabling sophisticated predictive modeling and optimization of processes.",
+    "chunk": 2
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "enables",
+    "object": "optimization",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Machine learning algorithms are now fundamental in fields like healthcare, finance, and manufacturing, enabling sophisticated predictive modeling and optimization of processes.",
+    "chunk": 2
+  },
+  {
+    "subject": "tesla",
+    "predicate": "championed",
+    "object": "autonomous vehicles",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "waymo",
+    "predicate": "championed",
+    "object": "autonomous vehicles",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "cruise",
+    "predicate": "championed",
+    "object": "autonomous vehicles",
+    "subject_type": "organization",
+    "object_type": "technology",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "autonomous vehicles",
+    "predicate": "reshaping",
+    "object": "transportation",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "autonomous vehicles",
+    "predicate": "reshaping",
+    "object": "logistics",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "autonomous vehicles",
+    "predicate": "affect",
+    "object": "urban planning",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "autonomous vehicles",
+    "predicate": "affect",
+    "object": "infrastructure",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Autonomous vehicles, championed by companies such as Tesla, Waymo, and Cruise, have begun reshaping transportation and logistics, promising significant changes in urban planning and infrastructure.",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "exemplified by",
+    "object": "bitcoin",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "exemplified by",
+    "object": "ethereum",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "bitcoin",
+    "predicate": "is",
+    "object": "cryptocurrency",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "ethereum",
+    "predicate": "is",
+    "object": "cryptocurrency",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "challenged",
+    "object": "financial institutions",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "This revolution centers around groundbreaking technologies such as artificial intelligence (AI), machine learning, robotics, biotechnology, quantum computing, blockchain, and the Internet of Things (IoT).",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "challenged",
+    "object": "legal institutions",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "introduced",
+    "object": "decentralized financial systems",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "blockchain",
+    "predicate": "introduced",
+    "object": "smart contracts",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Blockchain technology, exemplified by cryptocurrencies like Bitcoin and Ethereum, has challenged traditional financial and legal institutions by introducing decentralized financial systems and smart contracts.",
+    "chunk": 2
+  },
+  {
+    "subject": "biotechnology",
+    "predicate": "include",
+    "object": "crispr-cas9",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Biotechnology advancements, such as CRISPR-Cas9 gene editing, have introduced possibilities of addressing previously incurable diseases, significantly altering medicine and ethical considerations.",
+    "chunk": 2
+  },
+  {
+    "subject": "crispr-cas9",
+    "predicate": "is",
+    "object": "gene editing",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Biotechnology advancements, such as CRISPR-Cas9 gene editing, have introduced possibilities of addressing previously incurable diseases, significantly altering medicine and ethical considerations.",
+    "chunk": 2
+  },
+  {
+    "subject": "crispr-cas9",
+    "predicate": "addresses",
+    "object": "diseases",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Biotechnology advancements, such as CRISPR-Cas9 gene editing, have introduced possibilities of addressing previously incurable diseases, significantly altering medicine and ethical considerations.",
+    "chunk": 2
+  },
+  {
+    "subject": "crispr-cas9",
+    "predicate": "alters",
+    "object": "medicine",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Biotechnology advancements, such as CRISPR-Cas9 gene editing, have introduced possibilities of addressing previously incurable diseases, significantly altering medicine and ethical considerations.",
+    "chunk": 2
+  },
+  {
+    "subject": "crispr-cas9",
+    "predicate": "raises",
+    "object": "ethical considerations",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Biotechnology advancements, such as CRISPR-Cas9 gene editing, have introduced possibilities of addressing previously incurable diseases, significantly altering medicine and ethical considerations.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "developed by",
+    "object": "ibm",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "developed by",
+    "object": "google",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "developed by",
+    "object": "mit",
+    "subject_type": "technology",
+    "object_type": "organization",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "promises",
+    "object": "computational power",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "revolutionizes",
+    "object": "cryptography",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "revolutionizes",
+    "object": "materials science",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "quantum computing",
+    "predicate": "revolutionizes",
+    "object": "pharmaceuticals",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Quantum computing, currently in early stages of development by organizations such as IBM, Google, and research institutions like MIT, promises unprecedented computational power, potentially revolutionizing fields like cryptography, materials science, and pharmaceuticals.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "raises",
+    "object": "economic inequality",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "As the Fourth Industrial Revolution unfolds, critical questions emerge concerning economic inequality, ethics, data privacy, and employment.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "raises",
+    "object": "ethics",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "As the Fourth Industrial Revolution unfolds, critical questions emerge concerning economic inequality, ethics, data privacy, and employment.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "raises",
+    "object": "data privacy",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "As the Fourth Industrial Revolution unfolds, critical questions emerge concerning economic inequality, ethics, data privacy, and employment.",
+    "chunk": 2
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "raises",
+    "object": "employment",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "As the Fourth Industrial Revolution unfolds, critical questions emerge concerning economic inequality, ethics, data privacy, and employment.",
+    "chunk": 2
+  },
+  {
+    "subject": "debates",
+    "predicate": "shaped by",
+    "object": "automation impact",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "debates",
+    "predicate": "shaped by",
+    "object": "privacy implications",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "debates",
+    "predicate": "shaped by",
+    "object": "ethical dimensions",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "automation",
+    "predicate": "impacts",
+    "object": "employment",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "data collection",
+    "predicate": "affect",
+    "object": "data privacy",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "As the Fourth Industrial Revolution unfolds, critical questions emerge concerning economic inequality, ethics, data privacy, and employment.",
+    "chunk": 2
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "has",
+    "object": "ethical dimensions",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "biotechnology",
+    "predicate": "has",
+    "object": "ethical dimensions",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Debates on how best to manage technological progress are shaped by concerns around automation’s impact on employment, privacy implications of pervasive data collection, and the ethical dimensions of artificial intelligence and biotechnology.",
+    "chunk": 2
+  },
+  {
+    "subject": "world economic forum",
+    "predicate": "engages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 2
+  },
+  {
+    "subject": "united nations",
+    "predicate": "engages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 2
+  },
+  {
+    "subject": "governments",
+    "predicate": "engages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 2
+  },
+  {
+    "subject": "institution",
+    "predicate": "manages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 2
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "transformed",
+    "object": "society",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "reshaped",
+    "object": "global economic systems",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "altered",
+    "object": "cultural norms",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "influenced",
+    "object": "human interactions",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "human interactions",
+    "predicate": "with",
+    "object": "technology",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 2
+  },
+  {
+    "subject": "human interactions",
+    "predicate": "with",
+    "object": "environment",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 2
+  },
+  {
+    "subject": "world economic forum",
+    "predicate": "is",
+    "object": "institution",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "united nations",
+    "predicate": "is",
+    "object": "institution",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "governments",
+    "predicate": "is",
+    "object": "institution",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "world economic forum",
+    "predicate": "engages with",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "united nations",
+    "predicate": "engages with",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "governments",
+    "predicate": "engages with",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "world economic forum",
+    "predicate": "manages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "united nations",
+    "predicate": "manages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "governments",
+    "predicate": "manages",
+    "object": "technological progress",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Institutions such as the World Economic Forum, the United Nations, and governments globally are actively engaging with these topics to manage technological progress responsibly.",
+    "chunk": 3
+  },
+  {
+    "subject": "human interactions",
+    "predicate": "involves",
+    "object": "technology",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "human interactions",
+    "predicate": "involves",
+    "object": "environment",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "narrative",
+    "predicate": "describes",
+    "object": "industrial revolution",
+    "subject_type": "concept",
+    "object_type": "event",
+    "source": "Collectively, these successive industrial revolutions have profoundly transformed society, reshaped global economic systems, altered cultural norms, and significantly influenced human interactions with technology and the environment.",
+    "chunk": 3
+  },
+  {
+    "subject": "narrative",
+    "predicate": "requires",
+    "object": "understanding",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "understanding",
+    "predicate": "essential for",
+    "object": "interplay",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "interplay",
+    "predicate": "involves",
+    "object": "technological innovation",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "interplay",
+    "predicate": "involves",
+    "object": "socioeconomic shifts",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "interplay",
+    "predicate": "involves",
+    "object": "global politics",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "interplay",
+    "predicate": "involves",
+    "object": "human civilization",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "technological innovation",
+    "predicate": "interacts with",
+    "object": "socioeconomic shifts",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "technological innovation",
+    "predicate": "interacts with",
+    "object": "global politics",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "technological innovation",
+    "predicate": "interacts with",
+    "object": "human civilization",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "socioeconomic shifts",
+    "predicate": "interacts with",
+    "object": "global politics",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "socioeconomic shifts",
+    "predicate": "interacts with",
+    "object": "human civilization",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "global politics",
+    "predicate": "interacts with",
+    "object": "human civilization",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Understanding this extensive and interconnected narrative is essential for grasping the complex interplay between technological innovation, socioeconomic shifts, global politics, and human civilization as a whole.",
+    "chunk": 3
+  },
+  {
+    "subject": "spinning jenny",
+    "predicate": "enabled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "water frame",
+    "predicate": "enabled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "textiles",
+    "predicate": "drove",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "electrification",
+    "predicate": "enabled",
+    "object": "second industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "electric lighting",
+    "predicate": "transformed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "capitalism",
+    "predicate": "drove",
+    "object": "socioeconomic shifts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "karl marx",
+    "predicate": "analyzed",
+    "object": "socioeconomic shifts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "analyzed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "agriculture advances",
+    "predicate": "enabled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "cotton gin",
+    "predicate": "fueled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "raw material production",
+    "predicate": "fueled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "global communications",
+    "predicate": "enhanced",
+    "object": "human interactions",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "telephone",
+    "predicate": "transformed",
+    "object": "human interactions",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "radio",
+    "predicate": "transformed",
+    "object": "human interactions",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "transformed",
+    "object": "human interactions",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "transformed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "internet",
+    "predicate": "enabled",
+    "object": "e-commerce",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "internet",
+    "predicate": "transformed",
+    "object": "human interactions",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "assembly line",
+    "predicate": "enabled",
+    "object": "second industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "mass-production methods",
+    "predicate": "drove",
+    "object": "socioeconomic shifts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "assembly line",
+    "predicate": "transformed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "steel production",
+    "predicate": "drove",
+    "object": "second industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "bessemer process",
+    "predicate": "enabled",
+    "object": "second industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "technological progress",
+    "predicate": "enabled",
+    "object": "fourth industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "governments",
+    "predicate": "regulate",
+    "object": "artificial intelligence",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "technological progress",
+    "predicate": "drives",
+    "object": "automation",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "robert owen",
+    "predicate": "influenced",
+    "object": "factory acts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "robotic assembly lines",
+    "predicate": "exemplify",
+    "object": "automation",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "toyota",
+    "predicate": "used",
+    "object": "automation",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "social movements",
+    "predicate": "led to",
+    "object": "factory acts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "industrial boom",
+    "predicate": "resulted from",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "steam-powered locomotives",
+    "predicate": "used",
+    "object": "steam engine",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "transport",
+    "predicate": "enabled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "steam-powered ships",
+    "predicate": "used",
+    "object": "steam engine",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "powered",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "second industrial revolution",
+    "predicate": "preceded",
+    "object": "third industrial revolution",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "preceded",
+    "object": "fourth industrial revolution",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "enabled",
+    "object": "personal computing",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "third industrial revolution",
+    "predicate": "enabled",
+    "object": "internet",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "internet",
+    "predicate": "enabled",
+    "object": "blockchain",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "enabled",
+    "object": "internet",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "enabled",
+    "object": "artificial intelligence",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "modern computing devices",
+    "predicate": "enabled",
+    "object": "machine learning",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "enabled",
+    "object": "automation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "enabled",
+    "object": "automation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "machine learning",
+    "predicate": "enabled",
+    "object": "autonomous vehicles",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "artificial intelligence",
+    "predicate": "depends on",
+    "object": "machine learning",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "technological progress",
+    "predicate": "enabled",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "created",
+    "object": "industrial cities",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "industrial revolution",
+    "predicate": "transformed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "electrification",
+    "predicate": "transformed",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "electrification",
+    "predicate": "enabled",
+    "object": "industrial cities",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "steam engine",
+    "predicate": "powered",
+    "object": "industries",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "cellular technologies",
+    "predicate": "enabled",
+    "object": "e-commerce",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "adam smith",
+    "predicate": "influenced",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "automation",
+    "predicate": "causes",
+    "object": "automation impact",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "biological domains",
+    "predicate": "overlap",
+    "object": "digital domains",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "biological domains",
+    "predicate": "overlap",
+    "object": "physical domains",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "biotechnology",
+    "predicate": "subfield of",
+    "object": "technology",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "child labor",
+    "predicate": "opposed by",
+    "object": "labor movements",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "child labor",
+    "predicate": "form of",
+    "object": "manual labor",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "communications",
+    "predicate": "include",
+    "object": "mobile communications",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "computing",
+    "predicate": "uses",
+    "object": "modern computing devices",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "computing",
+    "predicate": "include",
+    "object": "quantum computing",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "data privacy",
+    "predicate": "has implications",
+    "object": "privacy implications",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "overcrowded conditions",
+    "predicate": "caused",
+    "object": "unsanitary conditions",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "consumer markets",
+    "predicate": "is a",
+    "object": "markets",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "cottage industries",
+    "predicate": "is a",
+    "object": "industries",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "food production",
+    "predicate": "is a",
+    "object": "production",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "fourth industrial revolution",
+    "predicate": "is a",
+    "object": "industrial revolution",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "global communications",
+    "predicate": "is a",
+    "object": "communications",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "information technology",
+    "predicate": "is a",
+    "object": "technology",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "infrastructure projects",
+    "predicate": "involves",
+    "object": "infrastructure",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "internet of things",
+    "predicate": "involves",
+    "object": "internet",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "just-in-time production",
+    "predicate": "is a",
+    "object": "production",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "machine-based manufacturing",
+    "predicate": "is a",
+    "object": "manufacturing",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "manufacturing industries",
+    "predicate": "is a",
+    "object": "industries",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "manufacturing industries",
+    "predicate": "involves",
+    "object": "manufacturing",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "personal computing",
+    "predicate": "is a",
+    "object": "computing",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "raw material production",
+    "predicate": "is a",
+    "object": "production",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "steel production",
+    "predicate": "is a",
+    "object": "production",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "steel production",
+    "predicate": "involves",
+    "object": "steel",
+    "inferred": true,
+    "method": "taxonomy"
+  }
+]

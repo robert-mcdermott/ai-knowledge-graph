@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Graphs</title>
+<style>
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --border: #d0d7de; --accent: #0969da; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --border: #30363d; --accent: #388bfd; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+h1 { font-size: 22px; margin: 0 0 4px 0; }
+.sub { color: var(--muted); margin-bottom: 24px; }
+.card { display: block; text-decoration: none; color: inherit; border: 1px solid var(--border); background: var(--panel); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+.card:hover { border-color: var(--accent); }
+.card .name { font-weight: 650; font-size: 16px; }
+.card .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.empty { border: 1px dashed var(--border); border-radius: 10px; padding: 24px; color: var(--muted); }
+code { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+footer { color: var(--muted); font-size: 12px; margin-top: 32px; }
+details.new { border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; margin-bottom: 20px; background: var(--panel); }
+details.new summary { cursor: pointer; font-weight: 600; }
+details.new form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+details.new label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+details.new input[type=text], details.new input:not([type]), details.new textarea { font: inherit; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+details.new .row { display: flex; align-items: center; gap: 12px; }
+details.new .hint { font-size: 13px; color: var(--muted); }
+.btn { padding: 7px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.err { color: #cf222e; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Knowledge Graphs</h1>
+  <div class="sub">{{ graphs|length }} graph{{ '' if graphs|length == 1 else 's' }} in <code>{{ graphs_dir }}</code> · questions answered by <code>{{ model }}</code></div>
+  <details class="new" {% if not graphs %}open{% endif %}>
+    <summary>New graph from text or files</summary>
+    <form id="ingest" enctype="multipart/form-data">
+      <label>Name <input name="name" placeholder="my-document" maxlength="80"></label>
+      <label>Paste text <textarea name="text" rows="6" placeholder="Paste the text to analyse…"></textarea></label>
+      <label>…or upload files <input type="file" name="files" multiple accept=".txt,.md,.markdown,.rst,.text,.log,.pdf,.docx"></label>
+      <div class="row"><button class="btn" type="submit" {% if active_job %}disabled{% endif %}>Generate</button>
+        <span class="hint">{% if active_job %}A graph is being generated right now (<a href="/jobs/{{ active_job.id }}">progress</a>).{% else %}Runs the same pipeline as <code>generate-graph</code> with your configured model.{% endif %}</span></div>
+      <div class="err" id="ingest-error"></div>
+    </form>
+  </details>
+  {% if graphs %}
+    {% for g in graphs %}
+    <a class="card" href="/graph/{{ g.name | urlencode }}">
+      <div class="name">{{ g.name }}</div>
+      <div class="meta">{{ g.nodes }} nodes · {{ g.triples }} relationships ({{ g.inferred }} inferred) · {{ g.modified }}</div>
+    </a>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No graphs here yet. Use the form above, or run<br><code>generate-graph --input your_text.txt --output {{ graphs_dir }}/your_graph.html</code><br>and reload this page.</div>
+  {% endif %}
+  <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" style="color: inherit">AI-Knowledge-Graph</a> · local server, no accounts, bound to localhost by default</footer>
+</main>
+<script>
+const form = document.getElementById('ingest');
+if (form) form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = document.getElementById('ingest-error');
+  err.textContent = '';
+  const button = form.querySelector('button');
+  button.disabled = true;
+  try {
+    const res = await fetch('/api/ingest', { method: 'POST', body: new FormData(form) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || res.statusText);
+    location.href = data.page_url;
+  } catch (ex) {
+    err.textContent = ex.message || String(ex);
+    button.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

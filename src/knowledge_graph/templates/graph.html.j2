@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ title }}</title>
-<style>{{ vis_css }}</style>
+{% if vis_css_href %}<link rel="stylesheet" href="{{ vis_css_href }}">{% else %}<style>{{ vis_css }}</style>{% endif %}
 <style>
 :root {
   --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --panel-border: #d0d7de;
@@ -80,6 +80,23 @@ main { position: relative; flex: 1; min-height: 0; }
 #progress .bar { height: 6px; background: var(--panel-border); border-radius: 3px; overflow: hidden; margin-top: 8px; }
 #progress .bar div { height: 100%; width: 0; background: var(--accent); transition: width .1s; }
 #help { left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, 90%); }
+#chat { right: 12px; bottom: 12px; width: 380px; max-height: 55%; display: flex; flex-direction: column; }
+#chat.hidden { display: none; }
+#chat-log { flex: 1; overflow: auto; min-height: 120px; font-size: 13px; }
+#chat-log .q { font-weight: 600; margin: 8px 0 2px 0; }
+#chat-log .a { white-space: pre-wrap; }
+#chat-log .a .bullet { padding-left: 12px; }
+#chat-log .fact { display: flex; gap: 6px; align-items: baseline; padding: 2px 6px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+#chat-log .fact:hover { background: var(--bg); }
+#chat-log .fact .pred { color: var(--muted); font-style: italic; }
+#chat-log .fact .tag { font-size: 10px; padding: 0 5px; border-radius: 10px; border: 1px dashed var(--muted); color: var(--muted); }
+#chat-log .fact .tag.extracted { border-style: solid; }
+#chat-log .thinking, #chat-log .err { color: var(--muted); font-style: italic; }
+#chat-log .err { color: var(--danger); }
+#chat-form { display: flex; gap: 6px; margin-top: 8px; }
+#chat-form input { flex: 1; min-width: 0; padding: 6px 10px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+body.chat-open #details { max-height: 40%; }
+.topbar .back { color: var(--muted); text-decoration: none; font-size: 13px; margin-right: 4px; }
 #help table { font-size: 13px; }
 #help td { padding: 2px 10px 2px 0; }
 #help kbd { border: 1px solid var(--panel-border); border-radius: 4px; padding: 0 5px; background: var(--bg); }
@@ -107,6 +124,7 @@ footer a { color: inherit; text-decoration: none; }
 </head>
 <body>
 <header class="topbar">
+  <a class="back hidden" id="library-link" href="/" title="Back to the graph library">◀ Library</a>
   <div class="brand">Knowledge Graph<span class="counts" id="counts"></span></div>
   <div class="search"><input id="search" list="node-list" placeholder="Search nodes  ( / )" autocomplete="off"><datalist id="node-list"></datalist></div>
   <div class="actions">
@@ -126,6 +144,7 @@ footer a { color: inherit; text-decoration: none; }
       </div>
     </div>
     <button class="btn" id="btn-theme" title="Toggle dark mode (d)">Dark</button>
+    <button class="btn hidden" id="btn-chat" title="Ask questions about this graph (a)">Ask</button>
     <button class="btn" id="btn-help" title="Keyboard shortcuts (?)">?</button>
   </div>
 </header>
@@ -176,13 +195,19 @@ footer a { color: inherit; text-decoration: none; }
       <tr><td><kbd>l</kbd></td><td>Toggle node labels</td><td><kbd>e</kbd></td><td>Cycle edge labels</td></tr>
       <tr><td><kbd>i</kbd></td><td>Toggle inferred edges</td><td><kbd>p</kbd></td><td>Toggle physics</td></tr>
       <tr><td><kbd>s</kbd></td><td>Statistics</td><td><kbd>d</kbd></td><td>Toggle dark mode</td></tr>
+      <tr><td><kbd>a</kbd></td><td>Ask the graph (when served)</td><td></td><td></td></tr>
     </table>
     <p style="color: var(--muted); font-size: 12px; margin: 10px 0 0 0;">Click a node to highlight its neighbourhood and see its relationships. Double-click to zoom to it. Use "Path to another node" in the details panel to trace how two entities connect. Drag the canvas to pan, scroll to zoom.</p>
+  </div>
+  <div class="panel hidden" id="chat">
+    <h3>Ask the graph <span><button class="btn small" id="chat-reset" title="Forget the conversation">Reset</button> <button class="close" data-close="chat" title="Close">×</button></span></h3>
+    <div id="chat-log"><p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Answers use only the relationships in this graph and cite the facts they rely on. Click a cited fact to jump to it.</p></div>
+    <form id="chat-form"><input id="chat-input" placeholder="Ask a question…" autocomplete="off"><button class="btn on" type="submit">Send</button></form>
   </div>
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
 </main>
 
-<script>{{ vis_js }}</script>
+{% if vis_js_href %}<script src="{{ vis_js_href }}"></script>{% else %}<script>{{ vis_js }}</script>{% endif %}
 <script>
 const KG = {{ data_json }};
 </script>
@@ -192,9 +217,40 @@ const KG = {{ data_json }};
   const $ = (id) => document.getElementById(id);
   const meta = KG.meta;
   const nodes = new vis.DataSet(KG.nodes.map(n => Object.assign({}, n)));
-  const edges = new vis.DataSet(KG.edges.map(e => Object.assign({}, e)));
-  const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
+  // `relations` is every relationship (used by the details panel, paths, stats and exports).
+  // `edges` is what is drawn: with collapseParallelEdges, one edge per (from, to) pair with a "+N" badge.
+  const relations = KG.edges;
+  const hiddenRel = new Set();                 // relation ids hidden by the filters
+  const relVisible = r => !hiddenRel.has(r.id);
+  const visualEdges = [], visualOf = new Map(); // relation id -> drawn edge id
+  (function buildVisualEdges() {
+    const collapse = meta.collapseParallelEdges !== false;
+    const groups = new Map();
+    relations.forEach(r => {
+      const key = collapse ? r.from + '\u0000' + r.to : r.id;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    });
+    const pairs = new Set(relations.map(r => r.from + '\u0000' + r.to));
+    let n = 0;
+    groups.forEach(members => {
+      const first = members[0];
+      const allInferred = members.every(r => r.inferred);
+      const labels = Array.from(new Set(members.map(r => r.label)));
+      const e = { id: 'v' + (n++), from: first.from, to: first.to, arrows: 'to', members: members.map(r => r.id),
+                  label: labels[0] + (members.length > 1 ? ' +' + (members.length - 1) : ''),
+                  title: members.map(r => r.title).join('\n\n'), inferred: allInferred,
+                  color: (members.find(r => !r.inferred) || first).color };
+      if (allInferred) e.dashes = true;
+      if (pairs.has(first.to + '\u0000' + first.from)) e.smooth = { type: 'curvedCW', roundness: 0.15 };  // both directions exist
+      visualEdges.push(e);
+      members.forEach(r => visualOf.set(r.id, e.id));
+    });
+  })();
+  const edges = new vis.DataSet(visualEdges.map(e => Object.assign({}, e)));
+  const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(visualEdges.map(e => [e.id, e])) };
   const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
+  const labelOf = id => (base.node.get(id) || {}).label || id;
   const state = { labels: true, edgeLabels: meta.edgeLabels || 'all', inferred: true, minDegree: 1,
                   hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, path: null, dark: false, physics: true };
   const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
@@ -215,7 +271,7 @@ const KG = {{ data_json }};
     let nodeSet = null, edgeSet = null, onPath = false;
     if (state.path) {
       nodeSet = new Set([state.path[0].from].concat(state.path.map(st => st.to)));
-      edgeSet = new Set(state.path.map(st => st.edge.id));
+      edgeSet = new Set(state.path.map(st => visualOf.get(st.edge.id)));
       onPath = true;
     } else if (state.selected) {
       const nb = neighbourhood(state.selected);
@@ -263,9 +319,9 @@ const KG = {{ data_json }};
   function neighbourhood(id) {
     const ids = new Set([id]);
     const connected = new Set();
-    edges.get().forEach(e => {
-      if (e.hidden) return;
-      if (e.from === id || e.to === id) { connected.add(e.id); ids.add(e.from); ids.add(e.to); }
+    relations.forEach(r => {
+      if (!relVisible(r)) return;
+      if (r.from === id || r.to === id) { connected.add(visualOf.get(r.id)); ids.add(r.from); ids.add(r.to); }
     });
     return { ids, connected };
   }
@@ -301,8 +357,8 @@ const KG = {{ data_json }};
   function findPath(from, to, extractedOnly) {
     if (from === to) return null;
     const adj = new Map();
-    edges.get().forEach(e => {
-      if (e.hidden || (extractedOnly && e.inferred)) return;
+    relations.forEach(e => {
+      if (!relVisible(e) || (extractedOnly && e.inferred)) return;
       if (!adj.has(e.from)) adj.set(e.from, []);
       if (!adj.has(e.to)) adj.set(e.to, []);
       adj.get(e.from).push({ node: e.to, edge: e });
@@ -337,7 +393,7 @@ const KG = {{ data_json }};
     state.path = steps;
     $('path-result').innerHTML = `<p class="note">${steps.length} step${steps.length === 1 ? '' : 's'}</p>` + steps.map(st => {
       const forward = st.edge.from === st.from;
-      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(st.from)}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(st.to)}</span></div>`;
+      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(labelOf(st.from))}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(labelOf(st.to))}</span></div>`;
     }).join('');
     $('path-result').querySelectorAll('.path-step').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
     highlightPath(steps);
@@ -350,18 +406,18 @@ const KG = {{ data_json }};
   function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
   function renderDetails(id) {
     const n = base.node.get(id);
-    $('d-name').textContent = id;
+    $('d-name').textContent = labelOf(id);
     const comm = meta.communities[n.community] || {};
     $('d-meta').innerHTML = (n.type ? `<span>${esc(TYPE_GLYPH[n.shape] || '●')} ${esc(n.type)}</span>` : '') +
                             `<span><span class="dot" style="background:${esc(n.color)}"></span>${esc(comm.name || ('Community ' + (n.community + 1)))}</span>` +
                             `<span>${degree.get(id)} connection${degree.get(id) === 1 ? '' : 's'}</span>`;
     const out = [], inc = [];
-    edges.get().forEach(e => {
-      if (e.hidden) return;
+    relations.forEach(e => {
+      if (!relVisible(e)) return;
       if (e.from === id) out.push(e); else if (e.to === id) inc.push(e);
     });
     const row = (e, other, arrow) => `<div class="rel" data-node="${esc(other)}" title="${esc(e.title || '')}">` +
-      `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(other)}</span>` +
+      `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(labelOf(other))}</span>` +
       `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span>` +
       (e.source ? `<span class="source">“${esc(e.source)}”</span>` : (e.via ? `<span class="source">via ${esc(e.via)}</span>` : '')) + `</div>`;
     let html = '';
@@ -383,7 +439,9 @@ const KG = {{ data_json }};
       nodeUpdates.push({ id: n.id, hidden });
     });
     nodes.update(nodeUpdates);
-    edges.update(edges.get().map(e => ({ id: e.id, hidden: (!state.inferred && e.inferred) || hiddenNodes.has(e.from) || hiddenNodes.has(e.to) })));
+    hiddenRel.clear();
+    relations.forEach(r => { if ((!state.inferred && r.inferred) || hiddenNodes.has(r.from) || hiddenNodes.has(r.to)) hiddenRel.add(r.id); });
+    edges.update(edges.get().map(e => ({ id: e.id, hidden: e.members.every(m => hiddenRel.has(m)) })));
     if (state.selected) { if (hiddenNodes.has(state.selected)) clearSelection(); else { highlight(state.selected); renderDetails(state.selected); } }
     updateStats();
   }
@@ -454,20 +512,20 @@ const KG = {{ data_json }};
 
   // ---------- search ----------
   const list = $('node-list');
-  KG.nodes.map(n => n.id).sort((a, b) => a.localeCompare(b)).forEach(id => { const o = document.createElement('option'); o.value = id; list.appendChild(o); });
+  KG.nodes.map(n => n.label || n.id).sort((a, b) => a.localeCompare(b)).forEach(l => { const o = document.createElement('option'); o.value = l; list.appendChild(o); });
   function search(q) {
     q = q.trim().toLowerCase();
     if (!q) return;
-    const ids = KG.nodes.map(n => n.id);
-    const id = ids.find(i => i.toLowerCase() === q) || ids.find(i => i.toLowerCase().startsWith(q)) || ids.find(i => i.toLowerCase().includes(q));
-    if (id) select(id, true);
+    const keys = KG.nodes.map(n => ({ id: n.id, a: n.id.toLowerCase(), b: (n.label || n.id).toLowerCase() }));
+    const hit = keys.find(k => k.a === q || k.b === q) || keys.find(k => k.a.startsWith(q) || k.b.startsWith(q)) || keys.find(k => k.a.includes(q) || k.b.includes(q));
+    if (hit) select(hit.id, true);
   }
   $('search').addEventListener('change', e => search(e.target.value));
   $('search').addEventListener('keydown', e => { if (e.key === 'Enter') { search(e.target.value); e.target.blur(); } if (e.key === 'Escape') e.target.blur(); });
 
   // ---------- stats ----------
   function visibleTriples() {
-    return edges.get().filter(e => !e.hidden).map(e => {
+    return relations.filter(relVisible).map(e => {
       const t = { subject: e.from, predicate: e.label, object: e.to };
       if (e.inferred) { t.inferred = true; t.method = e.method || null; if (e.via) t.via = e.via; }
       if (e.chunk) t.chunk = e.chunk;
@@ -479,7 +537,7 @@ const KG = {{ data_json }};
     });
   }
   function updateStats() {
-    const visN = nodes.get().filter(n => !n.hidden).length, visE = edges.get().filter(e => !e.hidden);
+    const visN = nodes.get().filter(n => !n.hidden).length, visE = relations.filter(relVisible);
     const inf = visE.filter(e => e.inferred).length;
     const methods = {};
     visE.forEach(e => { if (e.inferred) methods[e.method || 'unknown'] = (methods[e.method || 'unknown'] || 0) + 1; });
@@ -535,12 +593,66 @@ const KG = {{ data_json }};
     download('knowledge-graph.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
   });
 
+  // ---------- chat (only when served by graph-serve) ----------
+  if (meta.libraryUrl) { const l = $('library-link'); l.href = meta.libraryUrl; l.classList.remove('hidden'); }
+  const chatEndpoint = meta.chatEndpoint || null;
+  if (chatEndpoint) $('btn-chat').classList.remove('hidden');
+  function toggleChat() {
+    if (!chatEndpoint) return;
+    const open = $('chat').classList.toggle('hidden') === false;
+    document.body.classList.toggle('chat-open', open);
+    if (open) $('chat-input').focus();
+  }
+  // Minimal, safe rendering of the model's markdown: escape first, then bold and bullet lines.
+  function renderAnswer(text) {
+    return esc(text).split('\n').map(line => {
+      const bullet = line.match(/^\s*[*-]\s+(.*)$/);
+      const body = (bullet ? bullet[1] : line).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      return bullet ? `<div class="bullet">• ${body}</div>` : body;
+    }).join('\n').replace(/\n{2,}/g, '\n');
+  }
+  function factRow(t) {
+    const tag = t.inferred ? esc(t.method || 'inferred') : 'extracted';
+    const title = t.source ? esc(t.source) : (t.via ? 'via ' + esc(t.via) : '');
+    return `<div class="fact" data-node="${esc(t.subject)}" title="${title}"><span>${esc(t.subject)}</span>` +
+           `<span class="pred">→ ${esc(t.predicate)} →</span><span>${esc(t.object)}</span><span class="tag ${t.inferred ? '' : 'extracted'}">${tag}</span></div>`;
+  }
+  async function askGraph(question) {
+    const log = $('chat-log');
+    log.insertAdjacentHTML('beforeend', `<div class="q">${esc(question)}</div><div class="thinking">Thinking…</div>`);
+    log.scrollTop = log.scrollHeight;
+    const thinking = log.lastElementChild;
+    try {
+      const res = await fetch(chatEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question }) });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || data.detail || res.statusText);
+      thinking.outerHTML = `<div class="a">${renderAnswer(data.answer || '')}</div>` + (data.facts || []).map(factRow).join('');
+      log.querySelectorAll('.fact[data-node]').forEach(el => el.onclick = () => select(el.dataset.node, true));
+    } catch (e) {
+      thinking.outerHTML = `<div class="err">Error: ${esc(e.message || e)}</div>`;
+    }
+    log.scrollTop = log.scrollHeight;
+  }
+  $('btn-chat').addEventListener('click', toggleChat);
+  $('chat-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const q = $('chat-input').value.trim();
+    if (!q) return;
+    $('chat-input').value = '';
+    askGraph(q);
+  });
+  $('chat-reset').addEventListener('click', async () => {
+    if (!chatEndpoint) return;
+    await fetch(chatEndpoint + '/reset', { method: 'POST' }).catch(() => {});
+    $('chat-log').innerHTML = '<p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Conversation reset.</p>';
+  });
+
   // ---------- keyboard ----------
   document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.metaKey || e.ctrlKey || e.altKey) return;
     switch (e.key) {
       case '/': e.preventDefault(); $('search').focus(); $('search').select(); break;
-      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help'].forEach(id => $(id).classList.add('hidden')); break;
+      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help', 'chat'].forEach(id => $(id).classList.add('hidden')); document.body.classList.remove('chat-open'); break;
       case 'f': network.fit({ animation: true }); break;
       case 'l': setLabels(!state.labels); break;
       case 'e': cycleEdgeLabels(); break;
@@ -550,6 +662,7 @@ const KG = {{ data_json }};
       case 'c': togglePanel('legend'); break;
       case 's': updateStats(); togglePanel('stats'); break;
       case '?': togglePanel('help'); break;
+      case 'a': toggleChat(); break;
     }
   });
 })();

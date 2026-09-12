@@ -1,0 +1,158 @@
+{
+  "community_names": {
+    "0": "First Industrial Revolution",
+    "1": "Electrification and computing industries",
+    "2": "Internet and blockchain economy",
+    "3": "Third Industrial Revolution",
+    "4": "Fourth Industrial Revolution",
+    "5": "British factory reform",
+    "6": "Textile factory industrialization",
+    "7": "AI and quantum computing",
+    "8": "Capitalism and social theory",
+    "9": "Global communication technologies",
+    "10": "Second Industrial Revolution",
+    "11": "Mobile communications revolution",
+    "12": "Autonomous vehicle infrastructure",
+    "13": "Fordist mass production",
+    "14": "Global technology governance"
+  },
+  "communities": [
+    {
+      "id": 0,
+      "name": "First Industrial Revolution",
+      "top": [
+        "industrial revolution",
+        "steam engine",
+        "raw material production"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Electrification and computing industries",
+      "top": [
+        "industries",
+        "modern computing devices",
+        "electrification"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Internet and blockchain economy",
+      "top": [
+        "internet",
+        "blockchain",
+        "e-commerce"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Third Industrial Revolution",
+      "top": [
+        "third industrial revolution",
+        "automation",
+        "personal computing"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Fourth Industrial Revolution",
+      "top": [
+        "fourth industrial revolution",
+        "crispr-cas9",
+        "biotechnology"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "British factory reform",
+      "top": [
+        "factory acts",
+        "railway",
+        "robert owen"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Textile factory industrialization",
+      "top": [
+        "industrial cities",
+        "production",
+        "spinning jenny"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "AI and quantum computing",
+      "top": [
+        "artificial intelligence",
+        "quantum computing",
+        "google"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Capitalism and social theory",
+      "top": [
+        "socioeconomic shifts",
+        "adam smith",
+        "interplay"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Global communication technologies",
+      "top": [
+        "human interactions",
+        "global communications",
+        "technology"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Second Industrial Revolution",
+      "top": [
+        "second industrial revolution",
+        "steel production",
+        "bessemer process"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Mobile communications revolution",
+      "top": [
+        "cellular technologies",
+        "mobile communications",
+        "communications"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Autonomous vehicle infrastructure",
+      "top": [
+        "autonomous vehicles",
+        "infrastructure",
+        "infrastructure projects"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Fordist mass production",
+      "top": [
+        "assembly line",
+        "mass-production methods",
+        "consumer markets"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Global technology governance",
+      "top": [
+        "technological progress",
+        "institution",
+        "governments"
+      ]
+    }
+  ],
+  "generated": "2026-09-12 13:07",
+  "model": "deepseek-v4.1-flash:cloud"
+}

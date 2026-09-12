@@ -22,11 +22,12 @@ def test_utf8_and_bom(tmp_path, capsys):
     assert read_input_text(str(p)) == "hello"
 
 
-def test_cp1252_fallback(tmp_path, capsys):
+def test_cp1252_fallback(tmp_path, caplog):
     p = tmp_path / "w.txt"
     p.write_bytes("smart “quotes” and – dash".encode("cp1252"))
-    assert "“quotes”" in read_input_text(str(p))
-    assert "decoded as cp1252" in capsys.readouterr().out
+    with caplog.at_level("INFO", logger="knowledge_graph"):
+        assert "“quotes”" in read_input_text(str(p))
+    assert "decoded as cp1252" in caplog.text
 
 
 def test_pdf_rejected_with_hint(tmp_path):
@@ -142,3 +143,18 @@ def test_process_documents_tags_triples_with_document(monkeypatch):
     assert {(t["subject"], t["document"]) for t in out} == {("alpha", "a.txt"), ("beta", "b.txt")}
     single = process_documents(cfg, [("a.txt", "Alpha text here.")])
     assert "document" not in single[0]  # a single document is not tagged
+
+
+def test_graph_meta_sidecar_round_trip(tmp_path):
+    from knowledge_graph.main import load_graph_meta, meta_path_for, save_graph_meta
+    json_path = str(tmp_path / "g.json")
+    graph_data = {"meta": {"communities": [{"id": 0, "name": "Steam power", "top": ["engine"]}, {"id": 1, "top": ["x"]}],
+                           "generated": "2026-09-12 10:00"}}
+    path = save_graph_meta(json_path, graph_data, {"llm": {"model": "m"}})
+    assert path == meta_path_for(json_path) and (tmp_path / "g.meta.json").exists()
+    meta = load_graph_meta(json_path)
+    assert meta["community_names"] == {0: "Steam power"} and meta["model"] == "m"
+    assert load_graph_meta(str(tmp_path / "missing.json")) == {}
+    (tmp_path / "bad.meta.json").write_text("{not json")
+    assert load_graph_meta(str(tmp_path / "bad.json")) == {}
+    assert save_graph_meta(json_path, {"meta": {"communities": [{"id": 0, "top": []}]}}) is None  # nothing to store

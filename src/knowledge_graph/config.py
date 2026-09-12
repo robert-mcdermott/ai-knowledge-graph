@@ -1,6 +1,7 @@
 """Configuration loading, validation and defaults for the knowledge graph generator."""
 from __future__ import annotations
 
+import logging
 import os
 import re
 from typing import Any
@@ -9,6 +10,8 @@ try:  # Python 3.11+
     import tomllib
 except ModuleNotFoundError:  # pragma: no cover - older interpreters
     import tomli as tomllib  # type: ignore[no-redef]
+
+log = logging.getLogger("knowledge_graph.config")
 
 _ENV_BRACES = re.compile(r"^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$")
 
@@ -25,6 +28,8 @@ DEFAULTS: dict[str, dict[str, Any]] = {
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
     "extraction": {"language": "auto"},
+    "query": {"hops": 2, "max_triples": 150, "max_seed_entities": 8, "use_llm_for_entity_matching": True,
+              "history_turns": 3},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
     "inference": {
         "enabled": True,
@@ -44,7 +49,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "hub_max_new": 25,
     },
     "visualization": {"edge_smooth": False, "name_communities": True, "show_inferred": True,
-                      "theme": "light", "edge_labels": "all"},
+                      "theme": "light", "edge_labels": "all", "title_case": True, "collapse_parallel_edges": True},
 }
 
 
@@ -121,6 +126,11 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(config["extraction"]["language"], str) or not config["extraction"]["language"].strip():
         raise ConfigError("[extraction] language must be a non-empty string such as 'auto', 'English' or 'Chinese'")
 
+    query = config["query"]
+    for key in ("hops", "max_triples", "max_seed_entities", "history_turns"):
+        if not isinstance(query[key], int) or query[key] < 0:
+            raise ConfigError(f"[query] {key} must be a non-negative integer")
+
     visualization = config["visualization"]
     if visualization["theme"] not in ("light", "dark"):
         raise ConfigError("[visualization] theme must be 'light' or 'dark'")
@@ -151,13 +161,13 @@ def load_config(config_file: str = "config.toml") -> dict[str, Any] | None:
         with open(config_file, "rb") as f:
             config = tomllib.load(f)
     except FileNotFoundError:
-        print(f"Error: config file not found: {config_file}")
+        log.error(f"config file not found: {config_file}")
         return None
     except (OSError, tomllib.TOMLDecodeError) as e:
-        print(f"Error loading config file {config_file}: {e}")
+        log.error(f"Error loading config file {config_file}: {e}")
         return None
     try:
         return validate_config(config)
     except ConfigError as e:
-        print(f"Invalid configuration in {config_file}: {e}")
+        log.error(f"Invalid configuration in {config_file}: {e}")
         return None

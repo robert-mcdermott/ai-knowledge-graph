@@ -1,0 +1,158 @@
+{
+  "community_names": {
+    "0": "Apollo program development",
+    "1": "Apollo 11 moon landing",
+    "2": "Apollo spacecraft and rockets",
+    "3": "Final Apollo missions",
+    "4": "Lunar orbit rendezvous",
+    "5": "Apollo 1 fire",
+    "6": "Apollo-Soyuz Test Project",
+    "7": "Apollo 8 lunar orbit",
+    "8": "Apollo 12 mission",
+    "9": "Apollo 13 rescue",
+    "10": "Apollo 15 lunar rover",
+    "11": "Kennedy moon landing goal",
+    "12": "Alan Shepard Apollo 14",
+    "13": "Apollo lunar samples",
+    "14": "Johnson Space Center"
+  },
+  "communities": [
+    {
+      "id": 0,
+      "name": "Apollo program development",
+      "top": [
+        "apollo program",
+        "project gemini",
+        "apollo 7"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Apollo 11 moon landing",
+      "top": [
+        "moon",
+        "apollo 11",
+        "command module"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Apollo spacecraft and rockets",
+      "top": [
+        "lunar module",
+        "saturn v",
+        "apollo 13"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Final Apollo missions",
+      "top": [
+        "apollo 17",
+        "harrison schmitt",
+        "gene cernan"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Lunar orbit rendezvous",
+      "top": [
+        "apollo 10",
+        "lunar orbit rendezvous",
+        "mission mode"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Apollo 1 fire",
+      "top": [
+        "fire",
+        "investigation",
+        "astronaut"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Apollo-Soyuz Test Project",
+      "top": [
+        "apollo-soyuz test project",
+        "apollo hardware",
+        "international crewed space mission"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Apollo 8 lunar orbit",
+      "top": [
+        "apollo 8",
+        "earth orbit",
+        "jim lovell"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Apollo 12 mission",
+      "top": [
+        "apollo 12",
+        "parts",
+        "surveyor 3"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Apollo 13 rescue",
+      "top": [
+        "aquarius",
+        "apollo 13 crew",
+        "gene kranz"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Apollo 15 lunar rover",
+      "top": [
+        "lunar roving vehicle",
+        "apollo 15",
+        "david scott"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Kennedy moon landing goal",
+      "top": [
+        "moon landing",
+        "john f. kennedy",
+        "congress"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Alan Shepard Apollo 14",
+      "top": [
+        "alan shepard",
+        "apollo 14",
+        "first american"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Apollo lunar samples",
+      "top": [
+        "twelve astronauts",
+        "382 kilograms",
+        "21.5 kilograms"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Johnson Space Center",
+      "top": [
+        "manned spacecraft center",
+        "houston",
+        "johnson space center"
+      ]
+    }
+  ],
+  "generated": "2026-09-12 13:07",
+  "model": "deepseek-v4.1-flash:cloud"
+}

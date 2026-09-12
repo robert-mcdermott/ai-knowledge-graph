@@ -89,3 +89,36 @@ def test_communities_numbered_largest_first():
 
 def test_empty_input(tmp_path):
     assert visualize_knowledge_graph([], str(tmp_path / "e.html"))["nodes"] == 0
+
+
+def test_library_dir_renders_shared_library_reference(tmp_path):
+    from knowledge_graph.visualization import VENDOR_FILES, ensure_library, render_html
+    pages = tmp_path / "docs" / "samples"
+    pages.mkdir(parents=True)
+    vendor = tmp_path / "docs" / "vendor"
+    data = build_graph_data(SAMPLE_TRIPLES)
+    html = render_html(data, library_dir=str(vendor), page_dir=str(pages))
+    assert '<script src="../vendor/vis-network.min.js"></script>' in html
+    assert '<link rel="stylesheet" href="../vendor/vis-network.min.css">' in html
+    assert "@version" not in html and len(html) < 200_000  # library not embedded
+    assert all((vendor / name).exists() for name in VENDOR_FILES)
+    assert ensure_library(str(vendor), str(pages)) == "../vendor"  # idempotent, no re-copy needed
+
+
+def test_stored_community_names_skip_the_namer(tmp_path):
+    from knowledge_graph.visualization import render_knowledge_graph
+    calls = []
+    stats, data = render_knowledge_graph(SAMPLE_TRIPLES, str(tmp_path / "g.html"), community_names={0: "Steam"},
+                                         community_namer=lambda comms: calls.append(1) or {})
+    assert data["meta"]["communities"][0]["name"] == "Steam" and calls == []
+
+
+def test_community_partition_is_independent_of_input_order():
+    import random
+    triples = [{"subject": f"n{i}", "predicate": "p", "object": f"n{(i * 7 + 1) % 40}"} for i in range(120)]
+    triples += [{"subject": f"m{i}", "predicate": "p", "object": f"m{(i * 3 + 1) % 25}"} for i in range(60)]
+    shuffled = triples[:]
+    random.Random(3).shuffle(shuffled)
+    a = {n["id"]: n["community"] for n in build_graph_data(triples)["nodes"]}
+    b = {n["id"]: n["community"] for n in build_graph_data(shuffled)["nodes"]}
+    assert a == b

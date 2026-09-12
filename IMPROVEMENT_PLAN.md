@@ -91,6 +91,24 @@ is stale (`prompts.py` is now a package).
 > multiple files or directories with per-triple `document` tags, `extraction.language`, and `--export`
 > csv/graphml/cypher (Neo4j MERGE script with a label per entity type). README refreshed and Pages demo
 > regenerated (only the screenshot is still old).
+> **Wave 10 (done, 0.8):** optional `graph-chat` command (grounded, cited question answering over the
+> JSON; `[query]` config); `generate-graph` unchanged. Taxonomy rule no longer applies to people/places/orgs.
+> **Wave 11a (done, 0.8):** optional `graph-serve` (`[web]` extra): graph library, explorer pages, Ask panel
+> backed by the same retrieval code; localhost, no accounts. Static output unchanged.
+> **Wave 11b (done, 0.8):** ingest in the browser: paste/upload → background job with progress page → explorer.
+> **Wave 12 (done, 0.8):** page polish: parallel edges collapsed with a "+N" badge (raw relationships kept for
+> the details panel, paths, stats and exports), title-cased display names; both configurable.
+> **Wave 13 (done, 0.8):** `logging` migration: pipeline modules log via `knowledge_graph.*` loggers, the CLIs
+> configure a console handler (`--verbose`/`--debug`, `--quiet`), default output unchanged; graph-serve captures
+> job progress through a log handler instead of a stdout tee.
+> **Wave 14 (done, 0.8):** sample corpus in `data/samples/` (biography, program history, process description,
+> Spanish text) with DeepSeek-generated graphs, verified typed/sourced/connected; regression tests in
+> `tests/test_samples.py`. Fixes found on the way: case variants after LLM resolution merged; LLM-inferred
+> names mapped onto existing entities case-insensitively (unknown names dropped); taxonomy rule localized.
+> **Wave 15 (done, 0.8):** GitHub Pages site built from the corpus (`scripts/build_docs.py`: landing page +
+> five explorer pages sharing one vendored library via `--library-path`); community names stored in
+> `.meta.json` sidecars so `--from-json`, `graph-serve` and the docs render them offline; community
+> detection made order-independent (was drifting between processes).
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -165,7 +183,7 @@ Correctness fixes that change results today. Do these first and cut a 0.6.2 patc
       validate config values at load time. `P0 S`
 - [x] **Encoding fallback and file-type check** for input: try UTF-8, then UTF-8-sig,
       then `latin-1`, and give a clear message for binary files like PDF (issue #9). `P0 S`
-- [ ] **Unbuffered / logged output** (prints now flush; full `logging` migration pending). Replace `print` with `logging` (`--verbose`,
+- [x] **Unbuffered / logged output** (prints now flush; full `logging` migration pending). Replace `print` with `logging` (`--verbose`,
       `--quiet`), flush progress lines, and print a final summary table. `P1 S`
 
 ### Visualization template (`templates/graph_template.html`, `visualization.py`)
@@ -207,7 +225,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       (predicate, direction, extracted vs inferred, source chunk/sentence). `P1 M`
 - [x] **Edge labels only on hover/selection** (or above a zoom threshold); hide node labels
       for low-degree nodes when zoomed out. This alone removes most of the clutter. `P1 S`
-- [ ] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
+- [x] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
       the confirmed run) with a count badge, and list all predicates in the tooltip /
       details panel. Use `smooth: curvedCW/CCW` only when two directions exist. `P1 S`
 - [x] **Inferred edges visibility** is configurable (`visualization.show_inferred`, default true because inference is now conservative and traceable); the page has a one-click toggle and a count
@@ -235,7 +253,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       edges only. `P1 S`
 - [x] **Typography**: system font stack instead of Tahoma; label halo/stroke that matches
       the theme instead of the `!important` CSS hacks. `P1 S`
-- [ ] **Title-case display names** while keeping lowercase for matching (the prompt asks
+- [x] **Title-case display names** while keeping lowercase for matching (the prompt asks
       for lowercase; store `display_name` separately). `P2 S`
 
 ---
@@ -295,7 +313,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       Anthropic (via LiteLLM), Gemini (merge PR #16), OpenRouter, vLLM; a "reasoning
       models" note (`max_tokens ≥ 16K`); a troubleshooting section; screenshots of the new
       UI; CHANGELOG; CONTRIBUTING; issue templates. `P1 M`
-- [ ] **Sample corpus for testing**: keep `industrial-revolution.txt`, add 2–3 more
+- [x] **Sample corpus for testing**: keep `industrial-revolution.txt`, add 2–3 more
       (a short bio, a technical doc, a non-English text) plus their cached JSON so the
       visualization can be developed without an LLM. `P2 S`
 - [ ] **`--test` and `sample_data_visualization`**: move sample data to `data/sample.json`
@@ -305,11 +323,11 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 
 ## Phase 5 – Stretch capabilities (P2, L)
 
-- [ ] **"Chat with the graph"** (issue #6): `generate-graph query graph.json "How did the
+- [x] **"Chat with the graph"** (issue #6): `generate-graph query graph.json "How did the
       steam engine affect cities?"` which retrieves the relevant subgraph (search + k-hop)
       and asks the LLM with the triples as context; later expose the same in the HTML via a
       user-supplied endpoint. `P2 L`
-- [ ] **Lightweight local web UI** (`generate-graph serve`): upload text, watch progress,
+- [x] **Lightweight local web UI** (waves 11a/11b: ingest, library, explorer and chat; localhost, no accounts) (`generate-graph serve`): upload text, watch progress,
       open the result. Evaluate PR #22 (2.3k-line generated FastAPI app) as a starting point
       but keep it optional and out of the core package. `P2 L`
 - [x] **Neo4j / Cypher export** (issue #18) and GraphML for Gephi. `P2 S`

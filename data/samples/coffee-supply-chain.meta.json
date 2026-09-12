@@ -1,0 +1,148 @@
+{
+  "community_names": {
+    "0": "Coffee milling and roasting",
+    "1": "Coffee processing methods",
+    "2": "Coffee species and origins",
+    "3": "Coffee brewing and caffeine",
+    "4": "Coffee trade and producers",
+    "5": "Coffee roasting chemistry",
+    "6": "Decaffeination and roast temperatures",
+    "7": "Filter and immersion brewing",
+    "8": "Coffee cupping and flavour",
+    "9": "Espresso extraction variables",
+    "10": "Coffee byproducts and waste",
+    "11": "Coffee harvesting methods",
+    "12": "Coffee certification schemes",
+    "13": "Shade-grown coffee ecology"
+  },
+  "communities": [
+    {
+      "id": 0,
+      "name": "Coffee milling and roasting",
+      "top": [
+        "beans",
+        "green coffee",
+        "bags"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Coffee processing methods",
+      "top": [
+        "coffee cherry",
+        "mucilage",
+        "natural process"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Coffee species and origins",
+      "top": [
+        "coffea canephora",
+        "coffea arabica",
+        "brazil"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Coffee brewing and caffeine",
+      "top": [
+        "coffee",
+        "caffeine",
+        "espresso"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Coffee trade and producers",
+      "top": [
+        "cooperatives",
+        "smallholder farmers",
+        "direct trade"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Coffee roasting chemistry",
+      "top": [
+        "maillard reaction",
+        "oils",
+        "dark roasts"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Decaffeination and roast temperatures",
+      "top": [
+        "carbon dioxide",
+        "supercritical carbon dioxide extraction",
+        "180 degrees celsius"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Filter and immersion brewing",
+      "top": [
+        "drip",
+        "filter methods",
+        "coarser grounds"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Coffee cupping and flavour",
+      "top": [
+        "acidity",
+        "samples",
+        "light roasts"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Espresso extraction variables",
+      "top": [
+        "extraction",
+        "baristas",
+        "grind size"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Coffee byproducts and waste",
+      "top": [
+        "processing",
+        "pulp",
+        "seed"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Coffee harvesting methods",
+      "top": [
+        "strip harvesting",
+        "flat plantations",
+        "harvesting"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Coffee certification schemes",
+      "top": [
+        "fairtrade",
+        "rainforest alliance",
+        "certification scheme"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Shade-grown coffee ecology",
+      "top": [
+        "shade-grown coffee",
+        "birds",
+        "fertiliser"
+      ]
+    }
+  ],
+  "generated": "2026-09-12 13:07",
+  "model": "deepseek-v4.1-flash:cloud"
+}

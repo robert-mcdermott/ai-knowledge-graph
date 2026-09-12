@@ -3,6 +3,7 @@ Knowledge Graph Generator and Visualizer main module.
 """
 import argparse
 import json
+import logging
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -11,10 +12,12 @@ from knowledge_graph.config import load_config
 from knowledge_graph.entity_standardization import infer_relationships, limit_predicate_length, standardize_entities
 from knowledge_graph.exports import export_graph, parse_formats
 from knowledge_graph.llm import LLMClient, LLMError, extract_json_from_text
+from knowledge_graph.logging_utils import configure_logging, level_from_flags
 from knowledge_graph.prompts import prompt_factory, system_prompt_for
 from knowledge_graph.text_utils import chunk_text, find_source_sentence
 from knowledge_graph.visualization import ENTITY_TYPES, render_knowledge_graph, sample_data_visualization
 
+log = logging.getLogger("knowledge_graph.main")
 
 def process_with_llm(config, input_text, debug=False, client=None):
     """
@@ -45,9 +48,9 @@ def process_with_llm(config, input_text, debug=False, client=None):
 
     # Print raw response only if debug mode is on
     if debug:
-        print("Raw LLM response:")
-        print(response)
-        print("\n---\n")
+        log.debug("Raw LLM response:")
+        log.info(response)
+        log.info("\n---\n")
 
     # Extract JSON from the response
     result = extract_json_from_text(response)
@@ -65,10 +68,10 @@ def process_with_llm(config, input_text, debug=False, client=None):
                 invalid_count += 1
 
         if invalid_count > 0:
-            print(f"Warning: Filtered out {invalid_count} invalid triples missing required fields")
+            log.warning(f"Filtered out {invalid_count} invalid triples missing required fields")
 
         if not valid_triples:
-            print("Error: No valid triples found in LLM response")
+            log.error("No valid triples found in LLM response")
             return None
 
         # Apply predicate length limit to all valid triples
@@ -77,13 +80,13 @@ def process_with_llm(config, input_text, debug=False, client=None):
 
         # Print extracted JSON only if debug mode is on
         if debug:
-            print("Extracted JSON:")
-            print(json.dumps(valid_triples, indent=2))  # Pretty print the JSON
+            log.debug("Extracted JSON:")
+            log.info(json.dumps(valid_triples, indent=2))  # Pretty print the JSON
 
         return valid_triples
     else:
         # Always print error messages even if debug is off
-        print("\n\nERROR ### Could not extract valid JSON from response: ", response, "\n\n")
+        log.error("Could not extract valid JSON from response: " + str(response) + "\n\n")
         return None
 
 def normalize_triple(item, chunk_text_value):
@@ -133,23 +136,23 @@ def process_documents(config, documents, debug=False, continue_on_error=False):
         chunk_docs.extend([name] * len(pieces))
     multi_doc = len(documents) > 1
 
-    print("=" * 50)
-    print("PHASE 1: INITIAL TRIPLE EXTRACTION")
-    print("=" * 50)
+    log.info("=" * 50)
+    log.info("PHASE 1: INITIAL TRIPLE EXTRACTION")
+    log.info("=" * 50)
     if multi_doc:
-        print(f"Processing {len(documents)} documents in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
+        log.info(f"Processing {len(documents)} documents in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
     else:
-        print(f"Processing text in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
+        log.info(f"Processing text in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
 
     # Process chunks concurrently with a single shared client; results keep chunk order.
     client = LLMClient.from_config(config)
     concurrency = max(1, min(int(config.get("llm", {}).get("concurrency", 4)), len(text_chunks)))
     if concurrency > 1:
-        print(f"Extracting with {concurrency} parallel requests", flush=True)
+        log.info(f"Extracting with {concurrency} parallel requests")
 
     def run_chunk(index_chunk):
         i, chunk = index_chunk
-        print(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)", flush=True)
+        log.info(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)")
         try:
             results = process_with_llm(config, chunk, debug, client=client)
         except LLMError as e:
@@ -160,7 +163,7 @@ def process_documents(config, documents, debug=False, continue_on_error=False):
         outcomes = list(pool.map(run_chunk, enumerate(text_chunks)))
     cache_hits = getattr(client, "cache_hits", 0)
     if cache_hits:
-        print(f"Served {cache_hits} of {len(text_chunks)} chunks from the LLM cache ({client.cache_dir})", flush=True)
+        log.info(f"Served {cache_hits} of {len(text_chunks)} chunks from the LLM cache ({client.cache_dir})")
 
     all_results = []
     failed_chunks = []
@@ -169,7 +172,7 @@ def process_documents(config, documents, debug=False, continue_on_error=False):
             if not continue_on_error:
                 raise LLMError(f"Chunk {i+1}/{len(text_chunks)} failed: {error}\n"
                                f"(Use --continue-on-error to skip failed chunks instead of aborting.)") from error
-            print(f"Warning: skipping chunk {i+1}: {error}", flush=True)
+            log.warning(f"skipping chunk {i+1}: {error}")
             failed_chunks.append(i + 1)
             continue
         if chunk_results:
@@ -178,43 +181,43 @@ def process_documents(config, documents, debug=False, continue_on_error=False):
                 if multi_doc and chunk_docs[i]:
                     item["document"] = chunk_docs[i]
             all_results.extend(chunk_results)
-            print(f"Chunk {i+1}: {len(chunk_results)} triples", flush=True)
+            log.info(f"Chunk {i+1}: {len(chunk_results)} triples")
         else:
-            print(f"Warning: Failed to extract triples from chunk {i+1}")
+            log.warning(f"Failed to extract triples from chunk {i+1}")
 
-    print(f"\nExtracted a total of {len(all_results)} triples from all chunks", flush=True)
+    log.info(f"\nExtracted a total of {len(all_results)} triples from all chunks")
     if failed_chunks:
-        print(f"Warning: {len(failed_chunks)} of {len(text_chunks)} chunks failed and were skipped: "
-              f"{failed_chunks}. The graph is incomplete.", flush=True)
+        log.warning(f"{len(failed_chunks)} of {len(text_chunks)} chunks failed and were skipped: "
+              f"{failed_chunks}. The graph is incomplete.")
     if not all_results:
         return []
 
     # Apply entity standardization if enabled
     if config.get("standardization", {}).get("enabled", False):
-        print("\n" + "="*50)
-        print("PHASE 2: ENTITY STANDARDIZATION")
-        print("="*50)
-        print(f"Starting with {len(all_results)} triples and {len(get_unique_entities(all_results))} unique entities")
+        log.info("\n" + "="*50)
+        log.info("PHASE 2: ENTITY STANDARDIZATION")
+        log.info("="*50)
+        log.info(f"Starting with {len(all_results)} triples and {len(get_unique_entities(all_results))} unique entities")
 
         all_results = standardize_entities(all_results, config)
 
-        print(f"After standardization: {len(all_results)} triples and {len(get_unique_entities(all_results))} unique entities")
+        log.info(f"After standardization: {len(all_results)} triples and {len(get_unique_entities(all_results))} unique entities")
 
     # Apply relationship inference if enabled
     if config.get("inference", {}).get("enabled", False):
-        print("\n" + "="*50)
-        print("PHASE 3: RELATIONSHIP INFERENCE")
-        print("="*50)
-        print(f"Starting with {len(all_results)} triples")
+        log.info("\n" + "="*50)
+        log.info("PHASE 3: RELATIONSHIP INFERENCE")
+        log.info("="*50)
+        log.info(f"Starting with {len(all_results)} triples")
 
         # Count existing relationships
         relationship_counts = {}
         for triple in all_results:
             relationship_counts[triple["predicate"]] = relationship_counts.get(triple["predicate"], 0) + 1
 
-        print("Top 5 relationship types before inference:")
+        log.info("Top 5 relationship types before inference:")
         for pred, count in sorted(relationship_counts.items(), key=lambda x: x[1], reverse=True)[:5]:
-            print(f"  - {pred}: {count} occurrences")
+            log.info(f"  - {pred}: {count} occurrences")
 
         all_results = infer_relationships(all_results, config)
 
@@ -223,14 +226,14 @@ def process_documents(config, documents, debug=False, continue_on_error=False):
         for triple in all_results:
             relationship_counts_after[triple["predicate"]] = relationship_counts_after.get(triple["predicate"], 0) + 1
 
-        print("\nTop 5 relationship types after inference:")
+        log.info("\nTop 5 relationship types after inference:")
         for pred, count in sorted(relationship_counts_after.items(), key=lambda x: x[1], reverse=True)[:5]:
-            print(f"  - {pred}: {count} occurrences")
+            log.info(f"  - {pred}: {count} occurrences")
 
         # Count inferred relationships
         inferred_count = sum(1 for triple in all_results if triple.get("inferred", False))
-        print(f"\nAdded {inferred_count} inferred relationships")
-        print(f"Final knowledge graph: {len(all_results)} triples")
+        log.info(f"\nAdded {inferred_count} inferred relationships")
+        log.info(f"Final knowledge graph: {len(all_results)} triples")
 
     return all_results
 
@@ -273,7 +276,7 @@ def read_input_text(path):
         except UnicodeDecodeError:
             continue
         if encoding != "utf-8-sig":
-            print(f"Note: {path} decoded as {encoding}", flush=True)
+            log.info(f"Note: {path} decoded as {encoding}")
         return text
     raise InputError(f"Could not decode {path} as text (tried {', '.join(TEXT_ENCODINGS)}).")
 
@@ -351,6 +354,43 @@ def load_triples_from_json(path):
     return data
 
 
+def meta_path_for(json_path):
+    return os.path.splitext(json_path)[0] + ".meta.json"
+
+
+def save_graph_meta(json_path, graph_data, config=None):
+    """Write the sidecar with community names (and provenance) next to a triples JSON file."""
+    communities = [{"id": c["id"], "name": c.get("name"), "top": c.get("top", [])[:3]}
+                   for c in graph_data["meta"]["communities"] if c.get("name")]
+    if not communities:
+        return None
+    meta = {"community_names": {str(c["id"]): c["name"] for c in communities}, "communities": communities,
+            "generated": graph_data["meta"].get("generated"),
+            "model": (config or {}).get("llm", {}).get("model")}
+    path = meta_path_for(json_path)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2, ensure_ascii=False)
+    return path
+
+
+def load_graph_meta(json_path):
+    """Read the sidecar written by :func:`save_graph_meta`; returns ``{}`` when absent or unreadable."""
+    path = meta_path_for(json_path)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            meta = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    names = meta.get("community_names") or {}
+    try:
+        meta["community_names"] = {int(k): v for k, v in names.items() if isinstance(v, str) and v.strip()}
+    except (TypeError, ValueError):
+        meta["community_names"] = {}
+    return meta
+
+
 def make_community_namer(config):
     """Return a callable that asks the LLM for short community names, or None if disabled."""
     if not config.get("visualization", {}).get("name_communities", True):
@@ -409,7 +449,8 @@ def main():
                              'Required unless --test or --from-json is used')
     parser.add_argument('--from-json', type=str, metavar='FILE',
                         help='Render a visualization from a previously saved triples JSON file (no LLM calls)')
-    parser.add_argument('--debug', action='store_true', help='Enable debug output (raw LLM responses and extracted JSON)')
+    parser.add_argument('--debug', '--verbose', action='store_true', help='Enable debug output (raw LLM responses and extracted JSON)')
+    parser.add_argument('--quiet', action='store_true', help='Only show warnings and errors')
     parser.add_argument('--no-standardize', action='store_true', help='Disable entity standardization')
     parser.add_argument('--no-inference', action='store_true', help='Disable relationship inference')
     parser.add_argument('--continue-on-error', action='store_true',
@@ -418,8 +459,12 @@ def main():
                         help='Do not read or write the LLM response cache (llm.cache_dir)')
     parser.add_argument('--export', type=str, default='json', metavar='FORMATS',
                         help='Comma-separated extra outputs written next to the HTML: json (always), csv, graphml, cypher')
+    parser.add_argument('--library-path', type=str, metavar='DIR',
+                        help='Reference the vis-network library from DIR (copied there if missing) instead of embedding it; '
+                             'useful when publishing many pages, e.g. on GitHub Pages')
 
     args = parser.parse_args()
+    configure_logging(level_from_flags(verbose=args.debug, quiet=args.quiet))
 
     # Load configuration
     config = load_config(args.config)
@@ -450,7 +495,10 @@ def main():
             print(f"Error: {e}")
             sys.exit(1)
         print(f"Loaded {len(triples)} triples from {args.from_json}")
-        stats, graph_data = render_knowledge_graph(triples, args.output, config=config)
+        meta = load_graph_meta(args.from_json)
+        stats, graph_data = render_knowledge_graph(triples, args.output, config=config,
+                                                   community_names=meta.get("community_names") or None,
+                                                   library_dir=args.library_path)
         for path in export_graph(triples, args.output, [f for f in export_formats if f != "json"], graph_data):
             print(f"Exported {path}")
         print(f"\nNodes: {stats['nodes']}  Edges: {stats['edges']}  Communities: {stats['communities']}")
@@ -502,7 +550,10 @@ def main():
 
         # Visualize the knowledge graph, then write any extra export formats (with community names)
         stats, graph_data = render_knowledge_graph(result, args.output, config=config,
-                                                   community_namer=make_community_namer(config))
+                                                   community_namer=make_community_namer(config),
+                                                   library_dir=args.library_path)
+        if save_graph_meta(json_output, graph_data, config):
+            print(f"Saved community names to {meta_path_for(json_output)}")
         for path in export_graph(result, args.output, [f for f in export_formats if f != "json"], graph_data):
             print(f"Exported {path}")
         print("\nKnowledge Graph Statistics:")

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generating {{ job.name }}</title>
+<style>
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --border: #d0d7de; --accent: #0969da; --danger: #cf222e; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --border: #30363d; --accent: #388bfd; --danger: #ff7b72; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+h1 { font-size: 22px; margin: 0 0 4px 0; }
+.sub { color: var(--muted); margin-bottom: 20px; }
+.bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 12px 0; }
+.bar div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.phase { font-weight: 600; }
+pre { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; max-height: 320px; overflow: auto; white-space: pre-wrap; }
+.err { color: var(--danger); font-weight: 600; }
+a.btn { display: inline-block; padding: 8px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; margin-top: 8px; }
+a.back { color: var(--muted); text-decoration: none; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="/">◀ Library</a>
+  <h1>Generating “{{ job.name }}”</h1>
+  <div class="sub">from {{ job.documents | join(', ') }}</div>
+  <div class="phase" id="phase">{{ job.phase }}</div>
+  <div class="bar"><div id="bar"></div></div>
+  <div id="detail" class="sub"></div>
+  <div id="result"></div>
+  <pre id="log"></pre>
+</main>
+<script>
+const jobId = {{ job.id | tojson }};
+const PHASE_LABEL = { starting: 'Starting…', extracting: 'Phase 1 · extracting relationships', standardizing: 'Phase 2 · standardizing entities',
+                      inferring: 'Phase 3 · inferring relationships', rendering: 'Rendering the page', done: 'Done', error: 'Failed' };
+const PHASE_PROGRESS = { starting: 2, extracting: 10, standardizing: 70, inferring: 80, rendering: 95, done: 100, error: 100 };
+async function poll() {
+  const res = await fetch('/api/jobs/' + jobId);
+  if (!res.ok) return;
+  const s = await res.json();
+  document.getElementById('phase').textContent = PHASE_LABEL[s.phase] || s.phase;
+  let pct = PHASE_PROGRESS[s.phase] || 0;
+  if (s.phase === 'extracting' && s.chunks_total) pct = 10 + 60 * s.chunks_done / s.chunks_total;
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('detail').textContent = s.phase === 'extracting' && s.chunks_total ? `${s.chunks_done} of ${s.chunks_total} chunks` : '';
+  document.getElementById('log').textContent = s.log.join('\n');
+  if (s.state === 'done') {
+    const st = s.stats || {};
+    document.getElementById('result').innerHTML = `<p>${st.nodes || '?'} nodes · ${st.edges || '?'} relationships · ${st.communities || '?'} communities</p><a class="btn" href="${s.graph_url}">Open the graph</a>`;
+    setTimeout(() => { location.href = s.graph_url; }, 1500);
+    return;
+  }
+  if (s.state === 'error') { document.getElementById('result').innerHTML = `<p class="err">${s.error}</p>`; return; }
+  setTimeout(poll, 1500);
+}
+poll();
+</script>
+</body>
+</html>

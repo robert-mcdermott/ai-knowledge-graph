@@ -8,10 +8,14 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import logging
 import os
+import shutil
 
 import networkx as nx
 from jinja2 import Environment, FileSystemLoader
+
+log = logging.getLogger("knowledge_graph.visualization")
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 VENDOR_DIR = os.path.join(TEMPLATE_DIR, "vendor")
@@ -32,6 +36,26 @@ TYPE_SHAPES = {
     "technology": "hexagon", "product": "hexagon", "work": "triangleDown", "date": "square", "concept": "dot",
 }
 TYPE_GLYPHS = {"diamond": "◆", "square": "■", "triangle": "▲", "star": "★", "hexagon": "⬢", "triangleDown": "▼", "dot": "●"}
+
+
+_SMALL_WORDS = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to", "via", "with"}
+
+
+def display_name(name):
+    """Title-case an all-lower-case entity name for display ("steam engine" -> "Steam Engine").
+
+    Names that already contain capitals (proper nouns, acronyms the model kept) are returned
+    unchanged; so are words with digits ("mid-20th century" keeps "20th").
+    """
+    if not name or name != name.lower():
+        return name
+
+    def cap(word):
+        return "-".join(part if any(ch.isdigit() for ch in part) else part[:1].upper() + part[1:]
+                        for part in word.split("-"))
+
+    words = name.split()
+    return " ".join(cap(w) if i == 0 or w not in _SMALL_WORDS else w for i, w in enumerate(words))
 
 
 def entity_types(triples):
@@ -57,7 +81,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
 
 
 def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
-                           community_namer=None):
+                           community_namer=None, community_names=None, library_dir=None):
     """
     Create and visualize a knowledge graph from subject-predicate-object triples.
 
@@ -68,6 +92,10 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
         edge_smooth: Edge smoothing setting (overrides config)
         config: Configuration dictionary (optional)
         community_namer: optional callable(list_of_community_dicts) -> {community_id: name}
+        community_names: optional {community_id: name} already known (e.g. from a .meta.json sidecar);
+                         when given, the namer is not called
+        library_dir: write the vis-network files there and reference them from the page instead of
+                     embedding them (smaller pages that share one library copy, e.g. for GitHub Pages)
 
     Returns:
         ``(stats, graph_data)``: the statistics dict and the data embedded in the page
@@ -77,40 +105,45 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
 
     if not triples:
-        print("Warning: No triples provided for visualization")
+        log.warning("No triples provided for visualization")
         empty = {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
         return empty, {"nodes": [], "edges": [], "options": {}, "meta": {"stats": empty, "communities": [], "types": []}}
 
-    print(f"Processing {len(triples)} triples for visualization")
+    log.info(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
-    graph_data = build_graph_data(triples, edge_smooth, show_inferred=vis_cfg.get("show_inferred", True),
-                                  theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"))
+    graph_data = build_graph_data(triples, edge_smooth, community_names=community_names,
+                                  show_inferred=vis_cfg.get("show_inferred", True),
+                                  theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"),
+                                  title_case=vis_cfg.get("title_case", True),
+                                  collapse_parallel_edges=vis_cfg.get("collapse_parallel_edges", True))
     stats = graph_data["meta"]["stats"]
-    print(f"Found {stats['nodes']} unique nodes")
-    print(f"Found {stats['inferred_edges']} inferred relationships")
-    print(f"Detected {stats['communities']} communities using Louvain method")
-    if community_namer is not None and stats["communities"] > 1:
+    log.info(f"Found {stats['nodes']} unique nodes")
+    log.info(f"Found {stats['inferred_edges']} inferred relationships")
+    log.info(f"Detected {stats['communities']} communities using Louvain method")
+    if community_names:
+        log.info(f"Using {len(community_names)} stored community names")
+    elif community_namer is not None and stats["communities"] > 1:
         try:
             names = community_namer(graph_data["meta"]["communities"]) or {}
         except Exception as e:  # naming is cosmetic; never fail the render
-            print(f"Warning: community naming failed: {e}")
+            log.warning(f"community naming failed: {e}")
             names = {}
         if names:
             for entry in graph_data["meta"]["communities"]:
                 if entry["id"] in names:
                     entry["name"] = names[entry["id"]]
-            print(f"Named {len(names)} communities")
+            log.info(f"Named {len(names)} communities")
 
-    html = render_html(graph_data)
+    html = render_html(graph_data, library_dir=library_dir, page_dir=os.path.dirname(os.path.abspath(output_file)))
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"Knowledge graph visualization saved to {output_file}")
-    print(f"Graph Statistics: {json.dumps(stats, indent=2)}")
+    log.info(f"Knowledge graph visualization saved to {output_file}")
+    log.info(f"Graph Statistics: {json.dumps(stats, indent=2)}")
     return stats, graph_data
 
 
 def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True,
-                     theme="light", edge_labels="all"):
+                     theme="light", edge_labels="all", title_case=True, collapse_parallel_edges=True):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
@@ -118,10 +151,12 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
         all_nodes.add(triple["object"])
     inferred_count = sum(1 for t in triples if t.get("inferred", False))
 
+    # Insert nodes and edges in sorted order: Louvain depends on iteration order, and Python's
+    # set order changes between processes, which would make community ids (and the stored
+    # community names) drift between runs of the same graph.
     G_undirected = nx.Graph()
-    G_undirected.add_nodes_from(all_nodes)
-    for triple in triples:
-        G_undirected.add_edge(triple["subject"], triple["object"])
+    G_undirected.add_nodes_from(sorted(all_nodes))
+    G_undirected.add_edges_from(sorted((t["subject"], t["object"]) for t in triples))
 
     centrality = _calculate_centrality_metrics(G_undirected, all_nodes)
     degree = centrality["degree"]
@@ -138,7 +173,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             title += f"\nType: {node_type}"
         entry = {
             "id": node,
-            "label": node,
+            "label": display_name(node) if title_case else node,
             "title": title,
             "color": community_color(community),
             "community": community,
@@ -219,22 +254,45 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             "showInferred": bool(show_inferred),
             "theme": theme if theme in ("light", "dark") else "light",
             "edgeLabels": edge_labels if edge_labels in ("all", "selection", "none") else "all",
+            "collapseParallelEdges": bool(collapse_parallel_edges),
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
     }
 
 
-def render_html(graph_data):
-    """Render the explorer page with the graph data and vendored library embedded."""
+VENDOR_FILES = ("vis-network.min.js", "vis-network.min.css")
+
+
+def render_html(graph_data, library_dir=None, page_dir=None):
+    """Render the explorer page.
+
+    By default the vis-network library is embedded so the file is self-contained. With
+    ``library_dir`` the library files are copied there (once) and referenced by a path relative
+    to ``page_dir`` (the directory the page will be saved in).
+    """
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
     template = env.get_template("graph.html.j2")
     data_json = json.dumps(graph_data, ensure_ascii=False).replace("</", "<\\/")
-    return template.render(
-        title=graph_data["meta"]["title"],
-        data_json=data_json,
-        vis_js=_read_vendor("vis-network.min.js"),
-        vis_css=_read_vendor("vis-network.min.css"),
-    )
+    context = {"title": graph_data["meta"]["title"], "data_json": data_json}
+    if library_dir:
+        rel = ensure_library(library_dir, page_dir or os.getcwd())
+        context["vis_js_href"] = f"{rel}/vis-network.min.js"
+        context["vis_css_href"] = f"{rel}/vis-network.min.css"
+    else:
+        context["vis_js"] = _read_vendor("vis-network.min.js")
+        context["vis_css"] = _read_vendor("vis-network.min.css")
+    return template.render(**context)
+
+
+def ensure_library(library_dir, page_dir):
+    """Copy the vendored library into ``library_dir`` if missing/outdated; return the URL path from ``page_dir``."""
+    os.makedirs(library_dir, exist_ok=True)
+    for name in VENDOR_FILES:
+        src, dst = os.path.join(VENDOR_DIR, name), os.path.join(library_dir, name)
+        if not os.path.exists(dst) or os.path.getsize(dst) != os.path.getsize(src):
+            shutil.copyfile(src, dst)
+    rel = os.path.relpath(os.path.abspath(library_dir), os.path.abspath(page_dir))
+    return rel.replace(os.sep, "/")
 
 
 def _read_vendor(name):
@@ -261,7 +319,7 @@ def _detect_communities(G_undirected, all_nodes):
         partition = {node: idx for idx, members in enumerate(ordered) for node in members}
         return partition, len(ordered)
     except Exception as e:
-        print(f"Community detection failed ({e}); using degree-based grouping")
+        log.info(f"Community detection failed ({e}); using degree-based grouping")
         partition = {node: min(G_undirected.degree(node) if node in G_undirected else 0, 7) for node in all_nodes}
         return partition, len(set(partition.values()))
 
@@ -337,14 +395,14 @@ def sample_data_visualization(output_file="sample_knowledge_graph.html", edge_sm
     """Generate a visualization from built-in sample data to test the renderer."""
     if edge_smooth is None:
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
-    print(f"Generating sample visualization with {len(SAMPLE_TRIPLES)} triples")
+    log.info(f"Generating sample visualization with {len(SAMPLE_TRIPLES)} triples")
     stats = visualize_knowledge_graph(SAMPLE_TRIPLES, output_file, edge_smooth=edge_smooth, config=config)
-    print("\nSample Knowledge Graph Statistics:")
-    print(f"Nodes: {stats['nodes']}")
-    print(f"Edges: {stats['edges']}")
-    print(f"Communities: {stats['communities']}")
-    print(f"\nVisualization saved to {output_file}")
-    print(f"To view, open: file://{os.path.abspath(output_file)}")
+    log.info("\nSample Knowledge Graph Statistics:")
+    log.info(f"Nodes: {stats['nodes']}")
+    log.info(f"Edges: {stats['edges']}")
+    log.info(f"Communities: {stats['communities']}")
+    log.info(f"\nVisualization saved to {output_file}")
+    log.info(f"To view, open: file://{os.path.abspath(output_file)}")
     return stats
 
 

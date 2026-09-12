@@ -1,0 +1,108 @@
+{
+  "community_names": {
+    "0": "Curie education and colleagues",
+    "1": "Curie family Nobel chemistry",
+    "2": "Radium institutes and Paris",
+    "3": "Pierre Curie family biography",
+    "4": "Early radioactivity research",
+    "5": "Radioactive Curie notebooks",
+    "6": "Curie Nobel and Solvay",
+    "7": "Curie Panthéon reburial",
+    "8": "Petites Curies wartime radiology",
+    "9": "Marie Curie timeline"
+  },
+  "communities": [
+    {
+      "id": 0,
+      "name": "Curie education and colleagues",
+      "top": [
+        "marie curie",
+        "mathematics degree",
+        "physics"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Curie family Nobel chemistry",
+      "top": [
+        "radium",
+        "nobel prize in chemistry",
+        "irène joliot-curie"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Radium institutes and Paris",
+      "top": [
+        "paris",
+        "radium institute",
+        "radium institute in paris"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pierre Curie family biography",
+      "top": [
+        "pierre curie",
+        "ève curie",
+        "1904"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Early radioactivity research",
+      "top": [
+        "radiation",
+        "henri becquerel",
+        "uranium rays"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Radioactive Curie notebooks",
+      "top": [
+        "laboratory notebooks",
+        "bibliothèque nationale de france",
+        "france"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Curie Nobel and Solvay",
+      "top": [
+        "nobel prize in physics",
+        "nobel prize",
+        "albert einstein"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Curie Panthéon reburial",
+      "top": [
+        "curie",
+        "panthéon",
+        "marie curie remains"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Petites Curies wartime radiology",
+      "top": [
+        "mobile x-ray units",
+        "shrapnel",
+        "surgeons"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Marie Curie timeline",
+      "top": [
+        "1898",
+        "4 july 1934",
+        "july 1895"
+      ]
+    }
+  ],
+  "generated": "2026-09-12 13:07",
+  "model": "deepseek-v4.1-flash:cloud"
+}
