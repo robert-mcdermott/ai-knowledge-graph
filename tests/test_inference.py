@@ -92,19 +92,21 @@ def test_budget_caps_inferred_edges_relative_to_extracted():
 
 
 def test_llm_results_take_priority_over_rules(monkeypatch):
-    monkeypatch.setattr(es, "_infer_relationships_with_llm",
-                        lambda *a, **k: [es._make_inferred("manchester", "trades with", "europe", "llm_community")])
+    monkeypatch.setattr(es, "_infer_bridges_with_llm",
+                        lambda *a, **k: [es._make_inferred("manchester", "trades with", "europe", "llm_bridge")])
+    monkeypatch.setattr(es, "_infer_hub_relationships_with_llm", lambda *a, **k: [])
     monkeypatch.setattr(es, "_infer_within_community_relationships", lambda *a, **k: [])
     cfg = {"inference": {"use_llm_for_inference": True, "apply_transitive": True, "max_inferred_ratio": 1.0}}
     new = inferred(infer_relationships(CHAIN, cfg))
     # The LLM edge for the same pair wins; the transitive duplicate is dropped.
-    assert [t["method"] for t in new] == ["llm_community"]
+    assert [t["method"] for t in new] == ["llm_bridge"]
 
 
 def test_llm_results_drop_self_loops_and_already_connected_pairs(monkeypatch):
-    monkeypatch.setattr(es, "_infer_relationships_with_llm",
-                        lambda *a, **k: [es._make_inferred("england", "part of", "europe", "llm_community"),
-                                         es._make_inferred("europe", "same", "europe", "llm_community")])
+    monkeypatch.setattr(es, "_infer_bridges_with_llm",
+                        lambda *a, **k: [es._make_inferred("england", "part of", "europe", "llm_bridge"),
+                                         es._make_inferred("europe", "same", "europe", "llm_bridge")])
+    monkeypatch.setattr(es, "_infer_hub_relationships_with_llm", lambda *a, **k: [])
     monkeypatch.setattr(es, "_infer_within_community_relationships", lambda *a, **k: [])
     cfg = {"inference": {"use_llm_for_inference": True}}
     assert inferred(infer_relationships(CHAIN, cfg)) == []

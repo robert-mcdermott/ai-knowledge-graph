@@ -8,7 +8,7 @@ base_url = "http://localhost:11434/v1/chat/completions"
 #base_url = "http://localhost:4000/v1/chat/completions"
 max_tokens = 32768  # Reasoning models (deepseek, qwen3, gpt-5, o-series) spend most of this on hidden
                     # reasoning; 8192 is NOT enough for them and the run will abort with a truncation error.
-temperature = 0.8   # Omit this line for models that only accept the default temperature (e.g. gpt-5)
+temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit this line for models that only accept the default temperature (e.g. gpt-5)
 #timeout = 300              # Seconds to wait for one completion (default 300)
 #max_retries = 3            # Retries on 429/5xx/connection errors with exponential back-off (default 3)
 #token_param = "auto"       # "auto" (default) switches to max_completion_tokens when the server asks for it
@@ -30,7 +30,14 @@ use_llm_for_entities = true  # Whether to use LLM for additional entity resoluti
 
 [inference]
 enabled = true               # Whether to enable relationship inference
-use_llm_for_inference = true # LLM infers links between and within disconnected components
+use_llm_for_inference = true # Master switch for the LLM-based methods below
+#llm_bridge = true            # LLM links every isolated component to the main graph
+#max_bridge_components = 20   # ...for up to this many components, batched
+#bridge_groups_per_call = 5   #    this many per call
+#llm_hub = true               # LLM adds well-known relationships among the most central entities
+#hub_entities = 25            #    how many central entities to consider
+#hub_max_new = 25             #    cap on new hub relationships
+#taxonomy = true              # Rule: "quantum computing" is a "computing", "internet of things" involves "internet"
 apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for transitive predicate
                              # families (is a / part of / located in / led to). Off by default:
                              # it produced ~70% of all edges in testing and buried the real ones.
@@ -40,7 +47,6 @@ apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for tra
 #lexical = false                  # Rule: connect names sharing a content word ("related to"); off by default
 #lexical_min_word_length = 5
 #max_inferred_ratio = 0.5         # Cap inferred edges at this fraction of extracted edges
-#max_communities_for_llm = 5      # Largest components considered for cross-community LLM inference
 
 [visualization]
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 

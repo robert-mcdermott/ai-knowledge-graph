@@ -74,15 +74,18 @@ use_llm_for_entities = true  # Use LLM for additional entity resolution
 
 [inference]
 enabled = true               # Enable relationship inference
-use_llm_for_inference = true # LLM infers links between/within disconnected components
+use_llm_for_inference = true # Master switch for LLM inference (bridging, hub enrichment, within-component)
+#llm_bridge = true           # LLM links every isolated component to the main graph
+#llm_hub = true              # LLM adds well-known relationships among the most central entities
+#taxonomy = true             # Rule: "quantum computing" is a "computing" (deterministic, on by default)
 apply_transitive = false     # Rule-based A->B->C => A->C for transitive predicates (off by default)
 #lexical = false             # Rule-based "related to" edges for names sharing a word (off by default)
 #max_inferred_ratio = 0.5    # Cap inferred edges at this fraction of extracted edges
 ```
 
 Every inferred triple in the JSON output carries `"inferred": true` and a `"method"`
-(`llm_community`, `llm_within`, `transitive` or `lexical`); transitive triples also record the
-intermediate node in `"via"`. Rule-based inference is off by default because in testing it
+(`llm_bridge`, `llm_hub`, `llm_within`, `taxonomy`, `transitive` or `lexical`); transitive triples
+also record the intermediate node in `"via"`. Rule-based inference is off by default because in testing it
 generated roughly 70 % of all edges and hid the relationships actually found in the text.
 
 ### A note on reasoning models
@@ -244,8 +247,11 @@ file:///mnt/c/Users/rmcdermo/Documents/industrial-revolution-kg.html
    - Standardization helps create a more coherent and navigable knowledge graph
 4. **Third Pass - Relationship Inference**:
    - Automatic inference of transitive relationships
-   - Optional LLM-assisted inference between disconnected graph components (controlled by `inference.use_llm_for_inference` config)
-   - When enabled, the LLM analyzes representative entities from disconnected communities and infers plausible relationships
+   - LLM-assisted inference (controlled by `inference.use_llm_for_inference`): a *bridging* pass links
+     every isolated component to the main graph, a *hub enrichment* pass adds well-known relationships
+     between the most central entities (e.g. "internet enabled e-commerce"), and a *within-component*
+     pass connects lexically related pairs
+   - A deterministic *taxonomy* rule links specific terms to their general term ("quantum computing" is a "computing")
    - This reduces graph fragmentation by adding logical connections not explicitly stated in the text
    - Both rule-based and LLM-based inference methods work together to create a more comprehensive graph
 5. **Visualization**: An interactive HTML visualization is generated using the PyVis library

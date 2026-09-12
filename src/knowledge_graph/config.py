@@ -32,7 +32,13 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "lexical": False,
         "lexical_min_word_length": 5,
         "max_inferred_ratio": 0.5,
-        "max_communities_for_llm": 5,
+        "taxonomy": True,
+        "llm_bridge": True,
+        "max_bridge_components": 20,
+        "bridge_groups_per_call": 5,
+        "llm_hub": True,
+        "hub_entities": 25,
+        "hub_max_new": 25,
     },
     "visualization": {"edge_smooth": False},
 }
@@ -111,7 +117,7 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(ratio, (int, float)) or ratio < 0:
         raise ConfigError("[inference] max_inferred_ratio must be a number >= 0")
     for key in ("transitive_max_hub_degree", "transitive_max_per_subject", "lexical_min_word_length",
-                "max_communities_for_llm"):
+                "max_bridge_components", "bridge_groups_per_call", "hub_entities", "hub_max_new"):
         if not isinstance(inference[key], int) or inference[key] < 0:
             raise ConfigError(f"[inference] {key} must be a non-negative integer")
     groups = inference.get("transitive_predicate_groups")

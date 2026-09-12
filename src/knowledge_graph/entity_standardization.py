@@ -4,9 +4,11 @@ Two public entry points:
 
 * :func:`standardize_entities` merges different surface forms of the same entity.
 * :func:`infer_relationships` adds *inferred* triples. Every inferred triple carries
-  ``inferred: True`` and a ``method`` (``llm_community``, ``llm_within``,
-  ``transitive`` or ``lexical``); transitive triples also carry the intermediate
-  node in ``via``.
+  ``inferred: True`` and a ``method``: ``llm_bridge`` (links an isolated component to
+  the main graph), ``llm_hub`` (general-knowledge links between central entities),
+  ``llm_within`` (lexically related pairs inside a component), ``taxonomy``
+  (``quantum computing`` is a ``computing``), ``transitive`` (with the intermediate
+  node in ``via``) or ``lexical``.
 
 Inference is deliberately conservative. Rule-based methods are opt-in, the total
 number of inferred edges is capped relative to the extracted ones, and a node pair
@@ -37,7 +39,14 @@ TRANSITIVE_PREDICATE_GROUPS: dict[str, set[str]] = {
                "fueled", "spurred", "triggered"},
 }
 
-INFERENCE_PRIORITY = ("llm_community", "llm_within", "transitive", "lexical")
+INFERENCE_PRIORITY = ("llm_bridge", "llm_hub", "llm_within", "taxonomy", "transitive", "lexical")
+
+# Words that, when they immediately precede a candidate head noun, mean the phrase is
+# not "<modifier> <head>" ("developments in electronics" is not a kind of electronics).
+_PHRASE_BREAKERS = {"in", "of", "for", "on", "at", "to", "with", "by", "from", "and", "or", "the", "a", "an"}
+
+_PLURAL_EXCEPTIONS = {"physics", "economics", "politics", "mathematics", "ethics", "news", "series",
+                      "species", "analysis", "crisis", "basis", "thesis", "bus", "gas", "plus", "status"}
 
 _LEXICAL_STOPWORDS = {
     "about", "above", "after", "again", "against", "along", "among", "around", "because", "before",
@@ -136,7 +145,7 @@ def standardize_entities(triples, config):
     stopwords = {"the", "a", "an", "of", "and", "or", "in", "on", "at", "to", "for", "with", "by", "as"}
 
     def normalize_text(text):
-        words = [w for w in re.findall(r"\b\w+\b", text.lower()) if w not in stopwords]
+        words = [_singularize(w) for w in re.findall(r"\b\w+\b", text.lower()) if w not in stopwords]
         return " ".join(words)
 
     groups = defaultdict(list)
@@ -182,6 +191,19 @@ def standardize_entities(triples, config):
 
     print(f"Standardized {len(all_entities)} entities into {len(set(mapping.values()))} standard forms", flush=True)
     return filtered
+
+
+def _singularize(word):
+    """Cheap English singularization used only to *group* variants ("factories"/"factory")."""
+    if len(word) <= 3 or word in _PLURAL_EXCEPTIONS or word.endswith(("ss", "us", "is")):
+        return word
+    if word.endswith("ies") and len(word) > 4:
+        return word[:-3] + "y"
+    if word.endswith(("sses", "xes", "ches", "shes", "zes")):
+        return word[:-2]
+    if word.endswith("s"):
+        return word[:-1]
+    return word
 
 
 def _word_subset_merges(standard_forms):
@@ -275,8 +297,13 @@ def infer_relationships(triples, config):
 
     candidates: dict[str, list] = {m: [] for m in INFERENCE_PRIORITY}
     if inf_cfg.get("use_llm_for_inference", True):
-        candidates["llm_community"] = _infer_relationships_with_llm(valid_triples, communities, degree, config)
+        if inf_cfg.get("llm_bridge", True):
+            candidates["llm_bridge"] = _infer_bridges_with_llm(valid_triples, communities, degree, config)
+        if inf_cfg.get("llm_hub", True):
+            candidates["llm_hub"] = _infer_hub_relationships_with_llm(valid_triples, degree, config)
         candidates["llm_within"] = _infer_within_community_relationships(valid_triples, communities, config)
+    if inf_cfg.get("taxonomy", True):
+        candidates["taxonomy"] = _infer_taxonomy(all_entities, valid_triples)
     if inf_cfg.get("apply_transitive", False):
         candidates["transitive"] = _apply_transitive_inference(valid_triples, graph, degree, inf_cfg)
     if inf_cfg.get("lexical", False):
@@ -417,31 +444,95 @@ def _llm_infer(config, system_prompt, user_prompt, method, context):
     return results
 
 
-def _infer_relationships_with_llm(triples, communities, degree, config):
-    """Ask the LLM for links between the largest disconnected components."""
-    if len(communities) <= 1:
-        print("Only one connected component found, skipping cross-community LLM inference", flush=True)
-        return []
+def _format_triples(triples, limit):
+    return "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in triples[:limit])
 
-    max_communities = int(config.get("inference", {}).get("max_communities_for_llm", 5))
-    large = sorted(communities, key=len, reverse=True)[:max_communities]
-    system_prompt = prompt_factory.get_prompt("relationship_inference_system")
+
+def _infer_bridges_with_llm(triples, communities, degree, config):
+    """Ask the LLM to connect every isolated component to the largest one.
+
+    Small components are batched several per call. Representatives are the
+    highest-degree entities of each component.
+    """
+    if len(communities) <= 1:
+        print("Only one connected component found, skipping LLM bridging", flush=True)
+        return []
+    inf_cfg = config.get("inference", {})
+    max_components = int(inf_cfg.get("max_bridge_components", 20))
+    per_call = max(1, int(inf_cfg.get("bridge_groups_per_call", 5)))
+
+    ordered = sorted(communities, key=len, reverse=True)
+    main, others = ordered[0], ordered[1:1 + max_components]
+    main_reps = sorted(main, key=lambda n: -degree.get(n, 0))[:20]
+    main_text = ", ".join(main_reps)
+    system_prompt = prompt_factory.get_prompt("bridge_inference_system")
 
     new_triples = []
-    for i, comm1 in enumerate(large):
-        for comm2 in large[i + 1:]:
-            rep1 = sorted(comm1, key=lambda n: -degree.get(n, 0))[:5]
-            rep2 = sorted(comm2, key=lambda n: -degree.get(n, 0))[:5]
-            reps = set(rep1) | set(rep2)
-            context = [t for t in triples if t["subject"] in reps or t["object"] in reps][:20]
-            triples_text = "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in context)
-            user_prompt = prompt_factory.get_prompt(
-                "relationship_inference_user", ", ".join(rep1), ", ".join(rep2), triples_text)
-            found = _llm_infer(config, system_prompt, user_prompt, "llm_community", "between communities")
-            if found:
-                print(f"Inferred {len(found)} relationships between two communities", flush=True)
-            new_triples.extend(found)
-    print(f"Cross-community LLM inference proposed {len(new_triples)} relationships", flush=True)
+    for batch_start in range(0, len(others), per_call):
+        batch = others[batch_start:batch_start + per_call]
+        groups = []
+        for i, comp in enumerate(batch, start=batch_start + 1):
+            reps = sorted(comp, key=lambda n: -degree.get(n, 0))[:5]
+            comp_triples = [t for t in triples if t["subject"] in comp and t["object"] in comp]
+            groups.append(f"Group {i}: {', '.join(reps)}\n  known: " + _format_triples(comp_triples, 6).replace("\n", "; "))
+        user_prompt = prompt_factory.get_prompt("bridge_inference_user", main_text, "\n".join(groups))
+        found = _llm_infer(config, system_prompt, user_prompt, "llm_bridge", f"bridging groups {batch_start + 1}-{batch_start + len(batch)}")
+        new_triples.extend(found)
+    print(f"LLM bridging proposed {len(new_triples)} relationships for {len(others)} isolated components", flush=True)
+    return new_triples
+
+
+def _infer_hub_relationships_with_llm(triples, degree, config):
+    """Ask the LLM for well-known relationships between the most central entities."""
+    inf_cfg = config.get("inference", {})
+    top_n = int(inf_cfg.get("hub_entities", 25))
+    max_new = int(inf_cfg.get("hub_max_new", 25))
+    hubs = [n for n, _ in degree.most_common(top_n)]
+    if len(hubs) < 3:
+        return []
+    hub_set = set(hubs)
+    existing = [t for t in triples if t["subject"] in hub_set and t["object"] in hub_set]
+    user_prompt = prompt_factory.get_prompt(
+        "hub_inference_user", "\n".join(hubs), _format_triples(existing, 60) or "(none)", max_new)
+    found = _llm_infer(config, prompt_factory.get_prompt("hub_inference_system"), user_prompt, "llm_hub", "hub enrichment")
+    found = [t for t in found if t["subject"] in hub_set and t["object"] in hub_set][:max_new]
+    print(f"LLM hub enrichment proposed {len(found)} relationships among the {len(hubs)} most central entities", flush=True)
+    return found
+
+
+def _infer_taxonomy(entities, triples):
+    """Deterministic ``<modifier> <head>`` → ``is a`` ``<head>`` links, plus containment.
+
+    ``quantum computing`` is a ``computing``; ``internet of things`` involves ``internet``.
+    Only fires when the head/contained term already exists as an entity, so it never
+    invents nodes. Nearly always true, hence enabled by default.
+    """
+    by_lower = {e.lower(): e for e in entities}
+    connected = {_pair_key(t["subject"], t["object"]) for t in triples}
+    new_triples = []
+    for entity in sorted(entities):
+        words = entity.lower().split()
+        if len(words) < 2:
+            continue
+        linked = None
+        # 1. Longest suffix that is itself an entity and is a true head noun.
+        for k in range(1, len(words)):
+            head = " ".join(words[k:])
+            if head in by_lower and by_lower[head] != entity and words[k - 1] not in _PHRASE_BREAKERS:
+                linked = by_lower[head]
+                if _pair_key(entity, linked) not in connected:
+                    new_triples.append(_make_inferred(entity, "is a", linked, "taxonomy"))
+                    connected.add(_pair_key(entity, linked))
+                break
+        # 2. Another entity appears as a whole phrase inside this one (not as its head).
+        padded = f" {' '.join(words)} "
+        for other_lower, other in by_lower.items():
+            if other == entity or other == linked or len(other_lower) < 5:
+                continue
+            if f" {other_lower} " in padded and _pair_key(entity, other) not in connected:
+                new_triples.append(_make_inferred(entity, "involves", other, "taxonomy"))
+                connected.add(_pair_key(entity, other))
+    print(f"Taxonomy rule proposed {len(new_triples)} relationships", flush=True)
     return new_triples
 
 

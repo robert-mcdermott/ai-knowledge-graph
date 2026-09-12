@@ -10,6 +10,10 @@ from .inference_prompts import (
     get_relationship_inference_user_prompt,
     WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
     get_within_community_inference_user_prompt,
+    BRIDGE_INFERENCE_SYSTEM_PROMPT,
+    get_bridge_inference_user_prompt,
+    HUB_INFERENCE_SYSTEM_PROMPT,
+    get_hub_inference_user_prompt,
 )
 
 __all__ = [
@@ -23,6 +27,10 @@ __all__ = [
     "get_relationship_inference_user_prompt",
     "WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT",
     "get_within_community_inference_user_prompt",
+    "BRIDGE_INFERENCE_SYSTEM_PROMPT",
+    "get_bridge_inference_user_prompt",
+    "HUB_INFERENCE_SYSTEM_PROMPT",
+    "get_hub_inference_user_prompt",
 ]
 
 
@@ -47,6 +55,11 @@ class PromptFactory:
             "relationship_inference_user": get_relationship_inference_user_prompt,
             "within_community_system": WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
             "within_community_user": get_within_community_inference_user_prompt,
+
+            "bridge_inference_system": BRIDGE_INFERENCE_SYSTEM_PROMPT,
+            "bridge_inference_user": get_bridge_inference_user_prompt,
+            "hub_inference_system": HUB_INFERENCE_SYSTEM_PROMPT,
+            "hub_inference_user": get_hub_inference_user_prompt,
         }
 
     def get_prompt(self, name: str, *args, **kwargs) -> str:

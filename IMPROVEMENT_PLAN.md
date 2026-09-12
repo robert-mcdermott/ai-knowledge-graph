@@ -70,6 +70,11 @@ is stale (`prompts.py` is now a package).
 > **Wave 1 (done):** LLM client + JSON extraction + config validation, with a pytest suite
 > (`tests/`).
 > **Wave 2 (done):** inference defaults, constraints, budget, method tags and standardization guard.
+> **Wave 3 (done):** connectivity. Deterministic `taxonomy` method ("quantum computing" is a
+> "computing", on by default), plural singularization in standardization, LLM *bridging* pass that
+> links every isolated component to the main graph, LLM *hub enrichment* pass for general-knowledge
+> edges between central entities, default temperature 0.2 and a tighter atomic-entity instruction.
+> Measured on the wave-2 run: taxonomy alone took the graph from 22 components to 7 (228/286 nodes connected).
 > Remaining Phase 1 waves: text handling, template fixes.
 
 Correctness fixes that change results today. Do these first and cut a 0.6.2 patch.

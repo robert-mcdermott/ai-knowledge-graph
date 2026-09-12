@@ -13,6 +13,7 @@ Follow these rules carefully:
 
 - Entity Consistency: Use consistent names for entities throughout the document. For example, if \"John Smith\" is mentioned as \"John\", \"Mr. Smith\", and \"John Smith\" in different places, use a single consistent form (preferably the most complete one) in all triples.
 - Atomic Terms: Identify distinct key terms (e.g., objects, locations, organizations, acronyms, people, conditions, concepts, feelings). Avoid merging multiple ideas into one term (they should be as \"atomistic\" as possible).
+- Reuse General Terms: Prefer the short, general form of a concept as the entity and express qualifiers as separate triples. Write \"computing\" rather than \"modern computing devices\", \"artificial intelligence\" rather than \"artificial intelligence development\". When a specific kind of a general concept is important (e.g. \"quantum computing\"), keep it AND add a triple linking it to the general term (\"quantum computing\" is a \"computing\"). Never wrap an entity in words like \"development of\", \"advances in\", \"the rise of\".
 - Unified References: Replace any pronouns (e.g., \"he,\" \"she,\" \"it,\" \"they,\" etc.) with the actual referenced entity, if identifiable.
 - Pairwise Relationships: If multiple terms co-occur in the same sentence (or a short paragraph that makes them contextually related), create one triple for each pair that has a meaningful relationship.
 - CRITICAL INSTRUCTION: Predicates MUST be 1-3 words maximum. Never more than 3 words. Keep them extremely concise.
