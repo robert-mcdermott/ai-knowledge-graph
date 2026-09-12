@@ -80,6 +80,23 @@ main { position: relative; flex: 1; min-height: 0; }
 #progress .bar { height: 6px; background: var(--panel-border); border-radius: 3px; overflow: hidden; margin-top: 8px; }
 #progress .bar div { height: 100%; width: 0; background: var(--accent); transition: width .1s; }
 #help { left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, 90%); }
+#chat { right: 12px; bottom: 12px; width: 380px; max-height: 55%; display: flex; flex-direction: column; }
+#chat.hidden { display: none; }
+#chat-log { flex: 1; overflow: auto; min-height: 120px; font-size: 13px; }
+#chat-log .q { font-weight: 600; margin: 8px 0 2px 0; }
+#chat-log .a { white-space: pre-wrap; }
+#chat-log .a .bullet { padding-left: 12px; }
+#chat-log .fact { display: flex; gap: 6px; align-items: baseline; padding: 2px 6px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+#chat-log .fact:hover { background: var(--bg); }
+#chat-log .fact .pred { color: var(--muted); font-style: italic; }
+#chat-log .fact .tag { font-size: 10px; padding: 0 5px; border-radius: 10px; border: 1px dashed var(--muted); color: var(--muted); }
+#chat-log .fact .tag.extracted { border-style: solid; }
+#chat-log .thinking, #chat-log .err { color: var(--muted); font-style: italic; }
+#chat-log .err { color: var(--danger); }
+#chat-form { display: flex; gap: 6px; margin-top: 8px; }
+#chat-form input { flex: 1; min-width: 0; padding: 6px 10px; border: 1px solid var(--panel-border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+body.chat-open #details { max-height: 40%; }
+.topbar .back { color: var(--muted); text-decoration: none; font-size: 13px; margin-right: 4px; }
 #help table { font-size: 13px; }
 #help td { padding: 2px 10px 2px 0; }
 #help kbd { border: 1px solid var(--panel-border); border-radius: 4px; padding: 0 5px; background: var(--bg); }
@@ -107,6 +124,7 @@ footer a { color: inherit; text-decoration: none; }
 </head>
 <body>
 <header class="topbar">
+  <a class="back hidden" id="library-link" href="/" title="Back to the graph library">◀ Library</a>
   <div class="brand">Knowledge Graph<span class="counts" id="counts"></span></div>
   <div class="search"><input id="search" list="node-list" placeholder="Search nodes  ( / )" autocomplete="off"><datalist id="node-list"></datalist></div>
   <div class="actions">
@@ -126,6 +144,7 @@ footer a { color: inherit; text-decoration: none; }
       </div>
     </div>
     <button class="btn" id="btn-theme" title="Toggle dark mode (d)">Dark</button>
+    <button class="btn hidden" id="btn-chat" title="Ask questions about this graph (a)">Ask</button>
     <button class="btn" id="btn-help" title="Keyboard shortcuts (?)">?</button>
   </div>
 </header>
@@ -176,8 +195,14 @@ footer a { color: inherit; text-decoration: none; }
       <tr><td><kbd>l</kbd></td><td>Toggle node labels</td><td><kbd>e</kbd></td><td>Cycle edge labels</td></tr>
       <tr><td><kbd>i</kbd></td><td>Toggle inferred edges</td><td><kbd>p</kbd></td><td>Toggle physics</td></tr>
       <tr><td><kbd>s</kbd></td><td>Statistics</td><td><kbd>d</kbd></td><td>Toggle dark mode</td></tr>
+      <tr><td><kbd>a</kbd></td><td>Ask the graph (when served)</td><td></td><td></td></tr>
     </table>
     <p style="color: var(--muted); font-size: 12px; margin: 10px 0 0 0;">Click a node to highlight its neighbourhood and see its relationships. Double-click to zoom to it. Use "Path to another node" in the details panel to trace how two entities connect. Drag the canvas to pan, scroll to zoom.</p>
+  </div>
+  <div class="panel hidden" id="chat">
+    <h3>Ask the graph <span><button class="btn small" id="chat-reset" title="Forget the conversation">Reset</button> <button class="close" data-close="chat" title="Close">×</button></span></h3>
+    <div id="chat-log"><p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Answers use only the relationships in this graph and cite the facts they rely on. Click a cited fact to jump to it.</p></div>
+    <form id="chat-form"><input id="chat-input" placeholder="Ask a question…" autocomplete="off"><button class="btn on" type="submit">Send</button></form>
   </div>
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
 </main>
@@ -535,12 +560,66 @@ const KG = {{ data_json }};
     download('knowledge-graph.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
   });
 
+  // ---------- chat (only when served by graph-serve) ----------
+  if (meta.libraryUrl) { const l = $('library-link'); l.href = meta.libraryUrl; l.classList.remove('hidden'); }
+  const chatEndpoint = meta.chatEndpoint || null;
+  if (chatEndpoint) $('btn-chat').classList.remove('hidden');
+  function toggleChat() {
+    if (!chatEndpoint) return;
+    const open = $('chat').classList.toggle('hidden') === false;
+    document.body.classList.toggle('chat-open', open);
+    if (open) $('chat-input').focus();
+  }
+  // Minimal, safe rendering of the model's markdown: escape first, then bold and bullet lines.
+  function renderAnswer(text) {
+    return esc(text).split('\n').map(line => {
+      const bullet = line.match(/^\s*[*-]\s+(.*)$/);
+      const body = (bullet ? bullet[1] : line).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      return bullet ? `<div class="bullet">• ${body}</div>` : body;
+    }).join('\n').replace(/\n{2,}/g, '\n');
+  }
+  function factRow(t) {
+    const tag = t.inferred ? esc(t.method || 'inferred') : 'extracted';
+    const title = t.source ? esc(t.source) : (t.via ? 'via ' + esc(t.via) : '');
+    return `<div class="fact" data-node="${esc(t.subject)}" title="${title}"><span>${esc(t.subject)}</span>` +
+           `<span class="pred">→ ${esc(t.predicate)} →</span><span>${esc(t.object)}</span><span class="tag ${t.inferred ? '' : 'extracted'}">${tag}</span></div>`;
+  }
+  async function askGraph(question) {
+    const log = $('chat-log');
+    log.insertAdjacentHTML('beforeend', `<div class="q">${esc(question)}</div><div class="thinking">Thinking…</div>`);
+    log.scrollTop = log.scrollHeight;
+    const thinking = log.lastElementChild;
+    try {
+      const res = await fetch(chatEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question }) });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || data.detail || res.statusText);
+      thinking.outerHTML = `<div class="a">${renderAnswer(data.answer || '')}</div>` + (data.facts || []).map(factRow).join('');
+      log.querySelectorAll('.fact[data-node]').forEach(el => el.onclick = () => select(el.dataset.node, true));
+    } catch (e) {
+      thinking.outerHTML = `<div class="err">Error: ${esc(e.message || e)}</div>`;
+    }
+    log.scrollTop = log.scrollHeight;
+  }
+  $('btn-chat').addEventListener('click', toggleChat);
+  $('chat-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const q = $('chat-input').value.trim();
+    if (!q) return;
+    $('chat-input').value = '';
+    askGraph(q);
+  });
+  $('chat-reset').addEventListener('click', async () => {
+    if (!chatEndpoint) return;
+    await fetch(chatEndpoint + '/reset', { method: 'POST' }).catch(() => {});
+    $('chat-log').innerHTML = '<p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Conversation reset.</p>';
+  });
+
   // ---------- keyboard ----------
   document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.metaKey || e.ctrlKey || e.altKey) return;
     switch (e.key) {
       case '/': e.preventDefault(); $('search').focus(); $('search').select(); break;
-      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help'].forEach(id => $(id).classList.add('hidden')); break;
+      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help', 'chat'].forEach(id => $(id).classList.add('hidden')); document.body.classList.remove('chat-open'); break;
       case 'f': network.fit({ animation: true }); break;
       case 'l': setLabels(!state.labels); break;
       case 'e': cycleEdgeLabels(); break;
@@ -550,6 +629,7 @@ const KG = {{ data_json }};
       case 'c': togglePanel('legend'); break;
       case 's': updateStats(); togglePanel('stats'); break;
       case '?': togglePanel('help'); break;
+      case 'a': toggleChat(); break;
     }
   });
 })();

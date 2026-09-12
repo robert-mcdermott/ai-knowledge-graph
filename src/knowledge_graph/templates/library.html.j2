@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Graphs</title>
+<style>
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --border: #d0d7de; --accent: #0969da; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --border: #30363d; --accent: #388bfd; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+h1 { font-size: 22px; margin: 0 0 4px 0; }
+.sub { color: var(--muted); margin-bottom: 24px; }
+.card { display: block; text-decoration: none; color: inherit; border: 1px solid var(--border); background: var(--panel); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+.card:hover { border-color: var(--accent); }
+.card .name { font-weight: 650; font-size: 16px; }
+.card .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.empty { border: 1px dashed var(--border); border-radius: 10px; padding: 24px; color: var(--muted); }
+code { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+footer { color: var(--muted); font-size: 12px; margin-top: 32px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Knowledge Graphs</h1>
+  <div class="sub">{{ graphs|length }} graph{{ '' if graphs|length == 1 else 's' }} in <code>{{ graphs_dir }}</code> · questions answered by <code>{{ model }}</code></div>
+  {% if graphs %}
+    {% for g in graphs %}
+    <a class="card" href="/graph/{{ g.name | urlencode }}">
+      <div class="name">{{ g.name }}</div>
+      <div class="meta">{{ g.nodes }} nodes · {{ g.triples }} relationships ({{ g.inferred }} inferred) · {{ g.modified }}</div>
+    </a>
+    {% endfor %}
+  {% else %}
+    <div class="empty">No graphs here yet. Generate one with<br><code>generate-graph --input your_text.txt --output {{ graphs_dir }}/your_graph.html</code><br>and reload this page.</div>
+  {% endif %}
+  <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" style="color: inherit">AI-Knowledge-Graph</a> · local server, no accounts, bound to localhost by default</footer>
+</main>
+</body>
+</html>

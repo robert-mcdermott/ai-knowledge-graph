@@ -14,6 +14,7 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 - **Conservative, traceable inference**: LLM passes bridge isolated parts of the graph and add well-known relationships between central entities; a deterministic taxonomy rule links specific terms to general ones; every inferred edge carries its method and is capped relative to the extracted edges
 - **Exports**: JSON, CSV, GraphML for Gephi/yEd/Cytoscape and a Cypher script for Neo4j
 - **Chat with the graph** (optional `graph-chat` command): grounded, cited answers from the generated graph
+- **Local web interface** (optional `graph-serve` command): browse, explore and ask questions in the browser
 - **Interactive explorer**: a single self-contained HTML file with search, click-to-highlight, a relationships panel with sources, named communities, entity-type filters, a shortest-path finder, exports and light/dark themes
 - **Robust LLM client**: truncation detection for reasoning models, retries with back-off, automatic `max_completion_tokens` fallback, environment-variable API keys and an on-disk response cache
 - **Works with any OpenAI-compatible endpoint**: Ollama, LM Studio, vLLM, OpenAI, Gemini, OpenRouter, LiteLLM (which fronts AWS Bedrock, Azure OpenAI, Anthropic and many others)
@@ -50,7 +51,7 @@ python generate-graph.py --input your_text_file.txt --output knowledge_graph.htm
 
 ```bash
 pip install -e ".[dev]"   # adds pytest and ruff
-pip install -e ".[all]"   # adds pypdf and python-docx for .pdf / .docx inputs
+pip install -e ".[all]"   # adds pypdf, python-docx and the web server
 pytest -q                 # 108 tests, no LLM needed
 ruff check .
 ```
@@ -299,6 +300,21 @@ reply lists the facts it relied on, each marked *extracted* (with the source sen
 says so. Tuning lives under `[query]` in the config (`hops`, `max_triples`, `max_seed_entities`,
 `history_turns`); `--json` prints the result as JSON for scripting.
 
+## Local web interface (optional)
+
+`graph-serve` is a small local server over the same code: it lists the graphs in a directory, opens each one in
+the explorer, and adds an **Ask** panel that answers questions from the graph with cited facts (click a fact to
+jump to it in the graph). Install the extra and point it at the directory where you write your graphs:
+
+```bash
+pip install "ai-knowledge-graph[web]"      # FastAPI + uvicorn
+graph-serve --config config.toml --graphs ./out --open
+```
+
+It binds to `127.0.0.1:8008` by default, has no accounts or authentication, and only reads the `.json` files
+`generate-graph` writes, so it is meant for your own machine. Static HTML output is unchanged: the chat panel
+only exists in served pages. `--host 0.0.0.0` exposes it on your network if you put your own access control in front.
+
 ## Output files
 
 Next to the HTML page the generator writes a JSON file with the same base name containing every triple:
@@ -395,6 +411,7 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
     ├── entity_standardization.py   # Entity standardization and relationship inference
     ├── exports.py                  # CSV, GraphML and Cypher exports
     ├── query.py                    # Optional graph-chat command (question answering over the JSON)
+    ├── server.py                   # Optional graph-serve command (local web interface)
     ├── llm.py                      # LLM client (retries, truncation detection, cache) and JSON extraction
     ├── main.py                     # CLI, input handling and pipeline orchestration
     ├── text_utils.py               # Sentence splitting, chunking and provenance lookup
@@ -402,6 +419,7 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
     ├── prompts/                    # LLM prompts (extraction, entity resolution, inference, community naming)
     └── templates/
         ├── graph.html.j2           # The interactive explorer page (Jinja2)
+        ├── library.html.j2         # Graph library page for graph-serve
         └── vendor/                 # Embedded vis-network library
 ```
 
