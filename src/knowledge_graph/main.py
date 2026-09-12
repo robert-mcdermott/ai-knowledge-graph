@@ -5,13 +5,14 @@ import argparse
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 from knowledge_graph.config import load_config
 from knowledge_graph.entity_standardization import infer_relationships, limit_predicate_length, standardize_entities
 from knowledge_graph.llm import LLMClient, LLMError, extract_json_from_text
 from knowledge_graph.prompts import prompt_factory
-from knowledge_graph.text_utils import chunk_text
-from knowledge_graph.visualization import sample_data_visualization, visualize_knowledge_graph
+from knowledge_graph.text_utils import chunk_text, find_source_sentence
+from knowledge_graph.visualization import ENTITY_TYPES, sample_data_visualization, visualize_knowledge_graph
 
 
 def process_with_llm(config, input_text, debug=False, client=None):
@@ -39,7 +40,6 @@ def process_with_llm(config, input_text, debug=False, client=None):
         client = LLMClient.from_config(config)
 
     # Process with LLM (raises LLMError on truncated/empty/failed responses)
-    metadata = {}
     response = client.complete(user_prompt, system_prompt)
 
     # Print raw response only if debug mode is on
@@ -57,9 +57,9 @@ def process_with_llm(config, input_text, debug=False, client=None):
         invalid_count = 0
 
         for item in result:
-            if isinstance(item, dict) and "subject" in item and "predicate" in item and "object" in item:
-                # Add metadata to valid items
-                valid_triples.append(dict(item, **metadata))
+            if isinstance(item, dict) and "subject" in item and "predicate" in item and "object" in item \
+                    and isinstance(item["subject"], str) and isinstance(item["object"], str):
+                valid_triples.append(normalize_triple(item, input_text))
             else:
                 invalid_count += 1
 
@@ -84,6 +84,20 @@ def process_with_llm(config, input_text, debug=False, client=None):
         # Always print error messages even if debug is off
         print("\n\nERROR ### Could not extract valid JSON from response: ", response, "\n\n")
         return None
+
+def normalize_triple(item, chunk_text_value):
+    """Keep the known fields of an extracted triple, validate types and attach the source sentence."""
+    triple = {"subject": item["subject"].strip(), "predicate": str(item["predicate"]).strip(),
+              "object": item["object"].strip()}
+    for key in ("subject_type", "object_type"):
+        value = item.get(key)
+        if isinstance(value, str) and value.strip().lower() in ENTITY_TYPES:
+            triple[key] = value.strip().lower()
+    source = find_source_sentence(chunk_text_value, triple["subject"], triple["object"])
+    if source:
+        triple["source"] = source
+    return triple
+
 
 def process_text_in_chunks(config, full_text, debug=False, continue_on_error=False):
     """
@@ -114,31 +128,39 @@ def process_text_in_chunks(config, full_text, debug=False, continue_on_error=Fal
     print("=" * 50)
     print(f"Processing text in {len(text_chunks)} chunks (size: {chunk_size} words, overlap: {overlap} words)")
 
-    # Process each chunk with a single shared client
+    # Process chunks concurrently with a single shared client; results keep chunk order.
     client = LLMClient.from_config(config)
+    concurrency = max(1, min(int(config.get("llm", {}).get("concurrency", 4)), len(text_chunks)))
+    if concurrency > 1:
+        print(f"Extracting with {concurrency} parallel requests", flush=True)
+
+    def run_chunk(index_chunk):
+        i, chunk = index_chunk
+        print(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)", flush=True)
+        try:
+            results = process_with_llm(config, chunk, debug, client=client)
+        except LLMError as e:
+            return i, None, e
+        return i, results, None
+
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        outcomes = list(pool.map(run_chunk, enumerate(text_chunks)))
+
     all_results = []
     failed_chunks = []
-    for i, chunk in enumerate(text_chunks):
-        print(f"Processing chunk {i+1}/{len(text_chunks)} ({len(chunk.split())} words)", flush=True)
-
-        # Process the chunk with LLM
-        try:
-            chunk_results = process_with_llm(config, chunk, debug, client=client)
-        except LLMError as e:
+    for i, chunk_results, error in outcomes:
+        if error is not None:
             if not continue_on_error:
-                raise LLMError(f"Chunk {i+1}/{len(text_chunks)} failed: {e}\n"
-                               f"(Use --continue-on-error to skip failed chunks instead of aborting.)") from e
-            print(f"Warning: skipping chunk {i+1}: {e}", flush=True)
+                raise LLMError(f"Chunk {i+1}/{len(text_chunks)} failed: {error}\n"
+                               f"(Use --continue-on-error to skip failed chunks instead of aborting.)") from error
+            print(f"Warning: skipping chunk {i+1}: {error}", flush=True)
             failed_chunks.append(i + 1)
             continue
-
         if chunk_results:
-            # Add chunk information to each triple
             for item in chunk_results:
                 item["chunk"] = i + 1
-
-            # Add to overall results
             all_results.extend(chunk_results)
+            print(f"Chunk {i+1}: {len(chunk_results)} triples", flush=True)
         else:
             print(f"Warning: Failed to extract triples from chunk {i+1}")
 
@@ -246,6 +268,32 @@ def load_triples_from_json(path):
     return data
 
 
+def make_community_namer(config):
+    """Return a callable that asks the LLM for short community names, or None if disabled."""
+    if not config.get("visualization", {}).get("name_communities", True):
+        return None
+
+    def namer(communities):
+        lines = [f"{c['id'] + 1}. {', '.join(c['top'])}" for c in communities if c.get("top")]
+        if len(lines) < 2:
+            return {}
+        system_prompt = prompt_factory.get_prompt("community_naming_system")
+        user_prompt = prompt_factory.get_prompt("community_naming_user", "\n".join(lines))
+        response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
+        mapping = extract_json_from_text(response, expect="object") or {}
+        names = {}
+        for key, value in mapping.items():
+            try:
+                index = int(str(key).strip()) - 1
+            except ValueError:
+                continue
+            if isinstance(value, str) and value.strip() and 0 <= index < len(communities):
+                names[index] = value.strip()[:60]
+        return names
+
+    return namer
+
+
 def get_unique_entities(triples):
     """
     Get the set of unique entities from the triples.
@@ -351,7 +399,8 @@ def main():
             print(f"Warning: Could not save raw data to {json_output}: {e}")
 
         # Visualize the knowledge graph
-        stats = visualize_knowledge_graph(result, args.output, config=config)
+        stats = visualize_knowledge_graph(result, args.output, config=config,
+                                          community_namer=make_community_namer(config))
         print("\nKnowledge Graph Statistics:")
         print(f"Nodes: {stats['nodes']}")
         print(f"Edges: {stats['edges']}")

@@ -20,6 +20,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "max_retries": 3,
         "token_param": "auto",
         "json_mode": False,
+        "concurrency": 4,
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
@@ -40,7 +41,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "hub_entities": 25,
         "hub_max_new": 25,
     },
-    "visualization": {"edge_smooth": False},
+    "visualization": {"edge_smooth": False, "name_communities": True},
 }
 
 
@@ -102,6 +103,8 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
         raise ConfigError("[llm] token_param must be 'auto', 'max_tokens' or 'max_completion_tokens'")
     if not isinstance(llm.get("extra_body", {}), dict):
         raise ConfigError("[llm] extra_body must be a table")
+    if not isinstance(llm["concurrency"], int) or llm["concurrency"] < 1:
+        raise ConfigError("[llm] concurrency must be a positive integer")
 
     chunking = config["chunking"]
     size, overlap = chunking["chunk_size"], chunking["overlap"]

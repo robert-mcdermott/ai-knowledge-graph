@@ -25,21 +25,43 @@ COMMUNITY_PALETTE = [
 INFERRED_EDGE_COLOR = "#8a8a8a"
 FREEZE_PHYSICS_ABOVE = 300  # nodes; larger graphs stop simulating once laid out
 
+ENTITY_TYPES = ("person", "organization", "place", "event", "technology", "product", "work", "date", "concept")
+# vis-network shapes with the label drawn outside the shape, one per entity type.
+TYPE_SHAPES = {
+    "person": "diamond", "organization": "square", "place": "triangle", "event": "star",
+    "technology": "hexagon", "product": "hexagon", "work": "triangleDown", "date": "square", "concept": "dot",
+}
+TYPE_GLYPHS = {"diamond": "◆", "square": "■", "triangle": "▲", "star": "★", "hexagon": "⬢", "triangleDown": "▼", "dot": "●"}
+
+
+def entity_types(triples):
+    """Majority-vote entity type per node from the ``subject_type``/``object_type`` fields."""
+    votes = {}
+    for t in triples:
+        for name, key in ((t["subject"], "subject_type"), (t["object"], "object_type")):
+            value = t.get(key)
+            if isinstance(value, str) and value.strip().lower() in ENTITY_TYPES:
+                votes.setdefault(name, {}).setdefault(value.strip().lower(), 0)
+                votes[name][value.strip().lower()] += 1
+    return {name: max(counts.items(), key=lambda kv: (kv[1], kv[0]))[0] for name, counts in votes.items()}
+
 
 def community_color(index):
     return COMMUNITY_PALETTE[index % len(COMMUNITY_PALETTE)]
 
 
-def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None):
+def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
+                              community_namer=None):
     """
     Create and visualize a knowledge graph from subject-predicate-object triples.
 
     Args:
         triples: List of dictionaries with 'subject', 'predicate', and 'object' keys
-                 (optionally 'inferred', 'method', 'via', 'chunk')
+                 (optionally 'inferred', 'method', 'via', 'chunk', 'source', 'subject_type', 'object_type')
         output_file: HTML file to save the visualization
         edge_smooth: Edge smoothing setting (overrides config)
         config: Configuration dictionary (optional)
+        community_namer: optional callable(list_of_community_dicts) -> {community_id: name}
 
     Returns:
         Dictionary with graph statistics
@@ -57,6 +79,17 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
     print(f"Found {stats['nodes']} unique nodes")
     print(f"Found {stats['inferred_edges']} inferred relationships")
     print(f"Detected {stats['communities']} communities using Louvain method")
+    if community_namer is not None and stats["communities"] > 1:
+        try:
+            names = community_namer(graph_data["meta"]["communities"]) or {}
+        except Exception as e:  # naming is cosmetic; never fail the render
+            print(f"Warning: community naming failed: {e}")
+            names = {}
+        if names:
+            for entry in graph_data["meta"]["communities"]:
+                if entry["id"] in names:
+                    entry["name"] = names[entry["id"]]
+            print(f"Named {len(names)} communities")
 
     html = render_html(graph_data)
     with open(output_file, "w", encoding="utf-8") as f:
@@ -66,7 +99,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
     return stats
 
 
-def build_graph_data(triples, edge_smooth=False):
+def build_graph_data(triples, edge_smooth=False, community_names=None):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
@@ -84,19 +117,27 @@ def build_graph_data(triples, edge_smooth=False):
     node_communities, community_count = _detect_communities(G_undirected, all_nodes)
     node_sizes = _calculate_node_sizes(all_nodes, centrality["betweenness"], degree, centrality["eigenvector"])
 
+    types = entity_types(triples)
     nodes = []
     for node in sorted(all_nodes):
         community = node_communities[node]
-        nodes.append({
+        node_type = types.get(node)
+        title = f"{node}\nConnections: {degree.get(node, 0)}\nCommunity: {community + 1}"
+        if node_type:
+            title += f"\nType: {node_type}"
+        entry = {
             "id": node,
             "label": node,
-            "title": f"{node}\nConnections: {degree.get(node, 0)}\nCommunity: {community + 1}",
+            "title": title,
             "color": community_color(community),
             "community": community,
             "degree": degree.get(node, 0),
             "size": round(node_sizes[node], 2),
-            "shape": "dot",
-        })
+            "shape": TYPE_SHAPES.get(node_type, "dot"),
+        }
+        if node_type:
+            entry["type"] = node_type
+        nodes.append(entry)
 
     edges = []
     for index, triple in enumerate(triples):
@@ -107,6 +148,8 @@ def build_graph_data(triples, edge_smooth=False):
             title += f"\nInferred ({method or 'unknown'})"
             if triple.get("via"):
                 title += f" via {triple['via']}"
+        elif triple.get("source"):
+            title += f"\n“{triple['source']}”"
         elif triple.get("chunk"):
             title += f"\nExtracted from chunk {triple['chunk']}"
         edge = {"id": f"e{index}", "from": triple["subject"], "to": triple["object"], "label": triple["predicate"],
@@ -117,6 +160,8 @@ def build_graph_data(triples, edge_smooth=False):
             edge["via"] = triple["via"]
         if triple.get("chunk"):
             edge["chunk"] = triple["chunk"]
+        if triple.get("source"):
+            edge["source"] = triple["source"]
         if is_inferred:
             edge["dashes"] = True
             edge["color"] = {"color": INFERRED_EDGE_COLOR, "opacity": 0.8}
@@ -130,7 +175,13 @@ def build_graph_data(triples, edge_smooth=False):
     communities = []
     for community in range(community_count):
         names = sorted(members.get(community, []), key=lambda n: -degree.get(n, 0))
-        communities.append({"id": community, "color": community_color(community), "size": len(names), "top": names[:3]})
+        entry = {"id": community, "color": community_color(community), "size": len(names), "top": names[:8]}
+        if community_names and community_names.get(community):
+            entry["name"] = community_names[community]
+        communities.append(entry)
+    present_types = sorted({n["type"] for n in nodes if "type" in n})
+    type_legend = [{"type": t, "shape": TYPE_SHAPES[t], "glyph": TYPE_GLYPHS[TYPE_SHAPES[t]],
+                    "count": sum(1 for n in nodes if n.get("type") == t)} for t in present_types]
 
     stats = {
         "nodes": len(all_nodes),
@@ -148,6 +199,7 @@ def build_graph_data(triples, edge_smooth=False):
             "title": title,
             "stats": stats,
             "communities": communities,
+            "types": type_legend,
             "freezePhysicsAbove": FREEZE_PHYSICS_ABOVE,
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
@@ -241,8 +293,9 @@ SAMPLE_TRIPLES = [
     {"subject": "Industrial Revolution", "predicate": "led to", "object": "rise of capitalism"},
     {"subject": "Industrial Revolution", "predicate": "led to", "object": "new labor movements"},
     {"subject": "Industrial Revolution", "predicate": "fueled by", "object": "technological innovations"},
-    {"subject": "James Watt", "predicate": "developed", "object": "steam engine"},
-    {"subject": "James Watt", "predicate": "born in", "object": "Scotland"},
+    {"subject": "James Watt", "predicate": "developed", "object": "steam engine", "subject_type": "person",
+     "object_type": "technology", "source": "The steam engine was refined by James Watt."},
+    {"subject": "James Watt", "predicate": "born in", "object": "Scotland", "subject_type": "person", "object_type": "place"},
     {"subject": "Scotland", "predicate": "a country in", "object": "Europe"},
     {"subject": "steam engine", "predicate": "revolutionized", "object": "transportation"},
     {"subject": "steam engine", "predicate": "revolutionized", "object": "manufacturing processes"},

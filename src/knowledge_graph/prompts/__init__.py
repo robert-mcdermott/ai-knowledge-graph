@@ -1,5 +1,9 @@
 """Prompt factory and centralized prompt registry for the knowledge graph system."""
 
+from .community_prompts import (
+    COMMUNITY_NAMING_SYSTEM_PROMPT,
+    get_community_naming_user_prompt,
+)
 from .entity_prompts import (
     ENTITY_RESOLUTION_SYSTEM_PROMPT,
     get_entity_resolution_user_prompt,
@@ -31,6 +35,8 @@ __all__ = [
     "get_bridge_inference_user_prompt",
     "HUB_INFERENCE_SYSTEM_PROMPT",
     "get_hub_inference_user_prompt",
+    "COMMUNITY_NAMING_SYSTEM_PROMPT",
+    "get_community_naming_user_prompt",
 ]
 
 
@@ -60,6 +66,8 @@ class PromptFactory:
             "bridge_inference_user": get_bridge_inference_user_prompt,
             "hub_inference_system": HUB_INFERENCE_SYSTEM_PROMPT,
             "hub_inference_user": get_hub_inference_user_prompt,
+            "community_naming_system": COMMUNITY_NAMING_SYSTEM_PROMPT,
+            "community_naming_user": get_community_naming_user_prompt,
         }
 
     def get_prompt(self, name: str, *args, **kwargs) -> str:

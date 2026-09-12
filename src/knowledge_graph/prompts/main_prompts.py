@@ -31,21 +31,26 @@ Important Considerations:
 Output Requirements:
 
 - Do not include any text or commentary outside of the JSON.
-- Return only the JSON array, with each triple as an object containing \"subject\", \"predicate\", and \"object\".
+- Return only the JSON array, with each triple as an object containing \"subject\", \"predicate\", \"object\", \"subject_type\" and \"object_type\".
+- Entity types MUST be one of: person, organization, place, event, technology, product, work, date, concept.
 - Make sure the JSON is valid and properly formatted.
 
 Example of the desired output structure:
 
 [
   {
-    \"subject\": \"Term A\",
-    \"predicate\": \"relates to\",  // Notice: only 2 words
-    \"object\": \"Term B\"
+    \"subject\": \"james watt\",
+    \"subject_type\": \"person\",
+    \"predicate\": \"refined\",  // Notice: only 1 word
+    \"object\": \"steam engine\",
+    \"object_type\": \"technology\"
   },
   {
-    \"subject\": \"Term C\",
-    \"predicate\": \"uses\",  // Notice: only 1 word
-    \"object\": \"Term D\"
+    \"subject\": \"steam engine\",
+    \"subject_type\": \"technology\",
+    \"predicate\": \"used in\",  // Notice: only 2 words
+    \"object\": \"manufacturing\",
+    \"object_type\": \"concept\"
   }
 ]
 

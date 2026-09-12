@@ -67,6 +67,7 @@ temperature = 0.2                # omit for models that only accept the default 
 #max_retries = 3                 # retries on 429/5xx/connection errors
 #token_param = "auto"            # auto-switches to max_completion_tokens for newer OpenAI models
 #json_mode = false               # request response_format = json_object
+#concurrency = 4                 # chunks extracted in parallel
 #reasoning_effort = "low"        # passed through to servers/models that support it
 #[llm.extra_body]                # arbitrary extra request fields, e.g. Ollama's think switch
 #think = false
@@ -242,9 +243,9 @@ file:///mnt/c/Users/rmcdermo/Documents/industrial-revolution-kg.html
 
 ## How It Works
 
-1. **Chunking**: The document is split into overlapping chunks to fit within the LLM's context window
+1. **Chunking**: The document is split into overlapping chunks on sentence boundaries to fit within the LLM's context window
 2. **First Pass - SPO Extraction**: 
-   - Each chunk is processed by the LLM to extract Subject-Predicate-Object triplets
+   - Chunks are processed by the LLM in parallel (`llm.concurrency`) to extract typed Subject-Predicate-Object triplets, each tagged with the sentence it came from
    - Implemented in the `process_with_llm` function
    - The LLM identifies entities and their relationships within each text segment
    - Results are collected across all chunks to form the initial knowledge graph
@@ -274,6 +275,12 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
 - **Explore by clicking**: click a node to highlight its neighbourhood and open a details panel listing every
   incoming and outgoing relationship, tagged *extracted* or with its inference method; click a row to jump to
   that node. Double-click to zoom in.
+- **Entity types**: the extraction pass labels every entity (person, organization, place, event, technology,
+  product, work, date, concept); node shapes reflect the type and the Communities panel can filter by it.
+- **Provenance**: each extracted relationship carries the sentence it came from, shown in tooltips and in
+  the details panel, so inferred edges are easy to tell apart from what the text actually says.
+- **Named communities**: after community detection the LLM gives each community a short name (one call;
+  disable with `visualization.name_communities = false`).
 - **Search** with autocomplete (`/`), and shareable links: the selected node is kept in the URL (`#node=...`).
 - **Communities panel**: colour-coded Louvain communities with their top entities, toggle any of them on/off,
   a minimum-connections slider, and a switch for inferred relationships.

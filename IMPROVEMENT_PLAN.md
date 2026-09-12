@@ -80,6 +80,10 @@ is stale (`prompts.py` is now a package).
 > *Hide Inferred* toggle and per-method stats, Bootstrap CDN removed (fully offline HTML), MultiDiGraph so
 > parallel edges are no longer dropped, encoding fallback for input files, `--from-json` re-rendering.
 > Phase 1 is complete except the `logging` migration (moved to Phase 4).
+> **Wave 7 (done):** entity types (closed set, majority vote per node, shapes + type filter in the page),
+> provenance (source sentence per extracted edge, shown in tooltips and the details panel),
+> sentence-aware chunking, parallel chunk extraction (`llm.concurrency`), LLM-named communities.
+> Live run: 143/143 extracted triples typed and sourced; 11 communities named; extraction 2x faster.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -231,17 +235,17 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 
 ## Phase 3 – Better knowledge, not just more edges (P1, M)
 
-- [ ] **Entity types.** Extend the extraction prompt to return
+- [x] **Entity types.** Extend the extraction prompt to return
       `subject_type` / `object_type` from a small closed set (person, organization, place,
       event, concept, technology, work, date). Use type for node shape/icon and community
       for color; filter by type in the UI. `P1 M`
-- [ ] **Provenance.** Keep the source sentence (or chunk id + sentence index) on every
+- [x] **Provenance.** Keep the source sentence (or chunk id + sentence index) on every
       extracted triple and mark inferred triples with their method
       (`transitive`, `llm_community`, `llm_within`, `lexical`) and a confidence. Show it in
       the details panel. This is what makes users trust inferred edges. `P1 M`
-- [ ] **Sentence/paragraph-aware chunking** (split on sentence boundaries, size in tokens
+- [x] **Sentence/paragraph-aware chunking** (split on sentence boundaries, size in tokens
       via a cheap estimator) so relationships aren't cut mid-sentence. `P1 S`
-- [ ] **Parallel chunk extraction** with a configurable worker count (`llm.concurrency`,
+- [x] **Parallel chunk extraction** with a configurable worker count (`llm.concurrency`,
       default 4); order-preserving results. Cuts wall-clock time 3–5×. `P1 S`
 - [ ] **Response cache** keyed by hash(model, prompt) in `.kg-cache/`, so re-running
       visualization changes or tweaking inference doesn't re-pay for extraction.
@@ -249,7 +253,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [x] **Smarter inference budget**: cap inferred edges to a configurable fraction of extracted
       edges (default 50 %), prefer LLM-inferred over rule-inferred when over budget, and
       never infer between nodes already connected in either direction. `P1 S`
-- [ ] **LLM-named communities**: after Louvain, ask the LLM for a 2–4 word label per
+- [x] **LLM-named communities**: after Louvain, ask the LLM for a 2–4 word label per
       community from its top nodes; show labels in the legend and as optional cluster
       captions. Cheap (one call) and a strong "AI-powered" differentiator. `P1 S`
 - [ ] **Predicate normalization**: lower-case, lemmatize simple tense variants

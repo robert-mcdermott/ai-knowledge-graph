@@ -14,6 +14,7 @@ temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit 
 #token_param = "auto"       # "auto" (default) switches to max_completion_tokens when the server asks for it
 #json_mode = false          # Send response_format = json_object (OpenAI, Ollama, vLLM, LiteLLM support it)
 #reasoning_effort = "low"   # Passed through as-is for models/servers that support it
+#concurrency = 4            # Chunks extracted in parallel (default 4); lower it if your server rate-limits
 #api_key = "env:OPENAI_API_KEY"  # Read the key from an environment variable instead of this file
 #[llm.extra_body]           # Any extra JSON fields for the request body, e.g. Ollama's think switch
 #think = false
@@ -49,5 +50,6 @@ apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for tra
 #max_inferred_ratio = 0.5         # Cap inferred edges at this fraction of extracted edges
 
 [visualization]
+name_communities = true  # Ask the LLM for a short name per community (one call); shown in the Communities panel
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 
                          # "straightCross", "horizontal", "vertical", "curvedCW", "curvedCCW", "cubicBezier": true = "continuous"

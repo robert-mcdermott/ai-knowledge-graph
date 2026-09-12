@@ -46,6 +46,10 @@ main { position: relative; flex: 1; min-height: 0; }
 #legend .size { color: var(--muted); font-size: 12px; }
 #legend .top { color: var(--muted); font-size: 11px; margin-left: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .control { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; }
+#legend h4, #details h4 { margin: 10px 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+#legend .glyph { width: 14px; text-align: center; flex: none; }
+#details .source { display: block; color: var(--muted); font-size: 11px; font-style: italic; margin: -2px 0 4px 26px; white-space: normal; }
+#details .rel { flex-wrap: wrap; }
 .control input[type=range] { flex: 1; }
 #details { right: 12px; top: 12px; width: 320px; }
 #details .name { font-size: 16px; font-weight: 650; word-break: break-word; }
@@ -127,6 +131,7 @@ footer a { color: inherit; text-decoration: none; }
     <h3>Communities <button class="close" data-close="legend" title="Close">×</button></h3>
     <div id="legend-list"></div>
     <div class="control"><button class="btn small" id="legend-all">All</button><button class="btn small" id="legend-none">None</button></div>
+    <div id="type-legend"></div>
     <div class="control"><span>Min connections</span><input type="range" id="min-degree" min="1" max="10" value="1"><span id="min-degree-value">1</span></div>
     <div class="control"><label><input type="checkbox" id="show-inferred" checked> Show inferred relationships</label></div>
   </aside>
@@ -181,7 +186,8 @@ const KG = {{ data_json }};
   const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
   const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
   const state = { labels: true, edgeLabels: 'selection', inferred: true, minDegree: 1,
-                  hiddenCommunities: new Set(), selected: null, dark: false, physics: true };
+                  hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, dark: false, physics: true };
+  const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
 
   // ---------- theme ----------
   function theme() { return state.dark ? { node: '#ffffff', edge: '#f0c000', stroke: '#0d1117' } : { node: '#000000', edge: '#333333', stroke: '#ffffff' }; }
@@ -279,7 +285,8 @@ const KG = {{ data_json }};
     const n = base.node.get(id);
     $('d-name').textContent = id;
     const comm = meta.communities[n.community] || {};
-    $('d-meta').innerHTML = `<span><span class="dot" style="background:${esc(n.color)}"></span>Community ${n.community + 1}</span>` +
+    $('d-meta').innerHTML = (n.type ? `<span>${esc(TYPE_GLYPH[n.shape] || '●')} ${esc(n.type)}</span>` : '') +
+                            `<span><span class="dot" style="background:${esc(n.color)}"></span>${esc(comm.name || ('Community ' + (n.community + 1)))}</span>` +
                             `<span>${degree.get(id)} connection${degree.get(id) === 1 ? '' : 's'}</span>`;
     const out = [], inc = [];
     edges.get().forEach(e => {
@@ -288,7 +295,8 @@ const KG = {{ data_json }};
     });
     const row = (e, other, arrow) => `<div class="rel" data-node="${esc(other)}" title="${esc(e.title || '')}">` +
       `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(other)}</span>` +
-      `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span></div>`;
+      `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span>` +
+      (e.source ? `<span class="source">“${esc(e.source)}”</span>` : (e.via ? `<span class="source">via ${esc(e.via)}</span>` : '')) + `</div>`;
     let html = '';
     if (out.length) html += '<h4>Outgoing</h4>' + out.map(e => row(e, e.to, '→')).join('');
     if (inc.length) html += '<h4>Incoming</h4>' + inc.map(e => row(e, e.from, '←')).join('');
@@ -302,7 +310,8 @@ const KG = {{ data_json }};
   function applyFilters() {
     const nodeUpdates = [], hiddenNodes = new Set();
     nodes.get().forEach(n => {
-      const hidden = state.hiddenCommunities.has(n.community) || (degree.get(n.id) || 0) < state.minDegree;
+      const hidden = state.hiddenCommunities.has(n.community) || (degree.get(n.id) || 0) < state.minDegree ||
+                     (n.type && state.hiddenTypes.has(n.type));
       if (hidden) hiddenNodes.add(n.id);
       nodeUpdates.push({ id: n.id, hidden });
     });
@@ -314,15 +323,26 @@ const KG = {{ data_json }};
   function renderLegend() {
     $('legend-list').innerHTML = meta.communities.map(c =>
       `<label class="row"><input type="checkbox" data-community="${c.id}" ${state.hiddenCommunities.has(c.id) ? '' : 'checked'}>` +
-      `<span class="dot" style="background:${esc(c.color)}"></span><span class="name">Community ${c.id + 1}</span><span class="size">${c.size}</span></label>` +
-      `<div class="top">${esc(c.top.join(', '))}</div>`).join('');
+      `<span class="dot" style="background:${esc(c.color)}"></span><span class="name" title="${esc(c.name || '')}">${esc(c.name || ('Community ' + (c.id + 1)))}</span><span class="size">${c.size}</span></label>` +
+      `<div class="top">${esc(c.top.slice(0, 3).join(', '))}</div>`).join('');
     $('legend-list').querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
       const id = Number(cb.dataset.community);
       if (cb.checked) state.hiddenCommunities.delete(id); else state.hiddenCommunities.add(id);
       applyFilters();
     }));
   }
+  function renderTypeLegend() {
+    if (!meta.types || !meta.types.length) { $('type-legend').innerHTML = ''; return; }
+    $('type-legend').innerHTML = '<h4>Entity types</h4>' + meta.types.map(t =>
+      `<label class="row"><input type="checkbox" data-type="${esc(t.type)}" ${state.hiddenTypes.has(t.type) ? '' : 'checked'}>` +
+      `<span class="glyph">${t.glyph}</span><span class="name">${esc(t.type)}</span><span class="size">${t.count}</span></label>`).join('');
+    $('type-legend').querySelectorAll('input').forEach(cb => cb.addEventListener('change', () => {
+      if (cb.checked) state.hiddenTypes.delete(cb.dataset.type); else state.hiddenTypes.add(cb.dataset.type);
+      applyFilters();
+    }));
+  }
   renderLegend();
+  renderTypeLegend();
   $('legend-all').addEventListener('click', () => { state.hiddenCommunities.clear(); renderLegend(); applyFilters(); });
   $('legend-none').addEventListener('click', () => { meta.communities.forEach(c => state.hiddenCommunities.add(c.id)); renderLegend(); applyFilters(); });
   const maxDegree = Math.max(1, ...degree.values());
@@ -380,6 +400,10 @@ const KG = {{ data_json }};
       const t = { subject: e.from, predicate: e.label, object: e.to };
       if (e.inferred) { t.inferred = true; t.method = e.method || null; if (e.via) t.via = e.via; }
       if (e.chunk) t.chunk = e.chunk;
+      if (e.source) t.source = e.source;
+      const sn = base.node.get(e.from), on = base.node.get(e.to);
+      if (sn && sn.type) t.subject_type = sn.type;
+      if (on && on.type) t.object_type = on.type;
       return t;
     });
   }
@@ -391,6 +415,7 @@ const KG = {{ data_json }};
     const rows = [['Nodes', `${visN} / ${KG.nodes.length}`], ['Relationships', `${visE.length} / ${KG.edges.length}`],
                   ['Extracted', visE.length - inf], ['Inferred', inf]]
       .concat(Object.entries(methods).map(([m, n]) => ['  ' + m, n]))
+      .concat(meta.types && meta.types.length ? [['Typed entities', meta.types.reduce((a, t) => a + t.count, 0)]] : [])
       .concat([['Communities', meta.communities.length], ['Generated', meta.generated || '']]);
     $('stats-table').innerHTML = rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
     $('counts').textContent = ` ${KG.nodes.length} nodes · ${KG.edges.length} relationships · ${meta.communities.length} communities`;
