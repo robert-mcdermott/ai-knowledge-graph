@@ -1,11 +1,7 @@
 [llm]
-model = "gemma3"
-#model = "claude-3.5-sonnet-v2"
-#model = "gpt4o"
-#model = "llama3-2-90b-instruct-v1:0"
+model = "gemma4:31b"
 api_key = "sk-1234"
 base_url = "http://localhost:11434/v1/chat/completions"
-#base_url = "http://localhost:4000/v1/chat/completions"
 max_tokens = 32768  # Reasoning models (deepseek, qwen3, gpt-5, o-series) spend most of this on hidden
                     # reasoning; 8192 is NOT enough for them and the run will abort with a truncation error.
 temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit this line for models that only accept the default temperature (e.g. gpt-5)
