@@ -14,7 +14,7 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 - **Conservative, traceable inference**: LLM passes bridge isolated parts of the graph and add well-known relationships between central entities; a deterministic taxonomy rule links specific terms to general ones; every inferred edge carries its method and is capped relative to the extracted edges
 - **Exports**: JSON, CSV, GraphML for Gephi/yEd/Cytoscape and a Cypher script for Neo4j
 - **Chat with the graph** (optional `graph-chat` command): grounded, cited answers from the generated graph
-- **Local web interface** (optional `graph-serve` command): browse, explore and ask questions in the browser
+- **Local web interface** (optional `graph-serve` command): ingest, browse, explore and ask questions in the browser
 - **Interactive explorer**: a single self-contained HTML file with search, click-to-highlight, a relationships panel with sources, named communities, entity-type filters, a shortest-path finder, exports and light/dark themes
 - **Robust LLM client**: truncation detection for reasoning models, retries with back-off, automatic `max_completion_tokens` fallback, environment-variable API keys and an on-disk response cache
 - **Works with any OpenAI-compatible endpoint**: Ollama, LM Studio, vLLM, OpenAI, Gemini, OpenRouter, LiteLLM (which fronts AWS Bedrock, Azure OpenAI, Anthropic and many others)
@@ -311,9 +311,14 @@ pip install "ai-knowledge-graph[web]"      # FastAPI + uvicorn
 graph-serve --config config.toml --graphs ./out --open
 ```
 
-It binds to `127.0.0.1:8008` by default, has no accounts or authentication, and only reads the `.json` files
-`generate-graph` writes, so it is meant for your own machine. Static HTML output is unchanged: the chat panel
-only exists in served pages. `--host 0.0.0.0` exposes it on your network if you put your own access control in front.
+The library page also has a **New graph** form: paste text or upload files (`.txt`, `.md`, `.rst`, `.pdf`,
+`.docx`, several at once), watch the phases run, and land in the explorer when it finishes. It runs the same
+pipeline as `generate-graph` and writes the same `.json` and `.html` into the graphs directory, so the result is
+usable from the command line and `graph-chat` too. One generation runs at a time.
+
+It binds to `127.0.0.1:8008` by default, has no accounts or authentication, and only reads and writes the graphs
+directory, so it is meant for your own machine. Static HTML output is unchanged: the chat panel only exists in
+served pages. `--host 0.0.0.0` exposes it on your network if you put your own access control in front.
 
 ## Output files
 
@@ -419,7 +424,8 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
     ├── prompts/                    # LLM prompts (extraction, entity resolution, inference, community naming)
     └── templates/
         ├── graph.html.j2           # The interactive explorer page (Jinja2)
-        ├── library.html.j2         # Graph library page for graph-serve
+        ├── library.html.j2         # Graph library + new-graph form for graph-serve
+        ├── job.html.j2             # Generation progress page for graph-serve
         └── vendor/                 # Embedded vis-network library
 ```
 

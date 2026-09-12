@@ -94,7 +94,8 @@ is stale (`prompts.py` is now a package).
 > **Wave 10 (done, 0.8):** optional `graph-chat` command (grounded, cited question answering over the
 > JSON; `[query]` config); `generate-graph` unchanged. Taxonomy rule no longer applies to people/places/orgs.
 > **Wave 11a (done, 0.8):** optional `graph-serve` (`[web]` extra): graph library, explorer pages, Ask panel
-> backed by the same retrieval code; localhost, no accounts. Static output unchanged. Wave 11b: ingest in the browser.
+> backed by the same retrieval code; localhost, no accounts. Static output unchanged.
+> **Wave 11b (done, 0.8):** ingest in the browser: paste/upload → background job with progress page → explorer.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -313,7 +314,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       steam engine affect cities?"` which retrieves the relevant subgraph (search + k-hop)
       and asks the LLM with the triples as context; later expose the same in the HTML via a
       user-supplied endpoint. `P2 L`
-- [x] **Lightweight local web UI** (wave 11a: serve + explore + chat over existing graphs; in-browser ingest pending) (`generate-graph serve`): upload text, watch progress,
+- [x] **Lightweight local web UI** (waves 11a/11b: ingest, library, explorer and chat; localhost, no accounts) (`generate-graph serve`): upload text, watch progress,
       open the result. Evaluate PR #22 (2.3k-line generated FastAPI app) as a starting point
       but keep it optional and out of the core package. `P2 L`
 - [x] **Neo4j / Cypher export** (issue #18) and GraphML for Gephi. `P2 S`
