@@ -107,6 +107,7 @@ incomplete graph.
 - `--no-standardize`: Disable entity standardization
 - `--no-inference`: Disable relationship inference
 - `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
+- `--from-json FILE`: Re-render the visualization from a previously saved `.json` triples file (no LLM calls)
 - `--test`: Generate sample visualization using test data
 
 ### Usage message (--help)
@@ -262,7 +263,8 @@ Both the second and third passes are optional and can be disabled in the configu
 
 - **Color-coded Communities**: Node colors represent different communities
 - **Node Size**: Nodes sized by importance (degree, betweenness, eigenvector centrality)
-- **Relationship Types**: Original relationships shown as solid lines, inferred relationships as dashed lines
+- **Relationship Types**: Original relationships shown as solid lines, inferred relationships as dashed lines; a *Hide Inferred* button toggles them, and edge tooltips show the inference method
+- **Self-contained output**: the HTML file embeds everything it needs and works offline
 - **Interactive Controls**: Zoom, pan, hover for details, filtering and physics controls
 - **Light (default) and Dark mode themes**.
 

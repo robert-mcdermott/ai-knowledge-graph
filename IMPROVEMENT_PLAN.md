@@ -75,7 +75,11 @@ is stale (`prompts.py` is now a package).
 > links every isolated component to the main graph, LLM *hub enrichment* pass for general-knowledge
 > edges between central entities, default temperature 0.2 and a tighter atomic-entity instruction.
 > Measured on the wave-2 run: taxonomy alone took the graph from 22 components to 7 (228/286 nodes connected).
-> Remaining Phase 1 waves: text handling, template fixes.
+> **Wave 4 (done):** template fixes (script runs after `network` exists, no invalid vis options, no init
+> hacks), 20-colour community palette with real `community`/`inferred`/`method`/`via` attributes, a
+> *Hide Inferred* toggle and per-method stats, Bootstrap CDN removed (fully offline HTML), MultiDiGraph so
+> parallel edges are no longer dropped, encoding fallback for input files, `--from-json` re-rendering.
+> Phase 1 is complete except the `logging` migration (moved to Phase 4).
 
 Correctness fixes that change results today. Do these first and cut a 0.6.2 patch.
 
@@ -139,21 +143,21 @@ Correctness fixes that change results today. Do these first and cut a 0.6.2 patc
 ### Text handling (`text_utils.py`, `main.py`)
 - [x] **Guard `chunk_text` against `overlap >= chunk_size`** (infinite loop, verified) and
       validate config values at load time. `P0 S`
-- [ ] **Encoding fallback and file-type check** for input: try UTF-8, then UTF-8-sig,
+- [x] **Encoding fallback and file-type check** for input: try UTF-8, then UTF-8-sig,
       then `latin-1`, and give a clear message for binary files like PDF (issue #9). `P0 S`
-- [ ] **Unbuffered / logged output.** Replace `print` with `logging` (`--verbose`,
+- [ ] **Unbuffered / logged output** (prints now flush; full `logging` migration pending). Replace `print` with `logging` (`--verbose`,
       `--quiet`), flush progress lines, and print a final summary table. `P1 S`
 
 ### Visualization template (`templates/graph_template.html`, `visualization.py`)
-- [ ] **Fix `network is not defined`**: run template code after PyVis's `drawGraph()` (inject
+- [x] **Fix `network is not defined`**: run template code after PyVis's `drawGraph()` (inject
       the template script *after* the network is created, or guard with a ready hook).
       Remove the duplicated `stabilizationIterationsDone` handler. `P0 S`
-- [ ] **Remove invalid vis options** (`nodes.tooltipDelay`, `background`); drive the
+- [x] **Remove invalid vis options** (`nodes.tooltipDelay`, `background`); drive the
       background via CSS only. `P0 S`
-- [ ] **Store `community` and `inferred` as real node/edge attributes** instead of deriving
+- [x] **Store `community` and `inferred` as real node/edge attributes** instead of deriving
       them from color / `dashes`; generate a palette with ≥ 20 distinct, contrast-checked
       colors (Tableau 20 / Okabe-Ito extended) and drop `#ffff33` (unreadable on white). `P0 S`
-- [ ] **Make the HTML truly self-contained**: no Bootstrap CDN (the beta-3 link), inline all
+- [x] **Make the HTML truly self-contained**: no Bootstrap CDN (the beta-3 link), inline all
       CSS/JS, and offer `--cdn` to produce a small file instead. `P1 S`
 
 ---
@@ -186,7 +190,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [ ] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
       the confirmed run) with a count badge, and list all predicates in the tooltip /
       details panel. Use `smooth: curvedCW/CCW` only when two directions exist. `P1 S`
-- [ ] **Inferred edges hidden by default** in the page, with a one-click toggle and a count
+- [ ] **Inferred edges hidden by default** in the page (a one-click *Hide Inferred* toggle exists since wave 4; default is still visible), with a count
       in the legend, so the first impression is the extracted graph. `P1 S`
 - [ ] **Community legend with toggles**: click a color to isolate/hide a community; show
       counts. `P1 S`

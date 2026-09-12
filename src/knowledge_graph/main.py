@@ -196,6 +196,58 @@ def process_text_in_chunks(config, full_text, debug=False, continue_on_error=Fal
     
     return all_results
 
+TEXT_ENCODINGS = ("utf-8-sig", "cp1252", "latin-1")  # utf-8-sig also reads plain UTF-8 and strips a BOM
+BINARY_EXTENSIONS = {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip", ".gz", ".png", ".jpg", ".jpeg", ".gif"}
+
+
+class InputError(Exception):
+    """Raised when the input file cannot be read as text."""
+
+
+def read_input_text(path):
+    """Read a text file trying several encodings; refuse binary formats with a clear message.
+
+    Raises:
+        InputError: with a message that explains what to do.
+    """
+    ext = os.path.splitext(path)[1].lower()
+    if ext in BINARY_EXTENSIONS:
+        raise InputError(f"{path} looks like a {ext} file. Only plain text is supported; "
+                         f"convert it to .txt or .md first (for PDFs: `pdftotext file.pdf file.txt`).")
+    try:
+        with open(path, "rb") as f:
+            raw = f.read()
+    except OSError as e:
+        raise InputError(f"Could not read {path}: {e}") from e
+    if not raw.strip():
+        raise InputError(f"{path} is empty.")
+    if b"\x00" in raw[:4096]:
+        raise InputError(f"{path} contains binary data (NUL bytes); only plain text files are supported.")
+    for encoding in TEXT_ENCODINGS:
+        try:
+            text = raw.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+        if encoding != "utf-8-sig":
+            print(f"Note: {path} decoded as {encoding}", flush=True)
+        return text
+    raise InputError(f"Could not decode {path} as text (tried {', '.join(TEXT_ENCODINGS)}).")
+
+
+def load_triples_from_json(path):
+    """Load a previously generated *.json triples file (skips all LLM phases)."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        raise InputError(f"Could not load triples from {path}: {e}") from e
+    if isinstance(data, dict) and isinstance(data.get("triples"), list):
+        data = data["triples"]
+    if not isinstance(data, list) or not all(isinstance(t, dict) and "subject" in t and "object" in t for t in data):
+        raise InputError(f"{path} does not contain a list of subject/predicate/object triples.")
+    return data
+
+
 def get_unique_entities(triples):
     """
     Get the set of unique entities from the triples.
@@ -223,7 +275,9 @@ def main():
     parser.add_argument('--test', action='store_true', help='Generate a test visualization with sample data')
     parser.add_argument('--config', type=str, default='config.toml', help='Path to configuration file')
     parser.add_argument('--output', type=str, default='knowledge_graph.html', help='Output HTML file path')
-    parser.add_argument('--input', type=str, required=False, help='Path to input text file (required unless --test is used)')
+    parser.add_argument('--input', type=str, required=False, help='Path to input text file (required unless --test or --from-json is used)')
+    parser.add_argument('--from-json', type=str, metavar='FILE',
+                        help='Render a visualization from a previously saved triples JSON file (no LLM calls)')
     parser.add_argument('--debug', action='store_true', help='Enable debug output (raw LLM responses and extracted JSON)')
     parser.add_argument('--no-standardize', action='store_true', help='Disable entity standardization')
     parser.add_argument('--no-inference', action='store_true', help='Disable relationship inference')
@@ -247,9 +301,22 @@ def main():
         print(f"file://{os.path.abspath(args.output)}")
         return
     
+    # Re-render an existing graph without touching the LLM
+    if args.from_json:
+        try:
+            triples = load_triples_from_json(args.from_json)
+        except InputError as e:
+            print(f"Error: {e}")
+            sys.exit(1)
+        print(f"Loaded {len(triples)} triples from {args.from_json}")
+        stats = visualize_knowledge_graph(triples, args.output, config=config)
+        print(f"\nNodes: {stats['nodes']}  Edges: {stats['edges']}  Communities: {stats['communities']}")
+        print(f"file://{os.path.abspath(args.output)}")
+        return
+
     # For normal processing, input file is required
     if not args.input:
-        print("Error: --input is required unless --test is used")
+        print("Error: --input is required unless --test or --from-json is used")
         parser.print_help()
         sys.exit(2)
     
@@ -261,11 +328,10 @@ def main():
     
     # Load input text from file
     try:
-        with open(args.input, 'r', encoding='utf-8') as f:
-            input_text = f.read()
+        input_text = read_input_text(args.input)
         print(f"Using input text from file: {args.input}")
-    except Exception as e:
-        print(f"Error reading input file {args.input}: {e}")
+    except InputError as e:
+        print(f"Error: {e}")
         sys.exit(1)
     
     # Process text in chunks
