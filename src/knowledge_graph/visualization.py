@@ -74,8 +74,9 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         return {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
 
     print(f"Processing {len(triples)} triples for visualization")
-    show_inferred = (config or {}).get("visualization", {}).get("show_inferred", True)
-    graph_data = build_graph_data(triples, edge_smooth, show_inferred=show_inferred)
+    vis_cfg = (config or {}).get("visualization", {})
+    graph_data = build_graph_data(triples, edge_smooth, show_inferred=vis_cfg.get("show_inferred", True),
+                                  theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"))
     stats = graph_data["meta"]["stats"]
     print(f"Found {stats['nodes']} unique nodes")
     print(f"Found {stats['inferred_edges']} inferred relationships")
@@ -100,7 +101,8 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
     return stats
 
 
-def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True):
+def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True,
+                     theme="light", edge_labels="all"):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
@@ -203,6 +205,8 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             "types": type_legend,
             "freezePhysicsAbove": FREEZE_PHYSICS_ABOVE,
             "showInferred": bool(show_inferred),
+            "theme": theme if theme in ("light", "dark") else "light",
+            "edgeLabels": edge_labels if edge_labels in ("all", "selection", "none") else "all",
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
     }

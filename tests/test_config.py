@@ -59,3 +59,16 @@ def test_load_config_reports_invalid_and_missing(tmp_path, capsys):
     assert "overlap" in capsys.readouterr().out
     assert load_config(str(tmp_path / "nope.toml")) is None
     assert "not found" in capsys.readouterr().out
+
+
+def test_visualization_theme_and_edge_labels_validated():
+    cfg = validate_config(base())
+    assert cfg["visualization"]["theme"] == "light" and cfg["visualization"]["edge_labels"] == "all"
+    cfg = base()
+    cfg["visualization"] = {"theme": "blue"}
+    with pytest.raises(ConfigError, match="theme"):
+        validate_config(cfg)
+    cfg = base()
+    cfg["visualization"] = {"edge_labels": "some"}
+    with pytest.raises(ConfigError, match="edge_labels"):
+        validate_config(cfg)

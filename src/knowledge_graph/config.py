@@ -42,7 +42,8 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "hub_entities": 25,
         "hub_max_new": 25,
     },
-    "visualization": {"edge_smooth": False, "name_communities": True, "show_inferred": True},
+    "visualization": {"edge_smooth": False, "name_communities": True, "show_inferred": True,
+                      "theme": "light", "edge_labels": "all"},
 }
 
 
@@ -115,6 +116,12 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
         raise ConfigError("[chunking] overlap must be a non-negative integer")
     if overlap >= size:
         raise ConfigError(f"[chunking] overlap ({overlap}) must be smaller than chunk_size ({size})")
+
+    visualization = config["visualization"]
+    if visualization["theme"] not in ("light", "dark"):
+        raise ConfigError("[visualization] theme must be 'light' or 'dark'")
+    if visualization["edge_labels"] not in ("all", "selection", "none"):
+        raise ConfigError("[visualization] edge_labels must be 'all', 'selection' or 'none'")
 
     inference = config["inference"]
     ratio = inference["max_inferred_ratio"]

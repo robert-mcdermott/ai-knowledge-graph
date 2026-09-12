@@ -77,5 +77,11 @@ def test_show_inferred_option_reaches_the_page(tmp_path):
     html = out.read_text(encoding="utf-8")
     data = json.loads(re.search(r"const KG = (\{.*?\});\n</script>", html, re.DOTALL).group(1).replace("<\\/", "</"))
     assert data["meta"]["showInferred"] is False
+    assert data["meta"]["theme"] == "light" and data["meta"]["edgeLabels"] == "all"  # defaults
+    visualize_knowledge_graph(SAMPLE_TRIPLES, str(out), config={"visualization": {"theme": "dark", "edge_labels": "none"}})
+    html2 = out.read_text(encoding="utf-8")
+    data2 = json.loads(re.search(r"const KG = (\{.*?\});\n</script>", html2, re.DOTALL).group(1).replace("<\\/", "</"))
+    assert data2["meta"]["theme"] == "dark" and data2["meta"]["edgeLabels"] == "none"
+    assert "localStorage" not in html2
     assert 'id="path-target"' in html and "function findPath" in html
     assert build_graph_data(SAMPLE_TRIPLES)["meta"]["showInferred"] is True

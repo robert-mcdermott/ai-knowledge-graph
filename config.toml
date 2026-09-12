@@ -53,5 +53,7 @@ apply_transitive = false     # Rule: A -p-> B -p-> C  =>  A -p-> C, only for tra
 [visualization]
 name_communities = true  # Ask the LLM for a short name per community (one call); shown in the Communities panel
 show_inferred = true     # Whether inferred (dashed) relationships are visible when the page opens
+theme = "light"          # Initial theme: "light" or "dark" (the page has a toggle)
+edge_labels = "all"      # Initial edge label mode: "all", "selection" (only around the selected node) or "none"
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 
                          # "straightCross", "horizontal", "vertical", "curvedCW", "curvedCCW", "cubicBezier": true = "continuous"

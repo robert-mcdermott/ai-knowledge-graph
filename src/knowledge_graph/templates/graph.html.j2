@@ -113,7 +113,7 @@ footer a { color: inherit; text-decoration: none; }
     <button class="btn" id="btn-legend" title="Communities and filters (c)">Communities</button>
     <button class="btn on" id="btn-physics" title="Toggle physics (p)">Physics</button>
     <button class="btn on" id="btn-labels" title="Toggle node labels (l)">Labels</button>
-    <button class="btn" id="btn-edge-labels" title="Edge labels: on selection / all / none (e)">Edge labels: selection</button>
+    <button class="btn" id="btn-edge-labels" title="Edge labels: all / none / on selection (e)">Edge labels</button>
     <button class="btn on" id="btn-inferred" title="Toggle inferred relationships (i)">Inferred</button>
     <button class="btn" id="btn-fit" title="Fit graph to view (f)">Fit</button>
     <button class="btn" id="btn-stats" title="Statistics (s)">Stats</button>
@@ -195,7 +195,7 @@ const KG = {{ data_json }};
   const edges = new vis.DataSet(KG.edges.map(e => Object.assign({}, e)));
   const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
   const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
-  const state = { labels: true, edgeLabels: 'selection', inferred: true, minDegree: 1,
+  const state = { labels: true, edgeLabels: meta.edgeLabels || 'all', inferred: true, minDegree: 1,
                   hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, path: null, dark: false, physics: true };
   const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
 
@@ -205,7 +205,6 @@ const KG = {{ data_json }};
     state.dark = dark;
     document.body.dataset.theme = dark ? 'dark' : 'light';
     $('btn-theme').textContent = dark ? 'Light' : 'Dark';
-    try { localStorage.setItem('kg-theme', dark ? 'dark' : 'light'); } catch (e) {}
     if (window.network) applyFonts();
   }
   // Every node/edge style (opacity, colour, width, label size) is derived from `state` here and
@@ -238,9 +237,7 @@ const KG = {{ data_json }};
     }));
   }
   const applyFonts = refreshStyles;
-  let initialDark = false;
-  try { const saved = localStorage.getItem('kg-theme'); initialDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
-  applyTheme(initialDark);
+  applyTheme(meta.theme === 'dark');  // initial theme comes from the config (visualization.theme)
 
   // ---------- network ----------
   const options = KG.options;
@@ -422,6 +419,11 @@ const KG = {{ data_json }};
 
   // ---------- toolbar ----------
   function setBtn(id, on) { $(id).classList.toggle('on', on); }
+  function showEdgeLabelMode() {
+    $('btn-edge-labels').textContent = 'Edge labels: ' + state.edgeLabels;
+    setBtn('btn-edge-labels', state.edgeLabels === 'all');
+  }
+  showEdgeLabelMode();
   function setPhysics(on) {
     state.physics = on;
     network.setOptions({ physics: { enabled: on } });
@@ -430,9 +432,8 @@ const KG = {{ data_json }};
   }
   function setLabels(on) { state.labels = on; setBtn('btn-labels', on); refreshStyles(); }
   function cycleEdgeLabels() {
-    state.edgeLabels = { selection: 'all', all: 'none', none: 'selection' }[state.edgeLabels];
-    $('btn-edge-labels').textContent = 'Edge labels: ' + state.edgeLabels;
-    setBtn('btn-edge-labels', state.edgeLabels === 'all');
+    state.edgeLabels = { all: 'none', none: 'selection', selection: 'all' }[state.edgeLabels];
+    showEdgeLabelMode();
     refreshStyles();
   }
   function setInferred(on) { state.inferred = on; setBtn('btn-inferred', on); $('show-inferred').checked = on; applyFilters(); }
