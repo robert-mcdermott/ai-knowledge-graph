@@ -96,6 +96,8 @@ is stale (`prompts.py` is now a package).
 > **Wave 11a (done, 0.8):** optional `graph-serve` (`[web]` extra): graph library, explorer pages, Ask panel
 > backed by the same retrieval code; localhost, no accounts. Static output unchanged.
 > **Wave 11b (done, 0.8):** ingest in the browser: paste/upload → background job with progress page → explorer.
+> **Wave 12 (done, 0.8):** page polish: parallel edges collapsed with a "+N" badge (raw relationships kept for
+> the details panel, paths, stats and exports), title-cased display names; both configurable.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -212,7 +214,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       (predicate, direction, extracted vs inferred, source chunk/sentence). `P1 M`
 - [x] **Edge labels only on hover/selection** (or above a zoom threshold); hide node labels
       for low-degree nodes when zoomed out. This alone removes most of the clutter. `P1 S`
-- [ ] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
+- [x] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
       the confirmed run) with a count badge, and list all predicates in the tooltip /
       details panel. Use `smooth: curvedCW/CCW` only when two directions exist. `P1 S`
 - [x] **Inferred edges visibility** is configurable (`visualization.show_inferred`, default true because inference is now conservative and traceable); the page has a one-click toggle and a count
@@ -240,7 +242,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       edges only. `P1 S`
 - [x] **Typography**: system font stack instead of Tahoma; label halo/stroke that matches
       the theme instead of the `!important` CSS hacks. `P1 S`
-- [ ] **Title-case display names** while keeping lowercase for matching (the prompt asks
+- [x] **Title-case display names** while keeping lowercase for matching (the prompt asks
       for lowercase; store `display_name` separately). `P2 S`
 
 ---

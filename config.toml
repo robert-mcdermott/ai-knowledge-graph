@@ -62,5 +62,7 @@ name_communities = true  # Ask the LLM for a short name per community (one call)
 show_inferred = true     # Whether inferred (dashed) relationships are visible when the page opens
 theme = "light"          # Initial theme: "light" or "dark" (the page has a toggle)
 edge_labels = "all"      # Initial edge label mode: "all", "selection" (only around the selected node) or "none"
+title_case = true        # Show "Steam Engine" for the entity "steam engine" (names in the JSON are unchanged)
+collapse_parallel_edges = true  # Draw one edge per node pair with a "+N" badge; every predicate stays in the tooltip
 edge_smooth = false  # Options: false, "dynamic", "continuous", "discrete", "diagonalCross", 
                          # "straightCross", "horizontal", "vertical", "curvedCW", "curvedCCW", "cubicBezier": true = "continuous"

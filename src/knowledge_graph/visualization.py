@@ -34,6 +34,26 @@ TYPE_SHAPES = {
 TYPE_GLYPHS = {"diamond": "◆", "square": "■", "triangle": "▲", "star": "★", "hexagon": "⬢", "triangleDown": "▼", "dot": "●"}
 
 
+_SMALL_WORDS = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to", "via", "with"}
+
+
+def display_name(name):
+    """Title-case an all-lower-case entity name for display ("steam engine" -> "Steam Engine").
+
+    Names that already contain capitals (proper nouns, acronyms the model kept) are returned
+    unchanged; so are words with digits ("mid-20th century" keeps "20th").
+    """
+    if not name or name != name.lower():
+        return name
+
+    def cap(word):
+        return "-".join(part if any(ch.isdigit() for ch in part) else part[:1].upper() + part[1:]
+                        for part in word.split("-"))
+
+    words = name.split()
+    return " ".join(cap(w) if i == 0 or w not in _SMALL_WORDS else w for i, w in enumerate(words))
+
+
 def entity_types(triples):
     """Majority-vote entity type per node from the ``subject_type``/``object_type`` fields."""
     votes = {}
@@ -84,7 +104,9 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
     print(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
     graph_data = build_graph_data(triples, edge_smooth, show_inferred=vis_cfg.get("show_inferred", True),
-                                  theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"))
+                                  theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"),
+                                  title_case=vis_cfg.get("title_case", True),
+                                  collapse_parallel_edges=vis_cfg.get("collapse_parallel_edges", True))
     stats = graph_data["meta"]["stats"]
     print(f"Found {stats['nodes']} unique nodes")
     print(f"Found {stats['inferred_edges']} inferred relationships")
@@ -110,7 +132,7 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
 
 
 def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True,
-                     theme="light", edge_labels="all"):
+                     theme="light", edge_labels="all", title_case=True, collapse_parallel_edges=True):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
@@ -138,7 +160,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             title += f"\nType: {node_type}"
         entry = {
             "id": node,
-            "label": node,
+            "label": display_name(node) if title_case else node,
             "title": title,
             "color": community_color(community),
             "community": community,
@@ -219,6 +241,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             "showInferred": bool(show_inferred),
             "theme": theme if theme in ("light", "dark") else "light",
             "edgeLabels": edge_labels if edge_labels in ("all", "selection", "none") else "all",
+            "collapseParallelEdges": bool(collapse_parallel_edges),
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
     }

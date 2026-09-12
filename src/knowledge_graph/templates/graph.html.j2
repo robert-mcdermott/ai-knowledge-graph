@@ -217,9 +217,40 @@ const KG = {{ data_json }};
   const $ = (id) => document.getElementById(id);
   const meta = KG.meta;
   const nodes = new vis.DataSet(KG.nodes.map(n => Object.assign({}, n)));
-  const edges = new vis.DataSet(KG.edges.map(e => Object.assign({}, e)));
-  const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(KG.edges.map(e => [e.id, e])) };
+  // `relations` is every relationship (used by the details panel, paths, stats and exports).
+  // `edges` is what is drawn: with collapseParallelEdges, one edge per (from, to) pair with a "+N" badge.
+  const relations = KG.edges;
+  const hiddenRel = new Set();                 // relation ids hidden by the filters
+  const relVisible = r => !hiddenRel.has(r.id);
+  const visualEdges = [], visualOf = new Map(); // relation id -> drawn edge id
+  (function buildVisualEdges() {
+    const collapse = meta.collapseParallelEdges !== false;
+    const groups = new Map();
+    relations.forEach(r => {
+      const key = collapse ? r.from + '\u0000' + r.to : r.id;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    });
+    const pairs = new Set(relations.map(r => r.from + '\u0000' + r.to));
+    let n = 0;
+    groups.forEach(members => {
+      const first = members[0];
+      const allInferred = members.every(r => r.inferred);
+      const labels = Array.from(new Set(members.map(r => r.label)));
+      const e = { id: 'v' + (n++), from: first.from, to: first.to, arrows: 'to', members: members.map(r => r.id),
+                  label: labels[0] + (members.length > 1 ? ' +' + (members.length - 1) : ''),
+                  title: members.map(r => r.title).join('\n\n'), inferred: allInferred,
+                  color: (members.find(r => !r.inferred) || first).color };
+      if (allInferred) e.dashes = true;
+      if (pairs.has(first.to + '\u0000' + first.from)) e.smooth = { type: 'curvedCW', roundness: 0.15 };  // both directions exist
+      visualEdges.push(e);
+      members.forEach(r => visualOf.set(r.id, e.id));
+    });
+  })();
+  const edges = new vis.DataSet(visualEdges.map(e => Object.assign({}, e)));
+  const base = { node: new Map(KG.nodes.map(n => [n.id, n])), edge: new Map(visualEdges.map(e => [e.id, e])) };
   const degree = new Map(KG.nodes.map(n => [n.id, n.degree || 0]));
+  const labelOf = id => (base.node.get(id) || {}).label || id;
   const state = { labels: true, edgeLabels: meta.edgeLabels || 'all', inferred: true, minDegree: 1,
                   hiddenCommunities: new Set(), hiddenTypes: new Set(), selected: null, path: null, dark: false, physics: true };
   const TYPE_GLYPH = { diamond: '◆', square: '■', triangle: '▲', star: '★', hexagon: '⬢', triangleDown: '▼', dot: '●' };
@@ -240,7 +271,7 @@ const KG = {{ data_json }};
     let nodeSet = null, edgeSet = null, onPath = false;
     if (state.path) {
       nodeSet = new Set([state.path[0].from].concat(state.path.map(st => st.to)));
-      edgeSet = new Set(state.path.map(st => st.edge.id));
+      edgeSet = new Set(state.path.map(st => visualOf.get(st.edge.id)));
       onPath = true;
     } else if (state.selected) {
       const nb = neighbourhood(state.selected);
@@ -288,9 +319,9 @@ const KG = {{ data_json }};
   function neighbourhood(id) {
     const ids = new Set([id]);
     const connected = new Set();
-    edges.get().forEach(e => {
-      if (e.hidden) return;
-      if (e.from === id || e.to === id) { connected.add(e.id); ids.add(e.from); ids.add(e.to); }
+    relations.forEach(r => {
+      if (!relVisible(r)) return;
+      if (r.from === id || r.to === id) { connected.add(visualOf.get(r.id)); ids.add(r.from); ids.add(r.to); }
     });
     return { ids, connected };
   }
@@ -326,8 +357,8 @@ const KG = {{ data_json }};
   function findPath(from, to, extractedOnly) {
     if (from === to) return null;
     const adj = new Map();
-    edges.get().forEach(e => {
-      if (e.hidden || (extractedOnly && e.inferred)) return;
+    relations.forEach(e => {
+      if (!relVisible(e) || (extractedOnly && e.inferred)) return;
       if (!adj.has(e.from)) adj.set(e.from, []);
       if (!adj.has(e.to)) adj.set(e.to, []);
       adj.get(e.from).push({ node: e.to, edge: e });
@@ -362,7 +393,7 @@ const KG = {{ data_json }};
     state.path = steps;
     $('path-result').innerHTML = `<p class="note">${steps.length} step${steps.length === 1 ? '' : 's'}</p>` + steps.map(st => {
       const forward = st.edge.from === st.from;
-      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(st.from)}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(st.to)}</span></div>`;
+      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(labelOf(st.from))}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(labelOf(st.to))}</span></div>`;
     }).join('');
     $('path-result').querySelectorAll('.path-step').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
     highlightPath(steps);
@@ -375,18 +406,18 @@ const KG = {{ data_json }};
   function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
   function renderDetails(id) {
     const n = base.node.get(id);
-    $('d-name').textContent = id;
+    $('d-name').textContent = labelOf(id);
     const comm = meta.communities[n.community] || {};
     $('d-meta').innerHTML = (n.type ? `<span>${esc(TYPE_GLYPH[n.shape] || '●')} ${esc(n.type)}</span>` : '') +
                             `<span><span class="dot" style="background:${esc(n.color)}"></span>${esc(comm.name || ('Community ' + (n.community + 1)))}</span>` +
                             `<span>${degree.get(id)} connection${degree.get(id) === 1 ? '' : 's'}</span>`;
     const out = [], inc = [];
-    edges.get().forEach(e => {
-      if (e.hidden) return;
+    relations.forEach(e => {
+      if (!relVisible(e)) return;
       if (e.from === id) out.push(e); else if (e.to === id) inc.push(e);
     });
     const row = (e, other, arrow) => `<div class="rel" data-node="${esc(other)}" title="${esc(e.title || '')}">` +
-      `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(other)}</span>` +
+      `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(labelOf(other))}</span>` +
       `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span>` +
       (e.source ? `<span class="source">“${esc(e.source)}”</span>` : (e.via ? `<span class="source">via ${esc(e.via)}</span>` : '')) + `</div>`;
     let html = '';
@@ -408,7 +439,9 @@ const KG = {{ data_json }};
       nodeUpdates.push({ id: n.id, hidden });
     });
     nodes.update(nodeUpdates);
-    edges.update(edges.get().map(e => ({ id: e.id, hidden: (!state.inferred && e.inferred) || hiddenNodes.has(e.from) || hiddenNodes.has(e.to) })));
+    hiddenRel.clear();
+    relations.forEach(r => { if ((!state.inferred && r.inferred) || hiddenNodes.has(r.from) || hiddenNodes.has(r.to)) hiddenRel.add(r.id); });
+    edges.update(edges.get().map(e => ({ id: e.id, hidden: e.members.every(m => hiddenRel.has(m)) })));
     if (state.selected) { if (hiddenNodes.has(state.selected)) clearSelection(); else { highlight(state.selected); renderDetails(state.selected); } }
     updateStats();
   }
@@ -479,20 +512,20 @@ const KG = {{ data_json }};
 
   // ---------- search ----------
   const list = $('node-list');
-  KG.nodes.map(n => n.id).sort((a, b) => a.localeCompare(b)).forEach(id => { const o = document.createElement('option'); o.value = id; list.appendChild(o); });
+  KG.nodes.map(n => n.label || n.id).sort((a, b) => a.localeCompare(b)).forEach(l => { const o = document.createElement('option'); o.value = l; list.appendChild(o); });
   function search(q) {
     q = q.trim().toLowerCase();
     if (!q) return;
-    const ids = KG.nodes.map(n => n.id);
-    const id = ids.find(i => i.toLowerCase() === q) || ids.find(i => i.toLowerCase().startsWith(q)) || ids.find(i => i.toLowerCase().includes(q));
-    if (id) select(id, true);
+    const keys = KG.nodes.map(n => ({ id: n.id, a: n.id.toLowerCase(), b: (n.label || n.id).toLowerCase() }));
+    const hit = keys.find(k => k.a === q || k.b === q) || keys.find(k => k.a.startsWith(q) || k.b.startsWith(q)) || keys.find(k => k.a.includes(q) || k.b.includes(q));
+    if (hit) select(hit.id, true);
   }
   $('search').addEventListener('change', e => search(e.target.value));
   $('search').addEventListener('keydown', e => { if (e.key === 'Enter') { search(e.target.value); e.target.blur(); } if (e.key === 'Escape') e.target.blur(); });
 
   // ---------- stats ----------
   function visibleTriples() {
-    return edges.get().filter(e => !e.hidden).map(e => {
+    return relations.filter(relVisible).map(e => {
       const t = { subject: e.from, predicate: e.label, object: e.to };
       if (e.inferred) { t.inferred = true; t.method = e.method || null; if (e.via) t.via = e.via; }
       if (e.chunk) t.chunk = e.chunk;
@@ -504,7 +537,7 @@ const KG = {{ data_json }};
     });
   }
   function updateStats() {
-    const visN = nodes.get().filter(n => !n.hidden).length, visE = edges.get().filter(e => !e.hidden);
+    const visN = nodes.get().filter(n => !n.hidden).length, visE = relations.filter(relVisible);
     const inf = visE.filter(e => e.inferred).length;
     const methods = {};
     visE.forEach(e => { if (e.inferred) methods[e.method || 'unknown'] = (methods[e.method || 'unknown'] || 0) + 1; });

@@ -121,6 +121,8 @@ name_communities = true          # ask the LLM for a short name per community (o
 show_inferred = true             # whether inferred (dashed) relationships are visible when the page opens
 theme = "light"                  # initial theme: "light" or "dark"
 edge_labels = "all"              # initial edge label mode: "all", "selection" or "none"
+title_case = true                # show "Steam Engine" for the entity "steam engine" (ids are unchanged)
+collapse_parallel_edges = true   # draw one edge per node pair with a "+N" badge; all predicates stay in the tooltip
 ```
 
 Rule-based inference (`apply_transitive`, `lexical`) is off by default because in testing it generated
@@ -387,6 +389,8 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
 - **Search** with autocomplete (`/`), and shareable links: the selected node is kept in the URL (`#node=...`).
 - **Communities panel**: colour-coded Louvain communities with their top entities, toggle any of them on/off,
   a minimum-connections slider, and a switch for inferred relationships.
+- **Parallel edges collapsed**: when two entities share several relationships one edge is drawn with a "+N" badge; the tooltip and the details panel still list every predicate (`visualization.collapse_parallel_edges`).
+- **Display names**: lower-case entity names are shown title-cased ("Steam Engine"); the underlying names, search and exports are unchanged (`visualization.title_case`).
 - **Edge labels**: shown for all edges by default (`visualization.edge_labels`); cycle to *none* or *selection only*, which keeps dense graphs readable. Around a selected node only its own edges are labelled.
 - **Node size** reflects importance (degree, betweenness and eigenvector centrality).
 - **Extracted vs inferred**: solid lines are extracted from the text, dashed lines are inferred; tooltips show

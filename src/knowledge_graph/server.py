@@ -101,7 +101,9 @@ class GraphStore:
         triples = load_triples_from_json(path)
         vis = self.config.get("visualization", {})
         graph_data = build_graph_data(triples, vis.get("edge_smooth", False), show_inferred=vis.get("show_inferred", True),
-                                      theme=vis.get("theme", "light"), edge_labels=vis.get("edge_labels", "all"))
+                                      theme=vis.get("theme", "light"), edge_labels=vis.get("edge_labels", "all"),
+                                      title_case=vis.get("title_case", True),
+                                      collapse_parallel_edges=vis.get("collapse_parallel_edges", True))
         namer = make_community_namer(self.config)
         if namer is not None and graph_data["meta"]["stats"]["communities"] > 1:
             try:

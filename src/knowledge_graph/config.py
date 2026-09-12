@@ -46,7 +46,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "hub_max_new": 25,
     },
     "visualization": {"edge_smooth": False, "name_communities": True, "show_inferred": True,
-                      "theme": "light", "edge_labels": "all"},
+                      "theme": "light", "edge_labels": "all", "title_case": True, "collapse_parallel_edges": True},
 }
 
 
