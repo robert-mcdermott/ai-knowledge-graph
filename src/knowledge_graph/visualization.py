@@ -1,17 +1,20 @@
 """Visualization utilities for knowledge graphs.
 
-Renders a list of subject/predicate/object triples as a self-contained interactive
-HTML page (vis-network, inlined by PyVis, plus the project's own template).
+Renders subject/predicate/object triples as a single self-contained interactive
+HTML page: the vendored vis-network library plus the project's own explorer UI
+(``templates/graph.html.j2``). No network access is needed to view the result.
 """
 from __future__ import annotations
 
-import html as html_lib
+import datetime as _dt
 import json
 import os
-import re
 
 import networkx as nx
-from pyvis.network import Network
+from jinja2 import Environment, FileSystemLoader
+
+TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
+VENDOR_DIR = os.path.join(TEMPLATE_DIR, "vendor")
 
 # 20 distinct colours that read on both white and black backgrounds (no pure yellow).
 COMMUNITY_PALETTE = [
@@ -20,18 +23,7 @@ COMMUNITY_PALETTE = [
     "#17becf", "#bcbd22", "#393b79", "#637939",
 ]
 INFERRED_EDGE_COLOR = "#8a8a8a"
-_SCRIPT_MARKER = "<!-- KG_SCRIPT"
-
-
-def _load_html_template():
-    """Load the HTML template from the template file."""
-    template_path = os.path.join(os.path.dirname(__file__), "templates", "graph_template.html")
-    try:
-        with open(template_path, encoding="utf-8") as f:
-            return f.read()
-    except Exception as e:
-        print(f"Warning: Could not load template file: {e}")
-        return '<div id="mynetwork" class="card-body"></div>'
+FREEZE_PHYSICS_ABOVE = 300  # nodes; larger graphs stop simulating once laid out
 
 
 def community_color(index):
@@ -60,16 +52,28 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         return {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
 
     print(f"Processing {len(triples)} triples for visualization")
+    graph_data = build_graph_data(triples, edge_smooth)
+    stats = graph_data["meta"]["stats"]
+    print(f"Found {stats['nodes']} unique nodes")
+    print(f"Found {stats['inferred_edges']} inferred relationships")
+    print(f"Detected {stats['communities']} communities using Louvain method")
 
+    html = render_html(graph_data)
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"Knowledge graph visualization saved to {output_file}")
+    print(f"Graph Statistics: {json.dumps(stats, indent=2)}")
+    return stats
+
+
+def build_graph_data(triples, edge_smooth=False):
+    """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
     for triple in triples:
         all_nodes.add(triple["subject"])
         all_nodes.add(triple["object"])
     inferred_count = sum(1 for t in triples if t.get("inferred", False))
-    print(f"Found {len(all_nodes)} unique nodes")
-    print(f"Found {inferred_count} inferred relationships")
 
-    # Undirected simple graph for metrics and community detection.
     G_undirected = nx.Graph()
     G_undirected.add_nodes_from(all_nodes)
     for triple in triples:
@@ -80,20 +84,22 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
     node_communities, community_count = _detect_communities(G_undirected, all_nodes)
     node_sizes = _calculate_node_sizes(all_nodes, centrality["betweenness"], degree, centrality["eigenvector"])
 
-    # Directed multigraph so parallel edges (same pair, different predicates) are all drawn.
-    G = nx.MultiDiGraph()
-    for node in all_nodes:
+    nodes = []
+    for node in sorted(all_nodes):
         community = node_communities[node]
-        G.add_node(
-            node,
-            color=community_color(community),
-            community=community,
-            degree=degree.get(node, 0),
-            label=node,
-            title=f"{node}\nConnections: {degree.get(node, 0)}\nCommunity: {community + 1}",
-            size=node_sizes[node],
-        )
-    for triple in triples:
+        nodes.append({
+            "id": node,
+            "label": node,
+            "title": f"{node}\nConnections: {degree.get(node, 0)}\nCommunity: {community + 1}",
+            "color": community_color(community),
+            "community": community,
+            "degree": degree.get(node, 0),
+            "size": round(node_sizes[node], 2),
+            "shape": "dot",
+        })
+
+    edges = []
+    for index, triple in enumerate(triples):
         is_inferred = bool(triple.get("inferred", False))
         method = triple.get("method")
         title = f"{triple['subject']} → {triple['predicate']} → {triple['object']}"
@@ -103,35 +109,28 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
                 title += f" via {triple['via']}"
         elif triple.get("chunk"):
             title += f"\nExtracted from chunk {triple['chunk']}"
-        attrs = {"title": title, "label": triple["predicate"], "inferred": is_inferred}
+        edge = {"id": f"e{index}", "from": triple["subject"], "to": triple["object"], "label": triple["predicate"],
+                "title": title, "inferred": is_inferred, "arrows": "to"}
         if method:
-            attrs["method"] = method
+            edge["method"] = method
         if triple.get("via"):
-            attrs["via"] = triple["via"]
+            edge["via"] = triple["via"]
         if triple.get("chunk"):
-            attrs["chunk"] = triple["chunk"]
+            edge["chunk"] = triple["chunk"]
         if is_inferred:
-            attrs["dashes"] = True
-            attrs["color"] = INFERRED_EDGE_COLOR
-        G.add_edge(triple["subject"], triple["object"], **attrs)
+            edge["dashes"] = True
+            edge["color"] = {"color": INFERRED_EDGE_COLOR, "opacity": 0.8}
+        else:
+            edge["color"] = {"inherit": "from", "opacity": 0.9}
+        edges.append(edge)
 
-    net = Network(
-        height="100%",
-        width="100%",
-        directed=True,
-        notebook=False,
-        cdn_resources="in_line",  # vis-network is embedded; the output needs no network access
-        bgcolor="#ffffff",
-        font_color="#000000",
-        select_menu=False,
-        filter_menu=False,
-    )
-    print(f"Nodes in NetworkX graph: {G.number_of_nodes()}")
-    print(f"Edges in NetworkX graph: {G.number_of_edges()}")
-
-    _add_nodes_and_edges_to_network(net, G)
-    net.set_options(json.dumps(_get_visualization_options(edge_smooth)))
-    _save_and_modify_html(net, output_file, community_count, all_nodes, triples)
+    members = {}
+    for node, community in node_communities.items():
+        members.setdefault(community, []).append(node)
+    communities = []
+    for community in range(community_count):
+        names = sorted(members.get(community, []), key=lambda n: -degree.get(n, 0))
+        communities.append({"id": community, "color": community_color(community), "size": len(names), "top": names[:3]})
 
     stats = {
         "nodes": len(all_nodes),
@@ -140,8 +139,37 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         "inferred_edges": inferred_count,
         "communities": community_count,
     }
-    print(f"Graph Statistics: {json.dumps(stats, indent=2)}")
-    return stats
+    title = f"Knowledge Graph – {stats['nodes']} nodes, {stats['edges']} relationships, {community_count} communities"
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "options": _get_visualization_options(edge_smooth),
+        "meta": {
+            "title": title,
+            "stats": stats,
+            "communities": communities,
+            "freezePhysicsAbove": FREEZE_PHYSICS_ABOVE,
+            "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        },
+    }
+
+
+def render_html(graph_data):
+    """Render the explorer page with the graph data and vendored library embedded."""
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
+    template = env.get_template("graph.html.j2")
+    data_json = json.dumps(graph_data, ensure_ascii=False).replace("</", "<\\/")
+    return template.render(
+        title=graph_data["meta"]["title"],
+        data_json=data_json,
+        vis_js=_read_vendor("vis-network.min.js"),
+        vis_css=_read_vendor("vis-network.min.css"),
+    )
+
+
+def _read_vendor(name):
+    with open(os.path.join(VENDOR_DIR, name), encoding="utf-8") as f:
+        return f.read()
 
 
 def _calculate_centrality_metrics(G_undirected, all_nodes):
@@ -161,13 +189,11 @@ def _detect_communities(G_undirected, all_nodes):
         communities = nx.community.louvain_communities(G_undirected, seed=42)
         ordered = sorted(communities, key=len, reverse=True)
         partition = {node: idx for idx, members in enumerate(ordered) for node in members}
-        print(f"Detected {len(ordered)} communities using Louvain method")
         return partition, len(ordered)
     except Exception as e:
         print(f"Community detection failed ({e}); using degree-based grouping")
         partition = {node: min(G_undirected.degree(node) if node in G_undirected else 0, 7) for node in all_nodes}
-        count = len(set(partition.values()))
-        return partition, count
+        return partition, len(set(partition.values()))
 
 
 def _calculate_node_sizes(all_nodes, betweenness, degree, eigenvector):
@@ -185,38 +211,8 @@ def _calculate_node_sizes(all_nodes, betweenness, degree, eigenvector):
     return node_sizes
 
 
-def _add_nodes_and_edges_to_network(net, G):
-    """Add nodes and edges from the NetworkX multigraph to the PyVis network."""
-    for node_id, data in G.nodes(data=True):
-        net.add_node(
-            node_id,
-            color=data.get("color", "#4e79a7"),
-            label=str(node_id),
-            title=str(data.get("title", node_id)),
-            shape="dot",
-            size=data.get("size", 10),
-            community=data.get("community", 0),
-            degree=data.get("degree", 0),
-        )
-    for source, target, _key, data in G.edges(keys=True, data=True):
-        options = {"arrows": "to"}
-        options.update(data)
-        net.add_edge(source, target, **options)
-
-
 def _get_visualization_options(edge_smooth=False):
     """Options for the vis-network instance (only keys vis-network accepts)."""
-    physics_options = {
-        "enabled": True,
-        "solver": "forceAtlas2Based",
-        "forceAtlas2Based": {
-            "gravitationalConstant": -50,
-            "centralGravity": 0.01,
-            "springLength": 100,
-            "springConstant": 0.08,
-        },
-        "stabilization": {"iterations": 200, "enabled": True},
-    }
     if isinstance(edge_smooth, str):
         edge_smoothing = False if edge_smooth.lower() == "false" else {"type": edge_smooth}
     elif edge_smooth:
@@ -224,51 +220,18 @@ def _get_visualization_options(edge_smooth=False):
     else:
         edge_smoothing = False
     return {
-        "physics": physics_options,
-        "edges": {"color": {"inherit": True}, "font": {"size": 11}, "smooth": edge_smoothing},
-        "nodes": {"font": {"size": 14}, "scaling": {"min": 10, "max": 50}},
-        "interaction": {"hover": True, "navigationButtons": True, "keyboard": True, "tooltipDelay": 200},
+        "physics": {
+            "enabled": True,
+            "solver": "forceAtlas2Based",
+            "forceAtlas2Based": {"gravitationalConstant": -50, "centralGravity": 0.01, "springLength": 100, "springConstant": 0.08},
+            "stabilization": {"iterations": 200, "enabled": True},
+        },
+        "edges": {"smooth": edge_smoothing, "width": 1, "arrows": {"to": {"scaleFactor": 0.6}},
+                  "font": {"size": 0, "align": "middle"}, "selectionWidth": 2, "hoverWidth": 1.5},
+        "nodes": {"shape": "dot", "borderWidth": 1, "font": {"size": 14}, "scaling": {"min": 10, "max": 50}},
+        "interaction": {"hover": True, "navigationButtons": True, "keyboard": False, "tooltipDelay": 150},
         "layout": {"improvedLayout": True},
     }
-
-
-def _strip_external_resources(page):
-    """Remove the Bootstrap CDN tags PyVis injects so the file works offline."""
-    page = re.sub(r'<link[^>]*bootstrap[^>]*>\s*', "", page, flags=re.IGNORECASE)
-    page = re.sub(r'<script[^>]*bootstrap[^>]*>\s*</script>\s*', "", page, flags=re.IGNORECASE)
-    return page
-
-
-def _save_and_modify_html(net, output_file, community_count, all_nodes, triples):
-    """Render PyVis's HTML, merge in the project template, and write the file (UTF-8)."""
-    net.generate_html()
-    page = net.html
-
-    title = f"Knowledge Graph – {len(all_nodes)} nodes, {len(triples)} relationships, {community_count} communities"
-    template = _load_html_template().replace("{{KG_TITLE}}", html_lib.escape(title))
-
-    # The template's <script> must run after PyVis has created `network`, so split it off
-    # and append it at the end of <body>.
-    if _SCRIPT_MARKER in template:
-        markup, script = template.split(_SCRIPT_MARKER, 1)
-        script = "<!-- KG_SCRIPT" + script
-    else:
-        markup, script = template, ""
-
-    page = page.replace('<div id="mynetwork" class="card-body"></div>', markup)
-    page = re.sub(r"<center>\s*<h1>.*?</h1>\s*</center>", "", page, flags=re.DOTALL)
-    page = _strip_external_resources(page)
-    if "<title>" not in page:
-        page = page.replace("<head>", f"<head>\n        <title>{html_lib.escape(title)}</title>", 1)
-    if script:
-        if "</body>" in page:
-            page = page.replace("</body>", script + "\n    </body>", 1)
-        else:
-            page += script
-
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write(page)
-    print(f"Knowledge graph visualization saved to {output_file}")
 
 
 SAMPLE_TRIPLES = [

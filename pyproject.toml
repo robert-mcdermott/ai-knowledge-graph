@@ -17,8 +17,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 dependencies = [
+    "jinja2>=3.1",
     "networkx>=3.4.2",
-    "pyvis>=0.3.2",
     "requests>=2.32.3",
 ]
 
@@ -43,7 +43,7 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-knowledge_graph = ["templates/*.html"]
+knowledge_graph = ["templates/*.j2", "templates/vendor/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

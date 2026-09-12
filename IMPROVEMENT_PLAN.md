@@ -80,6 +80,12 @@ is stale (`prompts.py` is now a package).
 > *Hide Inferred* toggle and per-method stats, Bootstrap CDN removed (fully offline HTML), MultiDiGraph so
 > parallel edges are no longer dropped, encoding fallback for input files, `--from-json` re-rendering.
 > Phase 1 is complete except the `logging` migration (moved to Phase 4).
+> **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
+> 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
+> communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
+> PNG/JSON/CSV export, keyboard shortcuts, URL hash state, layout progress bar, auto physics freeze,
+> light/dark themes, responsive layout. Still open in Phase 2: path finder, node-size rescale,
+> title-case display names, inferred hidden by default.
 > **Wave 5 (done):** `src/` layout installed as `knowledge_graph` (no `sys.path` hacks), version 0.7.0,
 > deps pruned to networkx/pyvis/requests (IPython remains only because PyVis requires it), ruff config
 > and a clean lint, GitHub Actions CI on 3.11-3.13 with a renderer smoke test.
@@ -174,49 +180,49 @@ users know it) but render it from our own Jinja2 template with the graph embedde
 Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 
 ### Layout & chrome
-- [ ] **Redesign the chrome**: slim top bar (title, search, theme, export) + collapsible
+- [x] **Redesign the chrome**: slim top bar (title, search, theme, export) + collapsible
       right-hand *details panel* + a floating legend. No Bootstrap; a small hand-written CSS
       with design tokens for light/dark. Respect `prefers-color-scheme` and remember the
       choice in `localStorage`. `P1 M`
-- [ ] **Responsive**: toolbar collapses into a menu below ~800 px; panels become bottom
+- [x] **Responsive**: toolbar collapses into a menu below ~800 px; panels become bottom
       sheets on mobile; `network.fit()` after layout. `P1 S`
-- [ ] **Loading state**: progress bar during stabilization (vis `stabilizationProgress`),
+- [x] **Loading state**: progress bar during stabilization (vis `stabilizationProgress`),
       then freeze physics automatically for graphs > 300 nodes (big perf win). `P1 S`
 
 ### Exploration features (the "explore the data" goal)
-- [ ] **Search with autocomplete** over node names; Enter focuses and selects. `P1 S`
-- [ ] **Click a node → highlight its neighborhood** (1–2 hops), dim everything else, and
+- [x] **Search with autocomplete** over node names; Enter focuses and selects. `P1 S`
+- [x] **Click a node → highlight its neighborhood** (1–2 hops), dim everything else, and
       open the details panel listing every incoming/outgoing relationship as clickable rows
       (predicate, direction, extracted vs inferred, source chunk/sentence). `P1 M`
-- [ ] **Edge labels only on hover/selection** (or above a zoom threshold); hide node labels
+- [x] **Edge labels only on hover/selection** (or above a zoom threshold); hide node labels
       for low-degree nodes when zoomed out. This alone removes most of the clutter. `P1 S`
 - [ ] **Collapse parallel edges**: draw one edge per node pair (144 pairs had 2–6 edges in
       the confirmed run) with a count badge, and list all predicates in the tooltip /
       details panel. Use `smooth: curvedCW/CCW` only when two directions exist. `P1 S`
 - [ ] **Inferred edges hidden by default** in the page (a one-click *Hide Inferred* toggle exists since wave 4; default is still visible), with a count
       in the legend, so the first impression is the extracted graph. `P1 S`
-- [ ] **Community legend with toggles**: click a color to isolate/hide a community; show
+- [x] **Community legend with toggles**: click a color to isolate/hide a community; show
       counts. `P1 S`
-- [ ] **Quick filters**: "Show inferred edges" toggle, minimum-degree slider, predicate
+- [x] **Quick filters**: "Show inferred edges" toggle, minimum-degree slider, predicate
       multi-select, "hide leaf nodes". Replace the current three-dropdown filter form. `P1 M`
 - [ ] **Path finder**: pick two nodes and highlight the shortest path (reuse BFS in JS);
       option to exclude inferred edges. Directly serves "find relationships between
       concepts". `P1 M`
-- [ ] **Rich tooltips**: name, type, community, degree, top relationships, and the source
+- [x] **Rich tooltips**: name, type, community, degree, top relationships, and the source
       sentence for edges. `P1 S`
-- [ ] **Export**: PNG of the current view, and JSON / CSV / GraphML downloads of the
+- [x] **Export**: PNG of the current view, and JSON / CSV / GraphML downloads of the
       (filtered) graph from the page. `P2 S`
-- [ ] **Keyboard shortcuts** (`/` search, `Esc` clear, `F` fit, `L` labels, `P` physics) and
+- [x] **Keyboard shortcuts** (`/` search, `Esc` clear, `F` fit, `L` labels, `P` physics) and
       a `?` help overlay. `P2 S`
-- [ ] **URL state** (`#node=steam%20engine&hide=inferred`) so views can be shared. `P2 S`
+- [x] **URL state** (`#node=steam%20engine&hide=inferred`) so views can be shared. `P2 S`
 
 ### Visual quality
 - [ ] **Node sizing**: use a log/sqrt scale of degree so hubs don't dwarf everything;
       current mix of degree/betweenness/eigenvector is fine but scale it 8–40 px. `P1 S`
-- [ ] **Edge styling**: extracted edges solid and slightly thicker; inferred edges thin,
+- [x] **Edge styling**: extracted edges solid and slightly thicker; inferred edges thin,
       dashed, lower opacity; arrows scaled to node size; `smooth: continuous` for parallel
       edges only. `P1 S`
-- [ ] **Typography**: system font stack instead of Tahoma; label halo/stroke that matches
+- [x] **Typography**: system font stack instead of Tahoma; label halo/stroke that matches
       the theme instead of the `!important` CSS hacks. `P1 S`
 - [ ] **Title-case display names** while keeping lowercase for matching (the prompt asks
       for lowercase; store `display_name` separately). `P2 S`

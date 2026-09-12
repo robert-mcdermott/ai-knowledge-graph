@@ -6,9 +6,16 @@ import pytest
 from knowledge_graph.visualization import (
     COMMUNITY_PALETTE,
     SAMPLE_TRIPLES,
+    build_graph_data,
     community_color,
     visualize_knowledge_graph,
 )
+
+
+def embedded_data(html):
+    match = re.search(r"const KG = (\{.*?\});\n</script>", html, re.DOTALL)
+    assert match, "embedded KG data not found"
+    return json.loads(match.group(1).replace("<\\/", "</"))
 
 
 @pytest.fixture(scope="module")
@@ -28,49 +35,41 @@ def test_stats_count_every_triple_including_parallel_edges(page):
 
 def test_output_is_self_contained(page):
     html, _ = page
-    assert "bootstrap" not in html.lower()
-    assert "cdn.jsdelivr.net" not in html and "cdnjs.cloudflare.com" not in html
-    assert "vis-network" in html  # embedded library
+    assert "<!DOCTYPE html>" in html
+    assert re.search(r'<script[^>]+src=|<link[^>]+href=', html) is None  # nothing loaded from elsewhere
+    assert "vis-network" in html and "@version" in html  # embedded library header
 
 
-def test_template_script_runs_after_network_is_created(page):
+def test_embedded_data_matches_triples(page):
     html, _ = page
-    assert html.index("drawGraph();") < html.index("<!-- KG_SCRIPT")
-    assert html.index("<!-- KG_SCRIPT") < html.index("</body>")
-    assert "MutationObserver" not in html
-
-
-def test_no_invalid_vis_options(page):
-    html, _ = page
-    options = re.search(r"var options = (\{.*?\});\s*\n", html, re.DOTALL)
-    assert options, "options block not found"
-    parsed = json.loads(options.group(1))
-    assert "tooltipDelay" not in parsed["nodes"]
-    assert "background" not in parsed
-    assert "network.setOptions({ background" not in html
-
-
-def test_nodes_and_edges_carry_metadata(page):
-    html, _ = page
-    nodes = json.loads(re.search(r"nodes = new vis.DataSet\((\[.*?\])\);", html, re.DOTALL).group(1))
-    edges = json.loads(re.search(r"edges = new vis.DataSet\((\[.*?\])\);", html, re.DOTALL).group(1))
-    assert all("community" in n and "degree" in n for n in nodes)
-    assert all(n["color"] in COMMUNITY_PALETTE for n in nodes)
-    inferred = [e for e in edges if e.get("inferred")]
-    assert len(inferred) == 2
+    data = embedded_data(html)
+    assert len(data["edges"]) == len(SAMPLE_TRIPLES)
+    assert all("community" in n and "degree" in n and n["color"] in COMMUNITY_PALETTE for n in data["nodes"])
+    inferred = [e for e in data["edges"] if e["inferred"]]
     assert {e["method"] for e in inferred} == {"taxonomy", "transitive"}
     assert any(e.get("via") == "steam engine" for e in inferred)
     assert all(e.get("dashes") for e in inferred)
-    # parallel edges kept: "steam engine" has two distinct "spread to" targets and one "lead to"
-    assert sum(1 for e in edges if e["from"] == "steam engine") == 6
+    assert sum(1 for e in data["edges"] if e["from"] == "steam engine") == 6  # parallel edges kept
     assert any("Inferred (transitive) via steam engine" in e["title"] for e in inferred)
+    assert data["meta"]["stats"]["communities"] == len(data["meta"]["communities"])
+    assert data["meta"]["communities"][0]["size"] >= data["meta"]["communities"][-1]["size"]
 
 
-def test_title_and_legend_present(page):
+def test_title_and_ui_present(page):
     html, _ = page
-    assert "<title>Knowledge Graph" in html
-    assert 'id="inferred-toggle"' in html
-    assert "{{KG_TITLE}}" not in html
+    assert "<title>Knowledge Graph – " in html
+    for element in ('id="search"', 'id="details"', 'id="legend"', 'id="btn-inferred"', 'id="export-png"'):
+        assert element in html
+    assert "{{" not in html  # every placeholder rendered
+
+
+def test_script_breakout_is_escaped(tmp_path):
+    triples = [{"subject": "</script><script>alert(1)</script>", "predicate": "p", "object": "b"}]
+    out = tmp_path / "x.html"
+    visualize_knowledge_graph(triples, str(out))
+    html = out.read_text(encoding="utf-8")
+    assert "</script><script>alert" not in html
+    assert embedded_data(html)["nodes"][0]["id"].startswith("</script>")
 
 
 def test_palette_wraps_and_has_no_pure_yellow():
@@ -79,14 +78,13 @@ def test_palette_wraps_and_has_no_pure_yellow():
     assert "#ffff33" not in COMMUNITY_PALETTE and len(set(COMMUNITY_PALETTE)) == 20
 
 
-def test_communities_numbered_largest_first(tmp_path):
+def test_communities_numbered_largest_first():
     triples = [{"subject": f"a{i}", "predicate": "p", "object": "hub"} for i in range(6)]
     triples += [{"subject": "x", "predicate": "p", "object": "y"}]
-    out = tmp_path / "g.html"
-    visualize_knowledge_graph(triples, str(out))
-    nodes = json.loads(re.search(r"nodes = new vis.DataSet\((\[.*?\])\);", out.read_text(), re.DOTALL).group(1))
-    by_id = {n["id"]: n["community"] for n in nodes}
+    data = build_graph_data(triples)
+    by_id = {n["id"]: n["community"] for n in data["nodes"]}
     assert by_id["hub"] == 0 and by_id["x"] == by_id["y"] != 0
+    assert data["meta"]["communities"][0]["top"][0] == "hub"
 
 
 def test_empty_input(tmp_path):

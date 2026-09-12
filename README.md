@@ -18,7 +18,7 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 ## Requirements
 
 - Python 3.11+
-- Dependencies: `networkx`, `pyvis`, `requests` (installed by `pip install -e .` or `uv sync`)
+- Dependencies: `networkx`, `jinja2`, `requests` (installed by `pip install -e .` or `uv sync`)
 
 ## Quick Start
 
@@ -263,18 +263,27 @@ file:///mnt/c/Users/rmcdermo/Documents/industrial-revolution-kg.html
    - A deterministic *taxonomy* rule links specific terms to their general term ("quantum computing" is a "computing")
    - This reduces graph fragmentation by adding logical connections not explicitly stated in the text
    - Both rule-based and LLM-based inference methods work together to create a more comprehensive graph
-5. **Visualization**: An interactive HTML visualization is generated using the PyVis library
+5. **Visualization**: An interactive HTML visualization is generated from the project's own template with the embedded vis-network library
 
 Both the second and third passes are optional and can be disabled in the configuration to minimize LLM usage or control these processes manually.
 
 ## Visualization Features
 
-- **Color-coded Communities**: Node colors represent different communities
-- **Node Size**: Nodes sized by importance (degree, betweenness, eigenvector centrality)
-- **Relationship Types**: Original relationships shown as solid lines, inferred relationships as dashed lines; a *Hide Inferred* button toggles them, and edge tooltips show the inference method
-- **Self-contained output**: the HTML file embeds everything it needs and works offline
-- **Interactive Controls**: Zoom, pan, hover for details, filtering and physics controls
-- **Light (default) and Dark mode themes**.
+The generated HTML is a single self-contained file (vis-network is embedded) that works offline.
+
+- **Explore by clicking**: click a node to highlight its neighbourhood and open a details panel listing every
+  incoming and outgoing relationship, tagged *extracted* or with its inference method; click a row to jump to
+  that node. Double-click to zoom in.
+- **Search** with autocomplete (`/`), and shareable links: the selected node is kept in the URL (`#node=...`).
+- **Communities panel**: colour-coded Louvain communities with their top entities, toggle any of them on/off,
+  a minimum-connections slider, and a switch for inferred relationships.
+- **Edge labels on selection** by default (so dense graphs stay readable); cycle to *all* or *none*.
+- **Node size** reflects importance (degree, betweenness and eigenvector centrality).
+- **Extracted vs inferred**: solid lines are extracted from the text, dashed lines are inferred; tooltips show
+  the inference method and, for transitive edges, the intermediate node.
+- **Export** the current view as PNG, or the visible triples as JSON or CSV.
+- **Physics controls**, a layout progress bar, automatic physics freeze for graphs over 300 nodes, light and
+  dark themes (remembered per browser), keyboard shortcuts (`?` for the list), responsive layout.
 
 ## Project Layout
 
@@ -297,7 +306,8 @@ Both the second and third passes are optional and can be disabled in the configu
     ├── visualization.py            # Knowledge graph visualization generator
     ├── prompts/                    # LLM prompts (extraction, entity resolution, inference)
     └── templates/
-        └── graph_template.html     # Controls, styles and script for the interactive page
+        ├── graph.html.j2           # The interactive explorer page (Jinja2)
+        └── vendor/                 # Embedded vis-network library
 ```
 
 ## Program Flow
@@ -438,8 +448,7 @@ flowchart TD
 7. **Visualization**:
    - Calculates centrality metrics and community detection
    - Determines node sizes and colors based on importance
-   - Creates an interactive HTML visualization using PyVis
-   - Customizes the HTML with templates
+   - Renders the interactive HTML page from `templates/graph.html.j2` with vis-network embedded
 
 8. **Output**:
    - Saves the knowledge graph as both HTML and JSON
