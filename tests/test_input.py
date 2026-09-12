@@ -2,12 +2,12 @@ import json
 
 import pytest
 
-from src.knowledge_graph.main import InputError, load_triples_from_json, read_input_text
+from knowledge_graph.main import InputError, load_triples_from_json, read_input_text
 
 
 def test_utf8_and_bom(tmp_path, capsys):
     p = tmp_path / "a.txt"
-    p.write_bytes("héllo".encode("utf-8"))
+    p.write_bytes("héllo".encode())
     assert read_input_text(str(p)) == "héllo"
     p.write_bytes(b"\xef\xbb\xbfhello")
     assert read_input_text(str(p)) == "hello"

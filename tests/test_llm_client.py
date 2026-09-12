@@ -3,7 +3,7 @@ import json
 import pytest
 import requests
 
-from src.knowledge_graph.llm import (
+from knowledge_graph.llm import (
     LLMClient,
     LLMEmptyResponseError,
     LLMRequestError,

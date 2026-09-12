@@ -1,6 +1,6 @@
 import pytest
 
-from src.knowledge_graph.llm import extract_json_from_text, strip_reasoning
+from knowledge_graph.llm import extract_json_from_text, strip_reasoning
 
 TRIPLE = {"subject": "james watt", "predicate": "refined", "object": "steam engine"}
 

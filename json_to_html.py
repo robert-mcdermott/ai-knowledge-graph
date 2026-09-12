@@ -6,11 +6,13 @@ Equivalent to: generate-graph --from-json input.json --output output.html
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
+if os.path.isdir(_SRC) and _SRC not in sys.path:
+    sys.path.insert(0, _SRC)
 
-from src.knowledge_graph.config import load_config
-from src.knowledge_graph.main import InputError, load_triples_from_json
-from src.knowledge_graph.visualization import visualize_knowledge_graph
+from knowledge_graph.config import load_config  # noqa: E402
+from knowledge_graph.main import InputError, load_triples_from_json  # noqa: E402
+from knowledge_graph.visualization import visualize_knowledge_graph  # noqa: E402
 
 
 def json_to_html(json_file, output_file, config_file="config.toml"):

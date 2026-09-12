@@ -1,6 +1,6 @@
 """Wave 3: taxonomy, singularization, LLM bridging and hub enrichment."""
-from src.knowledge_graph import entity_standardization as es
-from src.knowledge_graph.entity_standardization import (
+from knowledge_graph import entity_standardization as es
+from knowledge_graph.entity_standardization import (
     _infer_taxonomy,
     _singularize,
     infer_relationships,

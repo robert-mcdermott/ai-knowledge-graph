@@ -1,7 +1,7 @@
-"""Make the repository root importable so tests can use ``src.knowledge_graph``."""
+"""Make ``src/`` importable so the tests work from a checkout without installing the package."""
 import os
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+SRC = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)

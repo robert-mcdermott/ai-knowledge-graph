@@ -18,29 +18,37 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 ## Requirements
 
 - Python 3.11+
-- Required packages (install using `pip install -r requirements.txt` or `uv sync`)
+- Dependencies: `networkx`, `pyvis`, `requests` (installed by `pip install -e .` or `uv sync`)
 
 ## Quick Start
 
 1. Clone this repository
-2. Install dependencies: `pip install -r requirements.txt`
+2. Install: `pip install -e .` (or `uv sync`)
 3. Configure your settings in `config.toml`
 4. Run the system:
 
 ```bash
-python generate-graph.py --input your_text_file.txt --output knowledge_graph.html
+generate-graph --input your_text_file.txt --output knowledge_graph.html
 ```
 
 Or with UV:
 
 ```bash
-uv run generate-graph.py --input your_text_file.txt --output knowledge_graph.html
+uv run generate-graph --input your_text_file.txt --output knowledge_graph.html
 ```
-Or installing and using as a module:
+
+Or straight from the checkout without installing:
 
 ```bash
-pip install --upgrade -e .
-generate-graph --input your_text_file.txt --output knowledge_graph.html
+python generate-graph.py --input your_text_file.txt --output knowledge_graph.html
+```
+
+### Development
+
+```bash
+pip install -e ".[dev]"   # adds pytest and ruff
+pytest -q                 # 86 tests, no LLM needed
+ruff check .
 ```
 
 ## Configuration
@@ -273,23 +281,23 @@ Both the second and third passes are optional and can be disabled in the configu
 ```
 .
 ├── config.toml                     # Main configuration file for the system
-├── generate-graph.py               # Entry point when run directly as a script
-├── pyproject.toml                  # Python project metadata and build configuration
-├── requirements.txt                # Python dependencies for 'pip' users
-├── uv.lock                         # Python dependencies for 'uv' users
-└── src/                            # Source code
-    ├── generate_graph.py           # Main entry point script when run as a module
-    └── knowledge_graph/            # Core package
-        ├── __init__.py             # Package initialization
-        ├── config.py               # Configuration loading and validation
-        ├── entity_standardization.py # Entity standardization algorithms
-        ├── llm.py                  # LLM interaction and response processing
-        ├── main.py                 # Main program flow and orchestration
-        ├── prompts.py              # Centralized collection of LLM prompts
-        ├── text_utils.py           # Text processing and chunking utilities
-        ├── visualization.py        # Knowledge graph visualization generator
-        └── templates/              # HTML templates for visualization
-            └── graph_template.html # Base template for interactive graph
+├── generate-graph.py               # Run from a checkout without installing
+├── json_to_html.py                 # Re-render a saved .json graph (same as --from-json)
+├── pyproject.toml                  # Project metadata, dependencies, tool config
+├── requirements.txt                # Pinned dependencies for 'pip' users
+├── uv.lock                         # Lock file for 'uv' users
+├── tests/                          # pytest suite (runs without an LLM)
+└── src/knowledge_graph/            # Core package (installed as `knowledge_graph`)
+    ├── __init__.py                 # Package initialization and version
+    ├── config.py                   # Configuration loading, defaults and validation
+    ├── entity_standardization.py   # Entity standardization and relationship inference
+    ├── llm.py                      # LLM client (retries, truncation detection) and JSON extraction
+    ├── main.py                     # CLI, input handling and pipeline orchestration
+    ├── text_utils.py               # Text chunking utilities
+    ├── visualization.py            # Knowledge graph visualization generator
+    ├── prompts/                    # LLM prompts (extraction, entity resolution, inference)
+    └── templates/
+        └── graph_template.html     # Controls, styles and script for the interactive page
 ```
 
 ## Program Flow
@@ -350,7 +358,7 @@ flowchart TD
     F --> W[JSON Data Export]
     
     %% Prompts usage
-    Y[prompts.py] --> H
+    Y[prompts/] --> H
     Y --> L1
     Y --> N2
     Y --> N3
@@ -363,7 +371,7 @@ flowchart TD
         llm.py
         entity_standardization.py
         visualization.py
-        prompts.py
+        prompts/
     end
     
     %% Phases
@@ -413,18 +421,18 @@ flowchart TD
 4. **Text Processing**:
    - Breaks text into chunks with overlap using `text_utils.py`
    - Processes each chunk with the LLM to extract triples
-   - Uses prompts from `prompts.py` to guide the LLM's extraction process
+   - Uses prompts from the `prompts/` package to guide the LLM's extraction process
 
 5. **Entity Standardization** (optional):
    - Standardizes entity names across all triples
    - May use LLM for entity resolution in ambiguous cases
-   - Uses specialized prompts from `prompts.py` for entity resolution
+   - Uses specialized prompts from the `prompts/` package for entity resolution
 
 6. **Relationship Inference** (optional):
    - Identifies communities in the graph
    - Infers relationships between disconnected communities
    - Applies transitive inference and lexical similarity rules
-   - Uses specialized prompts from `prompts.py` for relationship inference
+   - Uses specialized prompts from the `prompts/` package for relationship inference
    - Deduplicates triples
 
 7. **Visualization**:

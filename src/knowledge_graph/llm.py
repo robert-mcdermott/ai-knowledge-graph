@@ -21,12 +21,13 @@ import json
 import logging
 import re
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 import requests
 
-from src.knowledge_graph.config import resolve_secret
+from knowledge_graph.config import resolve_secret
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +115,7 @@ class LLMClient:
 
     # ---- construction ----------------------------------------------------- #
     @classmethod
-    def from_config(cls, config: dict[str, Any]) -> "LLMClient":
+    def from_config(cls, config: dict[str, Any]) -> LLMClient:
         """Create a client from the ``[llm]`` table of a loaded config dict."""
         llm = config.get("llm", {})
         if "model" not in llm or "base_url" not in llm:

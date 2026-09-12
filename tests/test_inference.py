@@ -1,7 +1,6 @@
-import pytest
 
-from src.knowledge_graph import entity_standardization as es
-from src.knowledge_graph.entity_standardization import (
+from knowledge_graph import entity_standardization as es
+from knowledge_graph.entity_standardization import (
     _apply_transitive_inference,
     _identify_communities,
     _infer_relationships_by_lexical_similarity,

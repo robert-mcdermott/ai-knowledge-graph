@@ -3,7 +3,7 @@ import re
 
 import pytest
 
-from src.knowledge_graph.visualization import (
+from knowledge_graph.visualization import (
     COMMUNITY_PALETTE,
     SAMPLE_TRIPLES,
     community_color,

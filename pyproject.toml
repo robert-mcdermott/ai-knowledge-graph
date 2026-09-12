@@ -1,31 +1,58 @@
 [project]
 name = "ai-knowledge-graph"
-version = "0.6.1"
+version = "0.7.0"
 description = "Takes a text document and generates an interactive knowledge graph"
-authors = [{ name = "Robert McDermott", email = "robert.c.mcdermott@gmail.com" }, ]
+authors = [{ name = "Robert McDermott", email = "robert.c.mcdermott@gmail.com" }]
 readme = "README.md"
-requires-python = ">=3.12"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+keywords = ["knowledge-graph", "llm", "visualization", "nlp", "vis-network"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
 dependencies = [
     "networkx>=3.4.2",
     "pyvis>=0.3.2",
-    "pyvis-network>=0.0.6",
     "requests>=2.32.3",
-    "tomli>=2.2.1",
-    "python-louvain>=0.16"
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[project.urls]
+Homepage = "https://github.com/robert-mcdermott/ai-knowledge-graph"
+Issues = "https://github.com/robert-mcdermott/ai-knowledge-graph/issues"
+
+[project.scripts]
+generate-graph = "knowledge_graph.main:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[project.scripts]
-generate-graph = "src.knowledge_graph.main:main"
-
 [tool.setuptools]
-package-dir = {"" = "."}
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+knowledge_graph = ["templates/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]

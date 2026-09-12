@@ -20,8 +20,8 @@ import logging
 import re
 from collections import Counter, defaultdict, deque
 
-from src.knowledge_graph.llm import LLMClient, extract_json_from_text
-from src.knowledge_graph.prompts import prompt_factory
+from knowledge_graph.llm import LLMClient, extract_json_from_text
+from knowledge_graph.prompts import prompt_factory
 
 logger = logging.getLogger(__name__)
 

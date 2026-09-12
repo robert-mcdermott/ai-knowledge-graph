@@ -1,4 +1,4 @@
-from src.knowledge_graph.entity_standardization import standardize_entities
+from knowledge_graph.entity_standardization import standardize_entities
 
 
 def T(s, p, o):

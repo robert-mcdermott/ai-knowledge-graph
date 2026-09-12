@@ -80,6 +80,9 @@ is stale (`prompts.py` is now a package).
 > *Hide Inferred* toggle and per-method stats, Bootstrap CDN removed (fully offline HTML), MultiDiGraph so
 > parallel edges are no longer dropped, encoding fallback for input files, `--from-json` re-rendering.
 > Phase 1 is complete except the `logging` migration (moved to Phase 4).
+> **Wave 5 (done):** `src/` layout installed as `knowledge_graph` (no `sys.path` hacks), version 0.7.0,
+> deps pruned to networkx/pyvis/requests (IPython remains only because PyVis requires it), ruff config
+> and a clean lint, GitHub Actions CI on 3.11-3.13 with a renderer smoke test.
 
 Correctness fixes that change results today. Do these first and cut a 0.6.2 patch.
 
@@ -246,7 +249,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [ ] **Predicate normalization**: lower-case, lemmatize simple tense variants
       (`involve` / `involves`), and merge synonyms via an LLM pass on the predicate list;
       the run above produced both `involve` and `involves`. `P2 S`
-- [ ] **Use `networkx.community.louvain_communities`** (built in) and drop `python-louvain`;
+- [x] **Use `networkx.community.louvain_communities`** (built in) and drop `python-louvain`;
       offer Leiden via optional `igraph`/`leidenalg` extra (issue #24). `P2 S`
 - [ ] **Language option** (`extraction.language = "auto"|"zh"|…`) instructing the model to
       keep entities in the source language (issue #7). `P2 S`
@@ -257,10 +260,10 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 
 ## Phase 4 – Engineering hygiene (P1, S–M)
 
-- [ ] **Proper package layout**: `src/knowledge_graph` installed as `knowledge_graph`
+- [x] **Proper package layout**: `src/knowledge_graph` installed as `knowledge_graph`
       (`package-dir = {"" = "src"}`), drop all `sys.path.insert` hacks, keep
       `generate-graph.py` as a thin shim. Bump to 0.7.0. `P1 M`
-- [ ] **Dependencies**: remove `pyvis-network` (unrelated package), `tomli` (use stdlib
+- [x] **Dependencies**: remove `pyvis-network` (unrelated package), `tomli` (use stdlib
       `tomllib`, Python ≥ 3.11), IPython/pandas/numpy from `requirements.txt`; add `jinja2`
       explicitly if PyVis is dropped. Regenerate `uv.lock`. `P1 S`
 - [ ] **Typed data model**: `Triple`, `Node`, `Edge`, `Config` dataclasses (or pydantic)
@@ -269,7 +272,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       (think tags, prose, truncated arrays, dict vs list), standardization (no over-merge),
       inference (no self-loops, respects config, predicate integrity), HTML generation smoke
       test that asserts no `CDN` links and valid embedded JSON. `P1 M`
-- [ ] **CI**: GitHub Actions running ruff + pytest on 3.11/3.12/3.13; a nightly job that
+- [x] **CI**: GitHub Actions running ruff + pytest on 3.11/3.12/3.13; a nightly job that
       regenerates `docs/index.html` from the checked-in sample JSON. `P1 S`
 - [ ] **Docs refresh**: fix the project layout section, add config examples for OpenAI,
       Anthropic (via LiteLLM), Gemini (merge PR #16), OpenRouter, vLLM; a "reasoning

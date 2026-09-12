@@ -8,7 +8,7 @@ Your task is to standardize entity names from a knowledge graph to ensure consis
 
 def get_entity_resolution_user_prompt(entity_list):
     return f"""
-Below is a list of entity names extracted from a knowledge graph. 
+Below is a list of entity names extracted from a knowledge graph.
 Some may refer to the same real-world entities but with different wording.
 
 Please identify groups of entities that refer to the same concept, and provide a standardized name for each group.

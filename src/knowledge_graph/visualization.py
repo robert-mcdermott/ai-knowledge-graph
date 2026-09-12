@@ -27,7 +27,7 @@ def _load_html_template():
     """Load the HTML template from the template file."""
     template_path = os.path.join(os.path.dirname(__file__), "templates", "graph_template.html")
     try:
-        with open(template_path, "r", encoding="utf-8") as f:
+        with open(template_path, encoding="utf-8") as f:
             return f.read()
     except Exception as e:
         print(f"Warning: Could not load template file: {e}")

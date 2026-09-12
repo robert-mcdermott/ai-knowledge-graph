@@ -1,20 +1,20 @@
 """Prompt factory and centralized prompt registry for the knowledge graph system."""
 
-from .main_prompts import MAIN_SYSTEM_PROMPT, MAIN_USER_PROMPT
 from .entity_prompts import (
     ENTITY_RESOLUTION_SYSTEM_PROMPT,
     get_entity_resolution_user_prompt,
 )
 from .inference_prompts import (
-    RELATIONSHIP_INFERENCE_SYSTEM_PROMPT,
-    get_relationship_inference_user_prompt,
-    WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
-    get_within_community_inference_user_prompt,
     BRIDGE_INFERENCE_SYSTEM_PROMPT,
-    get_bridge_inference_user_prompt,
     HUB_INFERENCE_SYSTEM_PROMPT,
+    RELATIONSHIP_INFERENCE_SYSTEM_PROMPT,
+    WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
+    get_bridge_inference_user_prompt,
     get_hub_inference_user_prompt,
+    get_relationship_inference_user_prompt,
+    get_within_community_inference_user_prompt,
 )
+from .main_prompts import MAIN_SYSTEM_PROMPT, MAIN_USER_PROMPT
 
 __all__ = [
     "PromptFactory",

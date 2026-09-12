@@ -1,14 +1,14 @@
 """Phase 3 & 4: Relationship inference prompts."""
 
 RELATIONSHIP_INFERENCE_SYSTEM_PROMPT = """
-You are an expert in knowledge representation and inference. 
+You are an expert in knowledge representation and inference.
 Your task is to infer plausible relationships between disconnected entities in a knowledge graph.
 """
 
 
 def get_relationship_inference_user_prompt(entities1, entities2, triples_text):
     return f"""
-I have a knowledge graph with two disconnected communities of entities. 
+I have a knowledge graph with two disconnected communities of entities.
 
 Community 1 entities: {entities1}
 Community 2 entities: {entities2}
@@ -36,7 +36,7 @@ IMPORTANT: Make sure the subject and object are different entities - avoid self-
 
 
 WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT = """
-You are an expert in knowledge representation and inference. 
+You are an expert in knowledge representation and inference.
 Your task is to infer plausible relationships between semantically related entities that are not yet connected in a knowledge graph.
 """
 

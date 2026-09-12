@@ -1,6 +1,6 @@
 import pytest
 
-from src.knowledge_graph.config import ConfigError, load_config, resolve_secret, validate_config
+from knowledge_graph.config import ConfigError, load_config, resolve_secret, validate_config
 
 
 def base():

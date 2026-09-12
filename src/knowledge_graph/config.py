@@ -122,7 +122,7 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
             raise ConfigError(f"[inference] {key} must be a non-negative integer")
     groups = inference.get("transitive_predicate_groups")
     if groups is not None:
-        from src.knowledge_graph.entity_standardization import TRANSITIVE_PREDICATE_GROUPS
+        from knowledge_graph.entity_standardization import TRANSITIVE_PREDICATE_GROUPS
         unknown = set(groups) - set(TRANSITIVE_PREDICATE_GROUPS)
         if unknown:
             raise ConfigError(f"[inference] unknown transitive_predicate_groups {sorted(unknown)}; "
