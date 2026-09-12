@@ -22,11 +22,12 @@ def test_utf8_and_bom(tmp_path, capsys):
     assert read_input_text(str(p)) == "hello"
 
 
-def test_cp1252_fallback(tmp_path, capsys):
+def test_cp1252_fallback(tmp_path, caplog):
     p = tmp_path / "w.txt"
     p.write_bytes("smart “quotes” and – dash".encode("cp1252"))
-    assert "“quotes”" in read_input_text(str(p))
-    assert "decoded as cp1252" in capsys.readouterr().out
+    with caplog.at_level("INFO", logger="knowledge_graph"):
+        assert "“quotes”" in read_input_text(str(p))
+    assert "decoded as cp1252" in caplog.text
 
 
 def test_pdf_rejected_with_hint(tmp_path):

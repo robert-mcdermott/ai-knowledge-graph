@@ -83,12 +83,16 @@ def test_store_rejects_traversal(tmp_path):
 
 # ---- wave 11b: ingest in the browser ---------------------------------------- #
 def _fake_pipeline(monkeypatch):
+    import logging
+    logging.getLogger("knowledge_graph").setLevel(logging.INFO)
+    log = logging.getLogger("knowledge_graph.main")
+
     def fake_process(config, documents, debug=False, continue_on_error=False):
-        print("PHASE 1: INITIAL TRIPLE EXTRACTION")
-        print(f"Processing text in {len(documents)} chunks (size: 500 words, overlap: 50 words)")
+        log.info("PHASE 1: INITIAL TRIPLE EXTRACTION")
+        log.info(f"Processing text in {len(documents)} chunks (size: 500 words, overlap: 50 words)")
         for i, _ in enumerate(documents, start=1):
-            print(f"Chunk {i}: 2 triples")
-        print("PHASE 3: RELATIONSHIP INFERENCE")
+            log.info(f"Chunk {i}: 2 triples")
+        log.info("PHASE 3: RELATIONSHIP INFERENCE")
         return [dict(t, document=name) for name, _ in documents for t in TRIPLES[:2]]
     monkeypatch.setattr(srv, "process_documents", fake_process)
 

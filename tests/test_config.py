@@ -52,13 +52,14 @@ def test_load_config_round_trip(tmp_path, capsys):
     assert cfg["chunking"]["overlap"] == 2 and cfg["llm"]["timeout"] == 300
 
 
-def test_load_config_reports_invalid_and_missing(tmp_path, capsys):
+def test_load_config_reports_invalid_and_missing(tmp_path, caplog):
     path = tmp_path / "c.toml"
     path.write_text('[llm]\nmodel = "m"\nbase_url = "http://x"\n[chunking]\nchunk_size = 5\noverlap = 9\n')
-    assert load_config(str(path)) is None
-    assert "overlap" in capsys.readouterr().out
-    assert load_config(str(tmp_path / "nope.toml")) is None
-    assert "not found" in capsys.readouterr().out
+    with caplog.at_level("ERROR", logger="knowledge_graph"):
+        assert load_config(str(path)) is None
+        assert "overlap" in caplog.text
+        assert load_config(str(tmp_path / "nope.toml")) is None
+        assert "not found" in caplog.text
 
 
 def test_visualization_theme_and_edge_labels_validated():

@@ -98,6 +98,9 @@ is stale (`prompts.py` is now a package).
 > **Wave 11b (done, 0.8):** ingest in the browser: paste/upload → background job with progress page → explorer.
 > **Wave 12 (done, 0.8):** page polish: parallel edges collapsed with a "+N" badge (raw relationships kept for
 > the details panel, paths, stats and exports), title-cased display names; both configurable.
+> **Wave 13 (done, 0.8):** `logging` migration: pipeline modules log via `knowledge_graph.*` loggers, the CLIs
+> configure a console handler (`--verbose`/`--debug`, `--quiet`), default output unchanged; graph-serve captures
+> job progress through a log handler instead of a stdout tee.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -172,7 +175,7 @@ Correctness fixes that change results today. Do these first and cut a 0.6.2 patc
       validate config values at load time. `P0 S`
 - [x] **Encoding fallback and file-type check** for input: try UTF-8, then UTF-8-sig,
       then `latin-1`, and give a clear message for binary files like PDF (issue #9). `P0 S`
-- [ ] **Unbuffered / logged output** (prints now flush; full `logging` migration pending). Replace `print` with `logging` (`--verbose`,
+- [x] **Unbuffered / logged output** (prints now flush; full `logging` migration pending). Replace `print` with `logging` (`--verbose`,
       `--quiet`), flush progress lines, and print a final summary table. `P1 S`
 
 ### Visualization template (`templates/graph_template.html`, `visualization.py`)

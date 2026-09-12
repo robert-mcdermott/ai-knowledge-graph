@@ -25,6 +25,8 @@ from knowledge_graph.prompts import prompt_factory, system_prompt_for
 
 logger = logging.getLogger(__name__)
 
+log = logging.getLogger("knowledge_graph.entity_standardization")
+
 REQUIRED_KEYS = ("subject", "predicate", "object")
 
 # Predicate families for which A -p-> B -p-> C reasonably implies A -p-> C.
@@ -81,7 +83,7 @@ def _valid_triples(triples, context):
         else:
             invalid += 1
     if invalid:
-        print(f"Warning: filtered out {invalid} invalid triples missing required fields ({context})", flush=True)
+        log.warning(f"filtered out {invalid} invalid triples missing required fields ({context})")
     return valid
 
 
@@ -124,11 +126,11 @@ def standardize_entities(triples, config):
     if not triples:
         return triples
 
-    print("Standardizing entity names across all triples...", flush=True)
+    log.info("Standardizing entity names across all triples...")
     std_cfg = config.get("standardization", {})
     valid_triples = _valid_triples(triples, "standardization")
     if not valid_triples:
-        print("Error: No valid triples found for entity standardization", flush=True)
+        log.error("No valid triples found for entity standardization")
         return []
 
     all_entities = set()
@@ -187,10 +189,10 @@ def standardize_entities(triples, config):
 
     filtered = [t for t in standardized if t["subject"] != t["object"]]
     if len(filtered) < len(standardized):
-        print(f"Removed {len(standardized) - len(filtered)} self-referencing triples", flush=True)
+        log.info(f"Removed {len(standardized) - len(filtered)} self-referencing triples")
     normalize_predicates(filtered)
 
-    print(f"Standardized {len(all_entities)} entities into {len(set(mapping.values()))} standard forms", flush=True)
+    log.info(f"Standardized {len(all_entities)} entities into {len(set(mapping.values()))} standard forms")
     return filtered
 
 
@@ -230,7 +232,7 @@ def normalize_predicates(triples):
     if merged:
         for t in triples:
             t["predicate"] = canonical[t["predicate"]]
-        print(f"Merged {merged} predicate variants (e.g. tense forms)", flush=True)
+        log.info(f"Merged {merged} predicate variants (e.g. tense forms)")
     return triples
 
 
@@ -283,7 +285,7 @@ def _resolve_entities_with_llm(triples, config):
         response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
         entity_mapping = extract_json_from_text(response, expect="object")
         if not entity_mapping:
-            print("Could not extract valid entity mapping from LLM response", flush=True)
+            log.info("Could not extract valid entity mapping from LLM response")
             return triples
 
         entity_to_standard = {}
@@ -299,9 +301,9 @@ def _resolve_entities_with_llm(triples, config):
         for triple in triples:
             triple["subject"] = entity_to_standard.get(triple["subject"], triple["subject"])
             triple["object"] = entity_to_standard.get(triple["object"], triple["object"])
-        print(f"Applied LLM-based entity standardization for {len(entity_mapping)} entity groups", flush=True)
+        log.info(f"Applied LLM-based entity standardization for {len(entity_mapping)} entity groups")
     except Exception as e:  # optional phase: never abort the run
-        print(f"Error in LLM-based entity resolution: {e}", flush=True)
+        log.error(f"Error in LLM-based entity resolution: {e}")
     return triples
 
 
@@ -319,11 +321,11 @@ def infer_relationships(triples, config):
     if not triples or len(triples) < 2:
         return triples
 
-    print("Inferring additional relationships between entities...", flush=True)
+    log.info("Inferring additional relationships between entities...")
     inf_cfg = config.get("inference", {})
     valid_triples = _valid_triples(triples, "inference")
     if not valid_triples:
-        print("Error: No valid triples found for relationship inference", flush=True)
+        log.error("No valid triples found for relationship inference")
         return []
 
     graph = defaultdict(set)
@@ -334,7 +336,7 @@ def infer_relationships(triples, config):
     degree = _degrees(valid_triples)
 
     communities = _identify_communities(graph)
-    print(f"Identified {len(communities)} disconnected components in the graph", flush=True)
+    log.info(f"Identified {len(communities)} disconnected components in the graph")
 
     candidates: dict[str, list] = {m: [] for m in INFERENCE_PRIORITY}
     if inf_cfg.get("use_llm_for_inference", True):
@@ -374,10 +376,10 @@ def infer_relationships(triples, config):
             per_method[method] += 1
 
     breakdown = ", ".join(f"{m}: {per_method[m]}" for m in INFERENCE_PRIORITY if candidates[m])
-    print(f"Accepted {len(accepted)} inferred relationships ({breakdown or 'none'}); "
+    log.info(f"Accepted {len(accepted)} inferred relationships ({breakdown or 'none'}); "
           f"dropped {dropped_dup} already-connected pairs"
           + (f", {dropped_budget} over the budget of {budget} ({ratio:g} x {extracted_count} extracted)"
-             if dropped_budget else ""), flush=True)
+             if dropped_budget else ""))
 
     result = _deduplicate_triples(valid_triples + accepted)
     for t in result:
@@ -454,8 +456,8 @@ def _apply_transitive_inference(triples, graph, degree, inf_cfg):
                 new_triples.append(_make_inferred(subj, canonical, obj, "transitive", via=mid))
                 connected.add(_pair_key(subj, obj))
                 per_subject[subj] += 1
-    print(f"Transitive inference proposed {len(new_triples)} relationships"
-          + (f" (skipped {skipped_hubs} paths through hub nodes)" if skipped_hubs else ""), flush=True)
+    log.info(f"Transitive inference proposed {len(new_triples)} relationships"
+          + (f" (skipped {skipped_hubs} paths through hub nodes)" if skipped_hubs else ""))
     return new_triples
 
 
@@ -475,10 +477,10 @@ def _llm_infer(config, system_prompt, user_prompt, method, context):
         response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
         parsed = extract_json_from_text(response, expect="array")
     except Exception as e:  # optional phase: never abort the run
-        print(f"Error in LLM-based relationship inference ({context}): {e}", flush=True)
+        log.error(f"Error in LLM-based relationship inference ({context}): {e}")
         return []
     if not parsed:
-        print(f"Could not extract valid inferred relationships from LLM response ({context})", flush=True)
+        log.info(f"Could not extract valid inferred relationships from LLM response ({context})")
         return []
     results = []
     for t in parsed:
@@ -498,7 +500,7 @@ def _infer_bridges_with_llm(triples, communities, degree, config):
     highest-degree entities of each component.
     """
     if len(communities) <= 1:
-        print("Only one connected component found, skipping LLM bridging", flush=True)
+        log.info("Only one connected component found, skipping LLM bridging")
         return []
     inf_cfg = config.get("inference", {})
     max_components = int(inf_cfg.get("max_bridge_components", 20))
@@ -521,7 +523,7 @@ def _infer_bridges_with_llm(triples, communities, degree, config):
         user_prompt = prompt_factory.get_prompt("bridge_inference_user", main_text, "\n".join(groups))
         found = _llm_infer(config, system_prompt, user_prompt, "llm_bridge", f"bridging groups {batch_start + 1}-{batch_start + len(batch)}")
         new_triples.extend(found)
-    print(f"LLM bridging proposed {len(new_triples)} relationships for {len(others)} isolated components", flush=True)
+    log.info(f"LLM bridging proposed {len(new_triples)} relationships for {len(others)} isolated components")
     return new_triples
 
 
@@ -539,7 +541,7 @@ def _infer_hub_relationships_with_llm(triples, degree, config):
         "hub_inference_user", "\n".join(hubs), _format_triples(existing, 60) or "(none)", max_new)
     found = _llm_infer(config, system_prompt_for("hub_inference_system", config), user_prompt, "llm_hub", "hub enrichment")
     found = [t for t in found if t["subject"] in hub_set and t["object"] in hub_set][:max_new]
-    print(f"LLM hub enrichment proposed {len(found)} relationships among the {len(hubs)} most central entities", flush=True)
+    log.info(f"LLM hub enrichment proposed {len(found)} relationships among the {len(hubs)} most central entities")
     return found
 
 
@@ -590,7 +592,7 @@ def _infer_taxonomy(entities, triples):
             if f" {other_lower} " in padded and _pair_key(entity, other) not in connected:
                 new_triples.append(_make_inferred(entity, "involves", other, "taxonomy"))
                 connected.add(_pair_key(entity, other))
-    print(f"Taxonomy rule proposed {len(new_triples)} relationships", flush=True)
+    log.info(f"Taxonomy rule proposed {len(new_triples)} relationships")
     return new_triples
 
 
@@ -624,7 +626,7 @@ def _infer_within_community_relationships(triples, communities, config):
         user_prompt = prompt_factory.get_prompt("within_community_user", pairs_text, triples_text)
         found = _llm_infer(config, system_prompt, user_prompt, "llm_within", "within community")
         new_triples.extend(found)
-    print(f"Within-community LLM inference proposed {len(new_triples)} relationships", flush=True)
+    log.info(f"Within-community LLM inference proposed {len(new_triples)} relationships")
     return new_triples
 
 
@@ -661,5 +663,5 @@ def _infer_relationships_by_lexical_similarity(entities, triples, min_word_lengt
             else:
                 continue
             connected.add(_pair_key(e1, e2))
-    print(f"Lexical similarity proposed {len(new_triples)} relationships", flush=True)
+    log.info(f"Lexical similarity proposed {len(new_triples)} relationships")
     return new_triples

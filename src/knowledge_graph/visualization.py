@@ -8,10 +8,13 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import logging
 import os
 
 import networkx as nx
 from jinja2 import Environment, FileSystemLoader
+
+log = logging.getLogger("knowledge_graph.visualization")
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 VENDOR_DIR = os.path.join(TEMPLATE_DIR, "vendor")
@@ -97,37 +100,37 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
 
     if not triples:
-        print("Warning: No triples provided for visualization")
+        log.warning("No triples provided for visualization")
         empty = {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
         return empty, {"nodes": [], "edges": [], "options": {}, "meta": {"stats": empty, "communities": [], "types": []}}
 
-    print(f"Processing {len(triples)} triples for visualization")
+    log.info(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
     graph_data = build_graph_data(triples, edge_smooth, show_inferred=vis_cfg.get("show_inferred", True),
                                   theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"),
                                   title_case=vis_cfg.get("title_case", True),
                                   collapse_parallel_edges=vis_cfg.get("collapse_parallel_edges", True))
     stats = graph_data["meta"]["stats"]
-    print(f"Found {stats['nodes']} unique nodes")
-    print(f"Found {stats['inferred_edges']} inferred relationships")
-    print(f"Detected {stats['communities']} communities using Louvain method")
+    log.info(f"Found {stats['nodes']} unique nodes")
+    log.info(f"Found {stats['inferred_edges']} inferred relationships")
+    log.info(f"Detected {stats['communities']} communities using Louvain method")
     if community_namer is not None and stats["communities"] > 1:
         try:
             names = community_namer(graph_data["meta"]["communities"]) or {}
         except Exception as e:  # naming is cosmetic; never fail the render
-            print(f"Warning: community naming failed: {e}")
+            log.warning(f"community naming failed: {e}")
             names = {}
         if names:
             for entry in graph_data["meta"]["communities"]:
                 if entry["id"] in names:
                     entry["name"] = names[entry["id"]]
-            print(f"Named {len(names)} communities")
+            log.info(f"Named {len(names)} communities")
 
     html = render_html(graph_data)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"Knowledge graph visualization saved to {output_file}")
-    print(f"Graph Statistics: {json.dumps(stats, indent=2)}")
+    log.info(f"Knowledge graph visualization saved to {output_file}")
+    log.info(f"Graph Statistics: {json.dumps(stats, indent=2)}")
     return stats, graph_data
 
 
@@ -284,7 +287,7 @@ def _detect_communities(G_undirected, all_nodes):
         partition = {node: idx for idx, members in enumerate(ordered) for node in members}
         return partition, len(ordered)
     except Exception as e:
-        print(f"Community detection failed ({e}); using degree-based grouping")
+        log.info(f"Community detection failed ({e}); using degree-based grouping")
         partition = {node: min(G_undirected.degree(node) if node in G_undirected else 0, 7) for node in all_nodes}
         return partition, len(set(partition.values()))
 
@@ -360,14 +363,14 @@ def sample_data_visualization(output_file="sample_knowledge_graph.html", edge_sm
     """Generate a visualization from built-in sample data to test the renderer."""
     if edge_smooth is None:
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
-    print(f"Generating sample visualization with {len(SAMPLE_TRIPLES)} triples")
+    log.info(f"Generating sample visualization with {len(SAMPLE_TRIPLES)} triples")
     stats = visualize_knowledge_graph(SAMPLE_TRIPLES, output_file, edge_smooth=edge_smooth, config=config)
-    print("\nSample Knowledge Graph Statistics:")
-    print(f"Nodes: {stats['nodes']}")
-    print(f"Edges: {stats['edges']}")
-    print(f"Communities: {stats['communities']}")
-    print(f"\nVisualization saved to {output_file}")
-    print(f"To view, open: file://{os.path.abspath(output_file)}")
+    log.info("\nSample Knowledge Graph Statistics:")
+    log.info(f"Nodes: {stats['nodes']}")
+    log.info(f"Edges: {stats['edges']}")
+    log.info(f"Communities: {stats['communities']}")
+    log.info(f"\nVisualization saved to {output_file}")
+    log.info(f"To view, open: file://{os.path.abspath(output_file)}")
     return stats
 
 

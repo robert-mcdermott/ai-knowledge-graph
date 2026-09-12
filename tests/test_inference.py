@@ -130,10 +130,11 @@ def test_llm_inference_parses_and_tags(monkeypatch):
                     "inferred": True, "method": "llm_within"}]
 
 
-def test_llm_inference_error_is_swallowed(monkeypatch, capsys):
+def test_llm_inference_error_is_swallowed(monkeypatch, caplog):
     class Boom:
         def __init__(self, *a, **k): pass
         def complete(self, *a, **k): raise RuntimeError("down")
     monkeypatch.setattr(es.LLMClient, "from_config", classmethod(lambda cls, cfg: Boom()))
-    assert es._llm_infer({}, "s", "u", "llm_within", "test") == []
-    assert "down" in capsys.readouterr().out
+    with caplog.at_level("INFO", logger="knowledge_graph"):
+        assert es._llm_infer({}, "s", "u", "llm_within", "test") == []
+    assert "down" in caplog.text

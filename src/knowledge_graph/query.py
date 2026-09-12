@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import re
 import sys
@@ -25,6 +26,7 @@ from dataclasses import dataclass, field
 from knowledge_graph.config import load_config
 from knowledge_graph.entity_standardization import _singularize
 from knowledge_graph.llm import LLMClient, LLMError, extract_json_from_text
+from knowledge_graph.logging_utils import configure_logging
 from knowledge_graph.prompts import prompt_factory, system_prompt_for
 
 _STOPWORDS = {
@@ -285,6 +287,7 @@ def main(argv=None):
     parser.add_argument("--json", action="store_true", help="Print the result as JSON (single-question mode)")
     parser.add_argument("--no-facts", action="store_true", help="Do not list the cited facts after the answer")
     args = parser.parse_args(argv)
+    configure_logging(logging.WARNING)
 
     config = load_config(args.config)
     if not config:

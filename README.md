@@ -52,7 +52,7 @@ python generate-graph.py --input your_text_file.txt --output knowledge_graph.htm
 ```bash
 pip install -e ".[dev]"   # adds pytest and ruff
 pip install -e ".[all]"   # adds pypdf, python-docx and the web server
-pytest -q                 # 108 tests, no LLM needed
+pytest -q                 # 149 tests, no LLM needed
 ruff check .
 ```
 
@@ -166,7 +166,8 @@ incomplete graph.
 - `--input PATH [PATH ...]`: Input file(s) or directories. Plain text (`.txt`, `.md`, `.rst`), `.pdf` (install the `[pdf]` extra) and `.docx` (`[docx]` extra). With several inputs every triple is tagged with its `document`
 - `--output FILE`: Output HTML file for visualization (default: knowledge_graph.html)
 - `--config FILE`: Path to config file (default: config.toml)
-- `--debug`: Enable debug output with raw LLM responses
+- `--debug` / `--verbose`: Show debug output, including raw LLM responses and standardization merges
+- `--quiet`: Only warnings and errors on the console (the final summary is still printed)
 - `--no-standardize`: Disable entity standardization
 - `--no-inference`: Disable relationship inference
 - `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
@@ -180,9 +181,9 @@ incomplete graph.
 ```bash
 generate-graph --help
 usage: generate-graph [-h] [--test] [--config CONFIG] [--output OUTPUT]
-                      [--input INPUT] [--from-json FILE] [--debug]
-                      [--no-standardize] [--no-inference]
-                      [--continue-on-error] [--no-cache]
+                      [--input PATH [PATH ...]] [--from-json FILE]
+                      [--debug] [--quiet] [--no-standardize] [--no-inference]
+                      [--continue-on-error] [--no-cache] [--export FORMATS]
 
 Knowledge Graph Generator and Visualizer
 
@@ -195,8 +196,9 @@ options:
                        --from-json is used)
   --from-json FILE     Render a visualization from a previously saved triples
                        JSON file (no LLM calls)
-  --debug              Enable debug output (raw LLM responses and extracted
+  --debug, --verbose   Enable debug output (raw LLM responses and extracted
                        JSON)
+  --quiet              Only show warnings and errors
   --no-standardize     Disable entity standardization
   --no-inference       Disable relationship inference
   --continue-on-error  Skip chunks whose LLM call fails or is truncated

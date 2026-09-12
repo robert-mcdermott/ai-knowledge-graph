@@ -1,6 +1,7 @@
 """Configuration loading, validation and defaults for the knowledge graph generator."""
 from __future__ import annotations
 
+import logging
 import os
 import re
 from typing import Any
@@ -9,6 +10,8 @@ try:  # Python 3.11+
     import tomllib
 except ModuleNotFoundError:  # pragma: no cover - older interpreters
     import tomli as tomllib  # type: ignore[no-redef]
+
+log = logging.getLogger("knowledge_graph.config")
 
 _ENV_BRACES = re.compile(r"^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$")
 
@@ -158,13 +161,13 @@ def load_config(config_file: str = "config.toml") -> dict[str, Any] | None:
         with open(config_file, "rb") as f:
             config = tomllib.load(f)
     except FileNotFoundError:
-        print(f"Error: config file not found: {config_file}")
+        log.error(f"config file not found: {config_file}")
         return None
     except (OSError, tomllib.TOMLDecodeError) as e:
-        print(f"Error loading config file {config_file}: {e}")
+        log.error(f"Error loading config file {config_file}: {e}")
         return None
     try:
         return validate_config(config)
     except ConfigError as e:
-        print(f"Invalid configuration in {config_file}: {e}")
+        log.error(f"Invalid configuration in {config_file}: {e}")
         return None

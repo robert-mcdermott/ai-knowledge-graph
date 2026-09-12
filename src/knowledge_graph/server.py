@@ -8,9 +8,8 @@ to localhost by default because it wraps your configured LLM and reads local fil
 """
 
 import argparse
-import contextlib
-import io
 import json
+import logging
 import os
 import re
 import sys
@@ -24,6 +23,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from knowledge_graph.config import load_config
 from knowledge_graph.llm import LLMError
+from knowledge_graph.logging_utils import ROOT_LOGGER, ConsoleFormatter, configure_logging
 from knowledge_graph.main import (
     SUPPORTED_EXTENSIONS,
     InputError,
@@ -35,6 +35,7 @@ from knowledge_graph.main import (
 from knowledge_graph.query import GraphChat
 from knowledge_graph.visualization import TEMPLATE_DIR, build_graph_data, render_html, render_knowledge_graph
 
+log = logging.getLogger("knowledge_graph.server")
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._ -]*$")
 
 
@@ -112,7 +113,7 @@ class GraphStore:
                     if entry["id"] in names:
                         entry["name"] = names[entry["id"]]
             except Exception as e:  # cosmetic; never block the page
-                print(f"Warning: community naming failed: {e}", flush=True)
+                log.warning(f"community naming failed: {e}")
         graph_data["meta"]["chatEndpoint"] = f"/api/chat/{name}"
         graph_data["meta"]["libraryUrl"] = "/"
         html = render_html(graph_data)
@@ -160,23 +161,18 @@ _PHASES = (
 )
 
 
-class _LogTee(io.TextIOBase):
-    """Forwards pipeline output to the real stdout and records it for the job status."""
+class _JobLogHandler(logging.Handler):
+    """Records the pipeline's log lines for the job status page (console output is unaffected)."""
 
-    def __init__(self, job, original):
-        super().__init__()
-        self.job, self.original, self._buffer = job, original, ""
+    def __init__(self, job):
+        super().__init__(logging.INFO)
+        self.job = job
 
-    def write(self, text):
-        self.original.write(text)
-        self._buffer += text
-        while "\n" in self._buffer:
-            line, self._buffer = self._buffer.split("\n", 1)
-            self.job.record(line)
-        return len(text)
-
-    def flush(self):
-        self.original.flush()
+    def emit(self, record):
+        try:
+            self.job.record(self.format(record))
+        except Exception:  # never let status bookkeeping break the pipeline
+            pass
 
 
 class IngestJob:
@@ -220,19 +216,21 @@ class IngestJob:
 
     def run(self):
         self.state = "running"
-        tee = _LogTee(self, sys.stdout)
+        handler = _JobLogHandler(self)
+        handler.setFormatter(ConsoleFormatter())
+        pipeline_logger = logging.getLogger(ROOT_LOGGER)
+        pipeline_logger.addHandler(handler)
         try:
-            with contextlib.redirect_stdout(tee):
-                triples = process_documents(self.store.config, self.documents, continue_on_error=True)
-                if not triples:
-                    raise InputError("No relationships could be extracted from the input.")
-                html_path = os.path.join(self.store.graphs_dir, f"{self.name}.html")
-                json_path = os.path.join(self.store.graphs_dir, f"{self.name}.json")
-                with open(json_path, "w", encoding="utf-8") as f:
-                    json.dump(triples, f, indent=2, ensure_ascii=False)
-                stats, _ = render_knowledge_graph(triples, html_path, config=self.store.config,
-                                                  community_namer=make_community_namer(self.store.config))
-                self.stats = stats
+            triples = process_documents(self.store.config, self.documents, continue_on_error=True)
+            if not triples:
+                raise InputError("No relationships could be extracted from the input.")
+            html_path = os.path.join(self.store.graphs_dir, f"{self.name}.html")
+            json_path = os.path.join(self.store.graphs_dir, f"{self.name}.json")
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(triples, f, indent=2, ensure_ascii=False)
+            stats, _ = render_knowledge_graph(triples, html_path, config=self.store.config,
+                                              community_namer=make_community_namer(self.store.config))
+            self.stats = stats
             self.store.forget(self.name)
             self.state = "done"
             self.phase = "done"
@@ -241,6 +239,7 @@ class IngestJob:
             self.state = "error"
             self.phase = "error"
         finally:
+            pipeline_logger.removeHandler(handler)
             self.finished = datetime.now()
 
 
@@ -391,6 +390,7 @@ def main(argv=None):
     parser.add_argument("--open", action="store_true", help="Open the library in your browser")
     args = parser.parse_args(argv)
 
+    configure_logging(logging.INFO)
     config = load_config(args.config)
     if not config:
         sys.exit(1)
