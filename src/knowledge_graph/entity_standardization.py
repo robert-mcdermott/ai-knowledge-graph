@@ -543,6 +543,20 @@ def _infer_hub_relationships_with_llm(triples, degree, config):
     return found
 
 
+_NAMED_TYPES = {"person", "organization", "place", "date"}
+
+
+def _entity_types(triples):
+    """Majority-vote entity type per node from subject_type/object_type (mirrors visualization.entity_types)."""
+    votes = defaultdict(Counter)
+    for t in triples:
+        for name, key in ((t["subject"], "subject_type"), (t["object"], "object_type")):
+            value = t.get(key)
+            if isinstance(value, str) and value.strip():
+                votes[name][value.strip().lower()] += 1
+    return {name: counts.most_common(1)[0][0] for name, counts in votes.items()}
+
+
 def _infer_taxonomy(entities, triples):
     """Deterministic ``<modifier> <head>`` → ``is a`` ``<head>`` links, plus containment.
 
@@ -552,11 +566,12 @@ def _infer_taxonomy(entities, triples):
     """
     by_lower = {e.lower(): e for e in entities}
     connected = {_pair_key(t["subject"], t["object"]) for t in triples}
+    types = _entity_types(triples)
     new_triples = []
     for entity in sorted(entities):
         words = entity.lower().split()
-        if len(words) < 2:
-            continue
+        if len(words) < 2 or types.get(entity) in _NAMED_TYPES:
+            continue  # "nikola tesla" is not a kind of "tesla"; "great britain" is not a kind of "britain"
         linked = None
         # 1. Longest suffix that is itself an entity and is a true head noun.
         for k in range(1, len(words)):

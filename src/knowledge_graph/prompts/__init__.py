@@ -19,6 +19,12 @@ from .inference_prompts import (
     get_within_community_inference_user_prompt,
 )
 from .main_prompts import MAIN_SYSTEM_PROMPT, MAIN_USER_PROMPT
+from .query_prompts import (
+    ENTITY_PICK_SYSTEM_PROMPT,
+    QUERY_SYSTEM_PROMPT,
+    get_entity_pick_user_prompt,
+    get_query_user_prompt,
+)
 
 __all__ = [
     "PromptFactory",
@@ -39,6 +45,10 @@ __all__ = [
     "get_hub_inference_user_prompt",
     "COMMUNITY_NAMING_SYSTEM_PROMPT",
     "get_community_naming_user_prompt",
+    "QUERY_SYSTEM_PROMPT",
+    "get_query_user_prompt",
+    "ENTITY_PICK_SYSTEM_PROMPT",
+    "get_entity_pick_user_prompt",
 ]
 
 
@@ -70,6 +80,10 @@ class PromptFactory:
             "hub_inference_user": get_hub_inference_user_prompt,
             "community_naming_system": COMMUNITY_NAMING_SYSTEM_PROMPT,
             "community_naming_user": get_community_naming_user_prompt,
+            "query_system": QUERY_SYSTEM_PROMPT,
+            "query_user": get_query_user_prompt,
+            "entity_pick_system": ENTITY_PICK_SYSTEM_PROMPT,
+            "entity_pick_user": get_entity_pick_user_prompt,
         }
 
     def get_prompt(self, name: str, *args, **kwargs) -> str:

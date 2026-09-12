@@ -13,6 +13,7 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 - **Entity standardization**: case, stop-word and plural variants are merged, with an optional LLM pass for the rest
 - **Conservative, traceable inference**: LLM passes bridge isolated parts of the graph and add well-known relationships between central entities; a deterministic taxonomy rule links specific terms to general ones; every inferred edge carries its method and is capped relative to the extracted edges
 - **Exports**: JSON, CSV, GraphML for Gephi/yEd/Cytoscape and a Cypher script for Neo4j
+- **Chat with the graph** (optional `graph-chat` command): grounded, cited answers from the generated graph
 - **Interactive explorer**: a single self-contained HTML file with search, click-to-highlight, a relationships panel with sources, named communities, entity-type filters, a shortest-path finder, exports and light/dark themes
 - **Robust LLM client**: truncation detection for reasoning models, retries with back-off, automatic `max_completion_tokens` fallback, environment-variable API keys and an on-disk response cache
 - **Works with any OpenAI-compatible endpoint**: Ollama, LM Studio, vLLM, OpenAI, Gemini, OpenRouter, LiteLLM (which fronts AWS Bedrock, Azure OpenAI, Anthropic and many others)
@@ -106,6 +107,12 @@ apply_transitive = false         # rule: A->B->C => A->C for transitive predicat
 #lexical = false                 # rule: "related to" edges for names sharing a word (noisy)
 #lexical_min_word_length = 5
 #max_inferred_ratio = 0.5        # cap inferred edges at this fraction of extracted edges
+
+[query]                          # used by the optional graph-chat command
+hops = 2                         # neighbourhood radius around the entities a question mentions
+max_triples = 150                # facts sent to the model per question
+max_seed_entities = 8
+history_turns = 3                # previous Q&A pairs kept for follow-up questions
 
 [visualization]
 edge_smooth = false              # or "dynamic", "continuous", "curvedCW", ... (true = "continuous")
@@ -275,6 +282,23 @@ To view the visualization, open the following file in your browser:
 file:///path/to/industrial-revolution-kg.html
 ```
 
+## Chat with your graph (optional)
+
+`generate-graph` is unchanged: text in, static HTML (and JSON) out. The optional `graph-chat` command
+reads that JSON and answers questions from it, using the same `[llm]` settings:
+
+```bash
+graph-chat knowledge_graph.json "How did the steam engine change cities?"
+graph-chat knowledge_graph.json            # interactive session; Ctrl-D or an empty line quits
+```
+
+For each question it finds the entities the question mentions, retrieves the surrounding subgraph (and the
+shortest paths between the mentioned entities), and asks the model to answer **only from those facts**. The
+reply lists the facts it relied on, each marked *extracted* (with the source sentence) or *inferred*
+(with the method), so answers stay traceable to the document. If the graph does not contain an answer it
+says so. Tuning lives under `[query]` in the config (`hops`, `max_triples`, `max_seed_entities`,
+`history_turns`); `--json` prints the result as JSON for scripting.
+
 ## Output files
 
 Next to the HTML page the generator writes a JSON file with the same base name containing every triple:
@@ -370,6 +394,7 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
     ├── config.py                   # Configuration loading, defaults and validation
     ├── entity_standardization.py   # Entity standardization and relationship inference
     ├── exports.py                  # CSV, GraphML and Cypher exports
+    ├── query.py                    # Optional graph-chat command (question answering over the JSON)
     ├── llm.py                      # LLM client (retries, truncation detection, cache) and JSON extraction
     ├── main.py                     # CLI, input handling and pipeline orchestration
     ├── text_utils.py               # Sentence splitting, chunking and provenance lookup

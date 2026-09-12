@@ -25,6 +25,8 @@ DEFAULTS: dict[str, dict[str, Any]] = {
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
     "extraction": {"language": "auto"},
+    "query": {"hops": 2, "max_triples": 150, "max_seed_entities": 8, "use_llm_for_entity_matching": True,
+              "history_turns": 3},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
     "inference": {
         "enabled": True,
@@ -120,6 +122,11 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
 
     if not isinstance(config["extraction"]["language"], str) or not config["extraction"]["language"].strip():
         raise ConfigError("[extraction] language must be a non-empty string such as 'auto', 'English' or 'Chinese'")
+
+    query = config["query"]
+    for key in ("hops", "max_triples", "max_seed_entities", "history_turns"):
+        if not isinstance(query[key], int) or query[key] < 0:
+            raise ConfigError(f"[query] {key} must be a non-negative integer")
 
     visualization = config["visualization"]
     if visualization["theme"] not in ("light", "dark"):

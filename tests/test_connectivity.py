@@ -52,6 +52,15 @@ def test_taxonomy_on_by_default_in_inference():
     assert inferred(infer_relationships(triples, {"inference": {"use_llm_for_inference": False, "taxonomy": False}})) == []
 
 
+def test_taxonomy_skips_people_places_and_organizations():
+    triples = [T("nikola tesla", "founded", "tesla", subject_type="person", object_type="organization"),
+               T("great britain", "led", "industrialization", subject_type="place"),
+               T("quantum computing", "extends", "cryptography", subject_type="technology")]
+    entities = {"nikola tesla", "tesla", "great britain", "britain", "quantum computing", "computing", "industrialization", "cryptography"}
+    new = _infer_taxonomy(entities, triples)
+    assert [(t["subject"], t["object"]) for t in new] == [("quantum computing", "computing")]
+
+
 # ---- singularization ------------------------------------------------------- #
 def test_singularize_rules():
     assert _singularize("factories") == "factory"

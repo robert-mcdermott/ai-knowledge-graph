@@ -34,6 +34,7 @@ Issues = "https://github.com/robert-mcdermott/ai-knowledge-graph/issues"
 
 [project.scripts]
 generate-graph = "knowledge_graph.main:main"
+graph-chat = "knowledge_graph.query:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

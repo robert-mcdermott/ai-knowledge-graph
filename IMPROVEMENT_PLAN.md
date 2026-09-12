@@ -91,6 +91,8 @@ is stale (`prompts.py` is now a package).
 > multiple files or directories with per-triple `document` tags, `extraction.language`, and `--export`
 > csv/graphml/cypher (Neo4j MERGE script with a label per entity type). README refreshed and Pages demo
 > regenerated (only the screenshot is still old).
+> **Wave 10 (done, 0.8):** optional `graph-chat` command (grounded, cited question answering over the
+> JSON; `[query]` config); `generate-graph` unchanged. Taxonomy rule no longer applies to people/places/orgs.
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -305,7 +307,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 
 ## Phase 5 – Stretch capabilities (P2, L)
 
-- [ ] **"Chat with the graph"** (issue #6): `generate-graph query graph.json "How did the
+- [x] **"Chat with the graph"** (issue #6): `generate-graph query graph.json "How did the
       steam engine affect cities?"` which retrieves the relevant subgraph (search + k-hop)
       and asks the LLM with the triples as context; later expose the same in the HTML via a
       user-supplied endpoint. `P2 L`

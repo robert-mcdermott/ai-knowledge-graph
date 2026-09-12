@@ -20,3 +20,5 @@ config.local.toml
 
 # LLM response cache
 .kg-cache/
+
+/testing/
