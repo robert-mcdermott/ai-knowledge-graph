@@ -1,0 +1,118 @@
+{
+  "community_names": {
+    "0": "Origen de la Alhambra",
+    "1": "Conquista de Granada",
+    "2": "Generalife y UNESCO",
+    "3": "Palacios y patios nazaríes",
+    "4": "Arte nazarí y renacentista",
+    "5": "Washington Irving y Alhambra",
+    "6": "Sistema hidráulico nazarí",
+    "7": "Alcazaba y Torre Vela",
+    "8": "Cronología constructiva Alhambra",
+    "9": "Conservación de Torres Balbás",
+    "10": "Daños de tropas francesas"
+  },
+  "communities": [
+    {
+      "id": 0,
+      "name": "Origen de la Alhambra",
+      "top": [
+        "alhambra",
+        "reino musulmán",
+        "al-hamra"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Conquista de Granada",
+      "top": [
+        "granada",
+        "2 de enero de 1492",
+        "boabdil"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Generalife y UNESCO",
+      "top": [
+        "generalife",
+        "acequia real",
+        "inscripción de alhambra"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Palacios y patios nazaríes",
+      "top": [
+        "palacio de comares",
+        "cúpula de madera",
+        "muhammad v"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Arte nazarí y renacentista",
+      "top": [
+        "palacios nazaríes",
+        "cumbre de arte nazarí",
+        "palacio renacentista"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Washington Irving y Alhambra",
+      "top": [
+        "cuentos de la alhambra",
+        "washington irving",
+        "estancia de washington irving"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Sistema hidráulico nazarí",
+      "top": [
+        "ciudad palatina",
+        "fuente",
+        "sistema hidráulico"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Alcazaba y Torre Vela",
+      "top": [
+        "alcazaba",
+        "extremo occidental",
+        "torre de la vela"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Cronología constructiva Alhambra",
+      "top": [
+        "construcción de palacio renacentista",
+        "construcción",
+        "recinto actual"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Conservación de Torres Balbás",
+      "top": [
+        "leopoldo torres balbás",
+        "criterios científicos",
+        "arquitecto"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Daños de tropas francesas",
+      "top": [
+        "torres",
+        "tropas francesas",
+        "1812"
+      ]
+    }
+  ],
+  "generated": "2026-09-12 13:07",
+  "model": "deepseek-v4.1-flash:cloud"
+}

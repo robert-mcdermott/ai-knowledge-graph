@@ -1,0 +1,2279 @@
+[
+  {
+    "subject": "marie curie",
+    "predicate": "born as",
+    "object": "maria skłodowska",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "born in",
+    "object": "warsaw",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "born on",
+    "object": "7 november 1867",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "warsaw",
+    "predicate": "part of",
+    "object": "russian empire",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "władysław skłodowski",
+    "predicate": "father of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "władysław skłodowski",
+    "predicate": "taught",
+    "object": "mathematics",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Her father, Władysław Skłodowski, taught mathematics and physics, and her mother, Bronisława, ran a boarding school for girls.",
+    "chunk": 1
+  },
+  {
+    "subject": "władysław skłodowski",
+    "predicate": "taught",
+    "object": "physics",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Her father, Władysław Skłodowski, taught mathematics and physics, and her mother, Bronisława, ran a boarding school for girls.",
+    "chunk": 1
+  },
+  {
+    "subject": "bronisława skłodowska",
+    "predicate": "mother of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "bronisława skłodowska",
+    "predicate": "ran",
+    "object": "boarding school",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "Her father, Władysław Skłodowski, taught mathematics and physics, and her mother, Bronisława, ran a boarding school for girls.",
+    "chunk": 1
+  },
+  {
+    "subject": "boarding school",
+    "predicate": "educated",
+    "object": "girls",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Her father, Władysław Skłodowski, taught mathematics and physics, and her mother, Bronisława, ran a boarding school for girls.",
+    "chunk": 1
+  },
+  {
+    "subject": "women",
+    "predicate": "could not enroll",
+    "object": "university of warsaw",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "Because women could not enroll at the University of Warsaw, Maria studied at the clandestine Flying University and worked as a governess to help pay for her older sister Bronisława's medical studies in Paris.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "studied at",
+    "object": "flying university",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "flying university",
+    "predicate": "was",
+    "object": "clandestine",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Because women could not enroll at the University of Warsaw, Maria studied at the clandestine Flying University and worked as a governess to help pay for her older sister Bronisława's medical studies in Paris.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "worked as",
+    "object": "governess",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "paid for",
+    "object": "medical studies",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "bronisława (sister)",
+    "predicate": "sister of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "bronisława (sister)",
+    "predicate": "studied medicine",
+    "object": "paris",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Because women could not enroll at the University of Warsaw, Maria studied at the clandestine Flying University and worked as a governess to help pay for her older sister Bronisława's medical studies in Paris.",
+    "chunk": 1
+  },
+  {
+    "subject": "medical studies",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Because women could not enroll at the University of Warsaw, Maria studied at the clandestine Flying University and worked as a governess to help pay for her older sister Bronisława's medical studies in Paris.",
+    "chunk": 1
+  },
+  {
+    "subject": "bronisława (sister)",
+    "predicate": "had",
+    "object": "medical studies",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Because women could not enroll at the University of Warsaw, Maria studied at the clandestine Flying University and worked as a governess to help pay for her older sister Bronisława's medical studies in Paris.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "helped",
+    "object": "bronisława (sister)",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "moved to",
+    "object": "paris",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "moved in",
+    "object": "1891",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "enrolled at",
+    "object": "university of paris",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "university of paris",
+    "predicate": "also known as",
+    "object": "sorbonne",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "In 1891 Maria moved to Paris and enrolled at the University of Paris, the Sorbonne, where she earned degrees in physics in 1893 and in mathematics in 1894.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "earned",
+    "object": "physics degree",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "physics degree",
+    "predicate": "awarded in",
+    "object": "1893",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "In 1891 Maria moved to Paris and enrolled at the University of Paris, the Sorbonne, where she earned degrees in physics in 1893 and in mathematics in 1894.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "earned",
+    "object": "mathematics degree",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "mathematics degree",
+    "predicate": "awarded in",
+    "object": "1894",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "In 1891 Maria moved to Paris and enrolled at the University of Paris, the Sorbonne, where she earned degrees in physics in 1893 and in mathematics in 1894.",
+    "chunk": 1
+  },
+  {
+    "subject": "university of paris",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "In 1891 Maria moved to Paris and enrolled at the University of Paris, the Sorbonne, where she earned degrees in physics in 1893 and in mathematics in 1894.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "met",
+    "object": "pierre curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "met in",
+    "object": "1894",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "instructor at",
+    "object": "school of physics and chemistry",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "school of physics and chemistry",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "discovered",
+    "object": "piezoelectricity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "discovered with",
+    "object": "jacques curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "jacques curie",
+    "predicate": "brother of",
+    "object": "pierre curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "brother of",
+    "object": "jacques curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "jacques curie",
+    "predicate": "discovered",
+    "object": "piezoelectricity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "married",
+    "object": "pierre curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "married",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "married in",
+    "object": "july 1895",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie and Pierre married in July 1895 in Sceaux, and she adopted the name Marie Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "married in",
+    "object": "sceaux",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Marie and Pierre married in July 1895 in Sceaux, and she adopted the name Marie Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "married in",
+    "object": "july 1895",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "married in",
+    "object": "sceaux",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "irène curie",
+    "predicate": "daughter of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "irène curie",
+    "predicate": "daughter of",
+    "object": "pierre curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "irène curie",
+    "predicate": "born in",
+    "object": "1897",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Their daughter Irène was born in 1897 and their daughter Ève in 1904.",
+    "chunk": 1
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "daughter of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "daughter of",
+    "object": "pierre curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "born in",
+    "object": "1904",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Their daughter Irène was born in 1897 and their daughter Ève in 1904.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "researched",
+    "object": "uranium rays",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "For her doctoral research Marie Curie chose the uranium rays that Henri Becquerel had discovered in 1896.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "chose",
+    "object": "uranium rays",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "For her doctoral research Marie Curie chose the uranium rays that Henri Becquerel had discovered in 1896.",
+    "chunk": 1
+  },
+  {
+    "subject": "henri becquerel",
+    "predicate": "discovered",
+    "object": "uranium rays",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "For her doctoral research Marie Curie chose the uranium rays that Henri Becquerel had discovered in 1896.",
+    "chunk": 1
+  },
+  {
+    "subject": "henri becquerel",
+    "predicate": "discovered in",
+    "object": "1896",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "For her doctoral research Marie Curie chose the uranium rays that Henri Becquerel had discovered in 1896.",
+    "chunk": 1
+  },
+  {
+    "subject": "uranium rays",
+    "predicate": "discovered in",
+    "object": "1896",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "For her doctoral research Marie Curie chose the uranium rays that Henri Becquerel had discovered in 1896.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrometer",
+    "predicate": "built by",
+    "object": "pierre curie",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "electrometer",
+    "predicate": "built by",
+    "object": "jacques curie",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "Using an electrometer built by Pierre and Jacques Curie, she showed that the radiation came from the uranium atoms themselves, and she coined the term radioactivity.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "used",
+    "object": "electrometer",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "radiation",
+    "predicate": "came from",
+    "object": "uranium atoms",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Using an electrometer built by Pierre and Jacques Curie, she showed that the radiation came from the uranium atoms themselves, and she coined the term radioactivity.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "showed",
+    "object": "radiation source",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "coined",
+    "object": "radioactivity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "coined term",
+    "object": "radioactivity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "found",
+    "object": "pitchblende",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pitchblende",
+    "predicate": "more active than",
+    "object": "uranium",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In 1898 she found that the mineral pitchblende was far more active than uranium alone.",
+    "chunk": 1
+  },
+  {
+    "subject": "pitchblende",
+    "predicate": "is",
+    "object": "mineral",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In 1898 she found that the mineral pitchblende was far more active than uranium alone.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "found in",
+    "object": "1898",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "worked in",
+    "object": "converted shed",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "worked in",
+    "object": "converted shed",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "announced",
+    "object": "polonium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "announced",
+    "object": "polonium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "announced",
+    "object": "radium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "announced",
+    "object": "radium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "polonium",
+    "predicate": "named after",
+    "object": "poland",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "poland",
+    "predicate": "native country of",
+    "object": "marie curie",
+    "subject_type": "place",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "polonium",
+    "predicate": "announced in",
+    "object": "july 1898",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium",
+    "predicate": "announced in",
+    "object": "december 1898",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "polonium",
+    "predicate": "is",
+    "object": "element",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium",
+    "predicate": "is",
+    "object": "element",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Working together in a converted shed, Marie and Pierre Curie announced two new elements that year: polonium, named after her native Poland, in July, and radium in December.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "announced in",
+    "object": "1898",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "announced in",
+    "object": "1898",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "isolated",
+    "object": "radium chloride",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "processed",
+    "object": "pitchblende residue",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "completed in",
+    "object": "1902",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pitchblende residue",
+    "predicate": "source of",
+    "object": "radium chloride",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "To isolate a measurable amount of radium chloride, Marie processed several tonnes of pitchblende residue, work she completed in 1902.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium chloride",
+    "predicate": "is",
+    "object": "compound",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "To isolate a measurable amount of radium chloride, Marie processed several tonnes of pitchblende residue, work she completed in 1902.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "received",
+    "object": "doctorate",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "received from",
+    "object": "university of paris",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "received in",
+    "object": "1903",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "awarded to",
+    "object": "henri becquerel",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "awarded to",
+    "object": "pierre curie",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "awarded to",
+    "object": "marie curie",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "awarded in",
+    "object": "december 1903",
+    "subject_type": "work",
+    "object_type": "date",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "recognized",
+    "object": "radiation research",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "henri becquerel",
+    "predicate": "researched",
+    "object": "radiation",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "researched",
+    "object": "radiation",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "researched",
+    "object": "radiation",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "was",
+    "object": "first woman",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "received",
+    "object": "nobel prize",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "first woman",
+    "predicate": "received",
+    "object": "nobel prize",
+    "subject_type": "concept",
+    "object_type": "work",
+    "source": "She was the first woman to receive a Nobel Prize.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "appointed professor",
+    "object": "sorbonne",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "In 1891 Maria moved to Paris and enrolled at the University of Paris, the Sorbonne, where she earned degrees in physics in 1893 and in mathematics in 1894.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "appointed in",
+    "object": "1904",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "became head",
+    "object": "pierre curie laboratory",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "head of",
+    "object": "pierre curie laboratory",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "became head in",
+    "object": "1904",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "died in",
+    "object": "april 1906",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "struck by",
+    "object": "horse-drawn wagon",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "horse-drawn wagon",
+    "predicate": "caused",
+    "object": "death",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "died in",
+    "object": "paris",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "died on",
+    "object": "paris street",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "horse-drawn wagon",
+    "predicate": "located on",
+    "object": "paris street",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "paris street",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Pierre Curie died in April 1906 when he was struck by a horse-drawn wagon on a Paris street.",
+    "chunk": 1
+  },
+  {
+    "subject": "university of paris",
+    "predicate": "offered chair",
+    "object": "marie curie",
+    "subject_type": "organization",
+    "object_type": "person",
+    "source": "In 1903 Marie Curie received her doctorate from the University of Paris, and in December of that year the Nobel Prize in Physics was awarded jointly to Henri Becquerel, Pierre Curie and Marie Curie for their research on radiation.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "became professor",
+    "object": "sorbonne",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "became professor in",
+    "object": "1908",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "was",
+    "object": "first female professor",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "isolated",
+    "object": "radium metal",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "isolated with",
+    "object": "andré-louis debierne",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "andré-louis debierne",
+    "predicate": "isolated",
+    "object": "radium metal",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1910 she isolated radium metal with André-Louis Debierne and defined an international standard for radioactive emissions; the unit of radioactivity, the curie, was later named in honour of the Curies.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "defined",
+    "object": "international standard",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "international standard",
+    "predicate": "regulates",
+    "object": "radioactive emissions",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In 1910 she isolated radium metal with André-Louis Debierne and defined an international standard for radioactive emissions; the unit of radioactivity, the curie, was later named in honour of the Curies.",
+    "chunk": 1
+  },
+  {
+    "subject": "curie",
+    "predicate": "unit of",
+    "object": "radioactivity",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Using an electrometer built by Pierre and Jacques Curie, she showed that the radiation came from the uranium atoms themselves, and she coined the term radioactivity.",
+    "chunk": 1
+  },
+  {
+    "subject": "curie",
+    "predicate": "named after",
+    "object": "marie curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "curie",
+    "predicate": "named after",
+    "object": "pierre curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "In 1894 she met Pierre Curie, an instructor at the School of Physics and Chemistry in Paris who had already discovered piezoelectricity with his brother Jacques Curie.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "isolated in",
+    "object": "1910",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "defined in",
+    "object": "1910",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "royal swedish academy of sciences",
+    "predicate": "awarded",
+    "object": "nobel prize in chemistry",
+    "subject_type": "organization",
+    "object_type": "work",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "awarded to",
+    "object": "marie curie",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "awarded in",
+    "object": "1911",
+    "subject_type": "work",
+    "object_type": "date",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "recognized",
+    "object": "polonium",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "recognized",
+    "object": "radium",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "recognized",
+    "object": "radium isolation",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "discovered",
+    "object": "polonium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "discovered",
+    "object": "radium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "isolated",
+    "object": "radium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "polonium",
+    "predicate": "discovered by",
+    "object": "marie curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium",
+    "predicate": "discovered by",
+    "object": "marie curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium",
+    "predicate": "isolated by",
+    "object": "marie curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "is",
+    "object": "only person",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "won",
+    "object": "nobel prizes",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "won in",
+    "object": "two sciences",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "attended",
+    "object": "solvay conference",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "That same year she attended the first Solvay Conference in Brussels, where she met Albert Einstein, who became a lifelong friend.",
+    "chunk": 2
+  },
+  {
+    "subject": "solvay conference",
+    "predicate": "located in",
+    "object": "brussels",
+    "subject_type": "event",
+    "object_type": "place",
+    "source": "That same year she attended the first Solvay Conference in Brussels, where she met Albert Einstein, who became a lifelong friend.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "attended in",
+    "object": "1911",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "In 1911 the Royal Swedish Academy of Sciences awarded Marie Curie the Nobel Prize in Chemistry for the discovery of polonium and radium and the isolation of radium.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "met",
+    "object": "albert einstein",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "That same year she attended the first Solvay Conference in Brussels, where she met Albert Einstein, who became a lifelong friend.",
+    "chunk": 2
+  },
+  {
+    "subject": "albert einstein",
+    "predicate": "lifelong friend of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "Marie Curie was born Maria Skłodowska in Warsaw on 7 November 1867, when the city was part of the Russian Empire.",
+    "chunk": 1
+  },
+  {
+    "subject": "albert einstein",
+    "predicate": "friend of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "That same year she attended the first Solvay Conference in Brussels, where she met Albert Einstein, who became a lifelong friend.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium institute",
+    "predicate": "founded by",
+    "object": "university of paris",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium institute",
+    "predicate": "founded by",
+    "object": "pasteur institute",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium institute",
+    "predicate": "completed in",
+    "object": "1914",
+    "subject_type": "organization",
+    "object_type": "date",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "director of",
+    "object": "physics laboratory",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute",
+    "predicate": "has",
+    "object": "physics laboratory",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "director at",
+    "object": "radium institute",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "university of paris",
+    "predicate": "founded",
+    "object": "radium institute",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "pasteur institute",
+    "predicate": "founded",
+    "object": "radium institute",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "physics laboratory",
+    "predicate": "part of",
+    "object": "radium institute",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 1
+  },
+  {
+    "subject": "radium institute in paris",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute in paris",
+    "predicate": "founded by",
+    "object": "university of paris",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute in paris",
+    "predicate": "founded by",
+    "object": "pasteur institute",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute in paris",
+    "predicate": "completed in",
+    "object": "1914",
+    "subject_type": "organization",
+    "object_type": "date",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "physics laboratory",
+    "predicate": "part of",
+    "object": "radium institute in paris",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "developed",
+    "object": "mobile x-ray units",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "mobile x-ray units",
+    "predicate": "nicknamed",
+    "object": "petites curies",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "When the First World War began, she developed mobile X-ray units, nicknamed \"petites Curies\", to help surgeons locate shrapnel in wounded soldiers, and she drove the vehicles to the front herself.",
+    "chunk": 2
+  },
+  {
+    "subject": "mobile x-ray units",
+    "predicate": "help",
+    "object": "surgeons",
+    "subject_type": "technology",
+    "object_type": "person",
+    "source": "When the First World War began, she developed mobile X-ray units, nicknamed \"petites Curies\", to help surgeons locate shrapnel in wounded soldiers, and she drove the vehicles to the front herself.",
+    "chunk": 2
+  },
+  {
+    "subject": "surgeons",
+    "predicate": "locate",
+    "object": "shrapnel",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "When the First World War began, she developed mobile X-ray units, nicknamed \"petites Curies\", to help surgeons locate shrapnel in wounded soldiers, and she drove the vehicles to the front herself.",
+    "chunk": 2
+  },
+  {
+    "subject": "shrapnel",
+    "predicate": "in",
+    "object": "wounded soldiers",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "When the First World War began, she developed mobile X-ray units, nicknamed \"petites Curies\", to help surgeons locate shrapnel in wounded soldiers, and she drove the vehicles to the front herself.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "drove",
+    "object": "mobile x-ray units",
+    "subject_type": "person",
+    "object_type": "technology",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "drove to",
+    "object": "front",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "mobile x-ray units",
+    "predicate": "used in",
+    "object": "first world war",
+    "subject_type": "technology",
+    "object_type": "event",
+    "source": "When the First World War began, she developed mobile X-ray units, nicknamed \"petites Curies\", to help surgeons locate shrapnel in wounded soldiers, and she drove the vehicles to the front herself.",
+    "chunk": 2
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "daughter of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "assisted",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "trained",
+    "object": "radiology technicians",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "trained",
+    "object": "radiology technicians",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Her daughter Irène assisted her, and together they trained radiology technicians.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "toured",
+    "object": "united states",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "toured in",
+    "object": "1921",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie mattingly meloney",
+    "predicate": "is",
+    "object": "journalist",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie mattingly meloney",
+    "predicate": "organised",
+    "object": "campaign",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "campaign",
+    "predicate": "raised",
+    "object": "money",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "campaign",
+    "predicate": "raised money for",
+    "object": "radium",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium",
+    "predicate": "presented to",
+    "object": "marie curie",
+    "subject_type": "concept",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "warren g. harding",
+    "predicate": "presented",
+    "object": "radium",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "warren g. harding",
+    "predicate": "is",
+    "object": "president",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium",
+    "predicate": "presented at",
+    "object": "white house",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "After the war Curie toured the United States in 1921, where the journalist Marie Mattingly Meloney had organised a campaign that raised the money for one gram of radium, presented to Curie by President Warren G. Harding at the White House.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "served on",
+    "object": "international committee on intellectual cooperation",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "international committee on intellectual cooperation",
+    "predicate": "part of",
+    "object": "league of nations",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "She also served on the League of Nations International Committee on Intellectual Cooperation.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "helped establish",
+    "object": "radium institute in warsaw",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute in warsaw",
+    "predicate": "located in",
+    "object": "warsaw",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "In 1932 she helped establish the Radium Institute in Warsaw, whose first director was her sister Bronisława.",
+    "chunk": 2
+  },
+  {
+    "subject": "radium institute in warsaw",
+    "predicate": "established in",
+    "object": "1932",
+    "subject_type": "organization",
+    "object_type": "date",
+    "source": "In 1932 she helped establish the Radium Institute in Warsaw, whose first director was her sister Bronisława.",
+    "chunk": 2
+  },
+  {
+    "subject": "bronisława",
+    "predicate": "first director",
+    "object": "radium institute in warsaw",
+    "subject_type": "person",
+    "object_type": "organization",
+    "source": "In 1932 she helped establish the Radium Institute in Warsaw, whose first director was her sister Bronisława.",
+    "chunk": 2
+  },
+  {
+    "subject": "bronisława",
+    "predicate": "sister of",
+    "object": "marie curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "died on",
+    "object": "4 july 1934",
+    "subject_type": "person",
+    "object_type": "date",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "died at",
+    "object": "sanatorium",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "sanatorium",
+    "predicate": "located in",
+    "object": "passy",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "passy",
+    "predicate": "located in",
+    "object": "france",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "died of",
+    "object": "aplastic anaemia",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "aplastic anaemia",
+    "predicate": "caused by",
+    "object": "radiation exposure",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "exposed to",
+    "object": "radiation",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Marie Curie died on 4 July 1934 at a sanatorium in Passy, France, of aplastic anaemia, almost certainly caused by decades of exposure to radiation.",
+    "chunk": 2
+  },
+  {
+    "subject": "laboratory notebooks",
+    "predicate": "belong to",
+    "object": "marie curie",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "laboratory notebooks",
+    "predicate": "are",
+    "object": "radioactive",
+    "subject_type": "work",
+    "object_type": "concept",
+    "source": "Her laboratory notebooks are still radioactive and are stored in lead-lined boxes at the Bibliothèque nationale de France.",
+    "chunk": 2
+  },
+  {
+    "subject": "laboratory notebooks",
+    "predicate": "stored in",
+    "object": "lead-lined boxes",
+    "subject_type": "work",
+    "object_type": "product",
+    "source": "Her laboratory notebooks are still radioactive and are stored in lead-lined boxes at the Bibliothèque nationale de France.",
+    "chunk": 2
+  },
+  {
+    "subject": "lead-lined boxes",
+    "predicate": "located at",
+    "object": "bibliothèque nationale de france",
+    "subject_type": "product",
+    "object_type": "organization",
+    "source": "Her laboratory notebooks are still radioactive and are stored in lead-lined boxes at the Bibliothèque nationale de France.",
+    "chunk": 2
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "received",
+    "object": "nobel prize in chemistry",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "frédéric joliot-curie",
+    "predicate": "received",
+    "object": "nobel prize in chemistry",
+    "subject_type": "person",
+    "object_type": "event",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "discovered",
+    "object": "artificial radioactivity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "frédéric joliot-curie",
+    "predicate": "discovered",
+    "object": "artificial radioactivity",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "frédéric joliot-curie",
+    "predicate": "husband of",
+    "object": "irène joliot-curie",
+    "subject_type": "person",
+    "object_type": "person",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "awarded in",
+    "object": "1935",
+    "subject_type": "event",
+    "object_type": "date",
+    "source": "In 1935 Irène Joliot-Curie and her husband Frédéric Joliot-Curie received the Nobel Prize in Chemistry for discovering artificial radioactivity.",
+    "chunk": 2
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "is",
+    "object": "writer",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Ève Curie became a writer and published a biography of her mother in 1937.",
+    "chunk": 2
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "published",
+    "object": "biography",
+    "subject_type": "person",
+    "object_type": "work",
+    "source": "Ève Curie became a writer and published a biography of her mother in 1937.",
+    "chunk": 2
+  },
+  {
+    "subject": "biography",
+    "predicate": "about",
+    "object": "marie curie",
+    "subject_type": "work",
+    "object_type": "person",
+    "source": "The Radium Institute in Paris, founded by the University of Paris and the Pasteur Institute, was completed in 1914 with Marie Curie as director of its physics laboratory.",
+    "chunk": 2
+  },
+  {
+    "subject": "biography",
+    "predicate": "published in",
+    "object": "1937",
+    "subject_type": "work",
+    "object_type": "date",
+    "source": "Ève Curie became a writer and published a biography of her mother in 1937.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie remains",
+    "predicate": "moved to",
+    "object": "panthéon",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "pierre curie remains",
+    "predicate": "moved to",
+    "object": "panthéon",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "panthéon",
+    "predicate": "located in",
+    "object": "paris",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "first woman honoured",
+    "object": "panthéon",
+    "subject_type": "person",
+    "object_type": "place",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "honoured for",
+    "object": "achievements",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "marie curie remains",
+    "predicate": "moved in",
+    "object": "1995",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "pierre curie remains",
+    "predicate": "moved in",
+    "object": "1995",
+    "subject_type": "concept",
+    "object_type": "date",
+    "source": "In 1995 the remains of Marie and Pierre Curie were moved to the Panthéon in Paris, making Marie Curie the first woman honoured there for her own achievements.",
+    "chunk": 2
+  },
+  {
+    "subject": "women",
+    "predicate": "includes",
+    "object": "marie curie",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "university of warsaw",
+    "predicate": "could not enroll",
+    "object": "marie curie",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "father of",
+    "object": "irène joliot-curie",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "mobile x-ray units",
+    "predicate": "used",
+    "object": "radiation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "radium",
+    "predicate": "emits",
+    "object": "radiation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "polonium",
+    "predicate": "emits",
+    "object": "radiation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "uranium rays",
+    "predicate": "type of",
+    "object": "radiation",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "buried in",
+    "object": "panthéon",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "awarded to",
+    "object": "albert einstein",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "albert einstein",
+    "predicate": "attended",
+    "object": "solvay conference",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "pierre curie",
+    "predicate": "professor at",
+    "object": "university of paris",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "director at",
+    "object": "radium institute",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "irène joliot-curie",
+    "predicate": "born in",
+    "object": "paris",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "ève curie",
+    "predicate": "born in",
+    "object": "paris",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "radium institute in warsaw",
+    "predicate": "modeled after",
+    "object": "radium institute in paris",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "marie curie",
+    "predicate": "met",
+    "object": "henri becquerel",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "1898",
+    "predicate": "includes",
+    "object": "december 1898",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "1898",
+    "predicate": "includes",
+    "object": "july 1898",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "1903",
+    "predicate": "includes",
+    "object": "december 1903",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "4 july 1934",
+    "predicate": "same month as",
+    "object": "july 1895",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "4 july 1934",
+    "predicate": "same month as",
+    "object": "july 1898",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "artificial radioactivity",
+    "predicate": "type of",
+    "object": "radioactivity",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "bibliothèque nationale de france",
+    "predicate": "located in",
+    "object": "france",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "boarding school",
+    "predicate": "similar to",
+    "object": "school of physics and chemistry",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "bronisława",
+    "predicate": "first name of",
+    "object": "bronisława (sister)",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "bronisława",
+    "predicate": "first name of",
+    "object": "bronisława skłodowska",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "marie curie remains",
+    "predicate": "involves",
+    "object": "curie",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "marie curie remains",
+    "predicate": "involves",
+    "object": "marie curie",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "mathematics degree",
+    "predicate": "involves",
+    "object": "mathematics",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "nobel prize in chemistry",
+    "predicate": "involves",
+    "object": "nobel prize",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "involves",
+    "object": "nobel prize",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "nobel prize in physics",
+    "predicate": "involves",
+    "object": "physics",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "physics degree",
+    "predicate": "involves",
+    "object": "physics",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "pierre curie remains",
+    "predicate": "involves",
+    "object": "pierre curie",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "pierre curie remains",
+    "predicate": "involves",
+    "object": "curie",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "pitchblende residue",
+    "predicate": "involves",
+    "object": "pitchblende",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radiation exposure",
+    "predicate": "involves",
+    "object": "radiation",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radiation research",
+    "predicate": "involves",
+    "object": "radiation",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radiation source",
+    "predicate": "involves",
+    "object": "radiation",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radioactive emissions",
+    "predicate": "involves",
+    "object": "radioactive",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radium chloride",
+    "predicate": "involves",
+    "object": "radium",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radium isolation",
+    "predicate": "involves",
+    "object": "radium",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "radium metal",
+    "predicate": "involves",
+    "object": "radium",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "uranium atoms",
+    "predicate": "involves",
+    "object": "uranium",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "uranium rays",
+    "predicate": "involves",
+    "object": "uranium",
+    "inferred": true,
+    "method": "taxonomy"
+  }
+]

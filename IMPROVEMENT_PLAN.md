@@ -101,6 +101,14 @@ is stale (`prompts.py` is now a package).
 > **Wave 13 (done, 0.8):** `logging` migration: pipeline modules log via `knowledge_graph.*` loggers, the CLIs
 > configure a console handler (`--verbose`/`--debug`, `--quiet`), default output unchanged; graph-serve captures
 > job progress through a log handler instead of a stdout tee.
+> **Wave 14 (done, 0.8):** sample corpus in `data/samples/` (biography, program history, process description,
+> Spanish text) with DeepSeek-generated graphs, verified typed/sourced/connected; regression tests in
+> `tests/test_samples.py`. Fixes found on the way: case variants after LLM resolution merged; LLM-inferred
+> names mapped onto existing entities case-insensitively (unknown names dropped); taxonomy rule localized.
+> **Wave 15 (done, 0.8):** GitHub Pages site built from the corpus (`scripts/build_docs.py`: landing page +
+> five explorer pages sharing one vendored library via `--library-path`); community names stored in
+> `.meta.json` sidecars so `--from-json`, `graph-serve` and the docs render them offline; community
+> detection made order-independent (was drifting between processes).
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -305,7 +313,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       Anthropic (via LiteLLM), Gemini (merge PR #16), OpenRouter, vLLM; a "reasoning
       models" note (`max_tokens ≥ 16K`); a troubleshooting section; screenshots of the new
       UI; CHANGELOG; CONTRIBUTING; issue templates. `P1 M`
-- [ ] **Sample corpus for testing**: keep `industrial-revolution.txt`, add 2–3 more
+- [x] **Sample corpus for testing**: keep `industrial-revolution.txt`, add 2–3 more
       (a short bio, a technical doc, a non-English text) plus their cached JSON so the
       visualization can be developed without an LLM. `P2 S`
 - [ ] **`--test` and `sample_data_visualization`**: move sample data to `data/sample.json`

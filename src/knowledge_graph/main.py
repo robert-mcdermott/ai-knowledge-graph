@@ -354,6 +354,43 @@ def load_triples_from_json(path):
     return data
 
 
+def meta_path_for(json_path):
+    return os.path.splitext(json_path)[0] + ".meta.json"
+
+
+def save_graph_meta(json_path, graph_data, config=None):
+    """Write the sidecar with community names (and provenance) next to a triples JSON file."""
+    communities = [{"id": c["id"], "name": c.get("name"), "top": c.get("top", [])[:3]}
+                   for c in graph_data["meta"]["communities"] if c.get("name")]
+    if not communities:
+        return None
+    meta = {"community_names": {str(c["id"]): c["name"] for c in communities}, "communities": communities,
+            "generated": graph_data["meta"].get("generated"),
+            "model": (config or {}).get("llm", {}).get("model")}
+    path = meta_path_for(json_path)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2, ensure_ascii=False)
+    return path
+
+
+def load_graph_meta(json_path):
+    """Read the sidecar written by :func:`save_graph_meta`; returns ``{}`` when absent or unreadable."""
+    path = meta_path_for(json_path)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            meta = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    names = meta.get("community_names") or {}
+    try:
+        meta["community_names"] = {int(k): v for k, v in names.items() if isinstance(v, str) and v.strip()}
+    except (TypeError, ValueError):
+        meta["community_names"] = {}
+    return meta
+
+
 def make_community_namer(config):
     """Return a callable that asks the LLM for short community names, or None if disabled."""
     if not config.get("visualization", {}).get("name_communities", True):
@@ -422,6 +459,9 @@ def main():
                         help='Do not read or write the LLM response cache (llm.cache_dir)')
     parser.add_argument('--export', type=str, default='json', metavar='FORMATS',
                         help='Comma-separated extra outputs written next to the HTML: json (always), csv, graphml, cypher')
+    parser.add_argument('--library-path', type=str, metavar='DIR',
+                        help='Reference the vis-network library from DIR (copied there if missing) instead of embedding it; '
+                             'useful when publishing many pages, e.g. on GitHub Pages')
 
     args = parser.parse_args()
     configure_logging(level_from_flags(verbose=args.debug, quiet=args.quiet))
@@ -455,7 +495,10 @@ def main():
             print(f"Error: {e}")
             sys.exit(1)
         print(f"Loaded {len(triples)} triples from {args.from_json}")
-        stats, graph_data = render_knowledge_graph(triples, args.output, config=config)
+        meta = load_graph_meta(args.from_json)
+        stats, graph_data = render_knowledge_graph(triples, args.output, config=config,
+                                                   community_names=meta.get("community_names") or None,
+                                                   library_dir=args.library_path)
         for path in export_graph(triples, args.output, [f for f in export_formats if f != "json"], graph_data):
             print(f"Exported {path}")
         print(f"\nNodes: {stats['nodes']}  Edges: {stats['edges']}  Communities: {stats['communities']}")
@@ -507,7 +550,10 @@ def main():
 
         # Visualize the knowledge graph, then write any extra export formats (with community names)
         stats, graph_data = render_knowledge_graph(result, args.output, config=config,
-                                                   community_namer=make_community_namer(config))
+                                                   community_namer=make_community_namer(config),
+                                                   library_dir=args.library_path)
+        if save_graph_meta(json_output, graph_data, config):
+            print(f"Saved community names to {meta_path_for(json_output)}")
         for path in export_graph(result, args.output, [f for f in export_formats if f != "json"], graph_data):
             print(f"Exported {path}")
         print("\nKnowledge Graph Statistics:")

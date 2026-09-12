@@ -32,46 +32,18 @@ footer { color: var(--muted); font-size: 13px; margin-top: 40px; }
     <code>generate-graph</code>; click one to explore it: search, click a node for its relationships and source sentences, trace paths, filter by
     community or entity type.</p>
   <div class="grid">
-  
-    <a class="card" href="samples/industrial-revolution.html">
-      <div class="domain">Technology history</div>
-      <div class="name">The Industrial Revolutions</div>
-      <div class="meta">236 entities · 355 relationships (82 inferred) · 15 communities</div>
-      <div class="communities">First Industrial Revolution · Electrification and computing industries · Internet and blockchain economy · Third Industrial Revolution · Fourth Industrial Revolution · British factory reform</div>
+  {% for g in graphs %}
+    <a class="card" href="{{ g.href }}">
+      <div class="domain">{{ g.domain }}</div>
+      <div class="name">{{ g.title }}</div>
+      <div class="meta">{{ g.nodes }} entities · {{ g.edges }} relationships ({{ g.inferred }} inferred) · {{ g.communities }} communities</div>
+      {% if g.community_names %}<div class="communities">{{ g.community_names | join(' · ') }}</div>{% endif %}
     </a>
-  
-    <a class="card" href="samples/marie-curie.html">
-      <div class="domain">Biography</div>
-      <div class="name">Marie Curie</div>
-      <div class="meta">138 entities · 263 relationships (45 inferred) · 10 communities</div>
-      <div class="communities">Curie education and colleagues · Curie family Nobel chemistry · Radium institutes and Paris · Pierre Curie family biography · Early radioactivity research · Radioactive Curie notebooks</div>
-    </a>
-  
-    <a class="card" href="samples/apollo-program.html">
-      <div class="domain">Program history</div>
-      <div class="name">The Apollo Program</div>
-      <div class="meta">173 entities · 280 relationships (60 inferred) · 15 communities</div>
-      <div class="communities">Apollo program development · Apollo 11 moon landing · Apollo spacecraft and rockets · Final Apollo missions · Lunar orbit rendezvous · Apollo 1 fire</div>
-    </a>
-  
-    <a class="card" href="samples/coffee-supply-chain.html">
-      <div class="domain">Process description</div>
-      <div class="name">Coffee, from farm to cup</div>
-      <div class="meta">178 entities · 279 relationships (85 inferred) · 14 communities</div>
-      <div class="communities">Coffee milling and roasting · Coffee processing methods · Coffee species and origins · Coffee brewing and caffeine · Coffee trade and producers · Coffee roasting chemistry</div>
-    </a>
-  
-    <a class="card" href="samples/la-alhambra.html">
-      <div class="domain">Spanish text</div>
-      <div class="name">La Alhambra de Granada</div>
-      <div class="meta">118 entities · 185 relationships (46 inferred) · 11 communities</div>
-      <div class="communities">Origen de la Alhambra · Conquista de Granada · Generalife y UNESCO · Palacios y patios nazaríes · Arte nazarí y renacentista · Washington Irving y Alhambra</div>
-    </a>
-  
+  {% endfor %}
   </div>
   <h2>How these were made</h2>
   <p class="how">Texts and graphs live in <code>data/samples/</code> of the repository. Extraction, entity standardization, relationship inference and
-    community naming ran with <code>deepseek-v4.1-flash</code>; the pages were rendered with <code>generate-graph --from-json</code>. Solid lines are relationships
+    community naming ran with <code>{{ model }}</code>; the pages were rendered with <code>generate-graph --from-json</code>. Solid lines are relationships
     stated in the text (hover for the sentence); dashed lines were inferred and are labelled with their method.</p>
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph">robert-mcdermott/ai-knowledge-graph</a> on GitHub · Apache 2.0</footer>
 </main>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ title }}</title>
-<style>{{ vis_css }}</style>
+{% if vis_css_href %}<link rel="stylesheet" href="{{ vis_css_href }}">{% else %}<style>{{ vis_css }}</style>{% endif %}
 <style>
 :root {
   --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --panel-border: #d0d7de;
@@ -207,7 +207,7 @@ footer a { color: inherit; text-decoration: none; }
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
 </main>
 
-<script>{{ vis_js }}</script>
+{% if vis_js_href %}<script src="{{ vis_js_href }}"></script>{% else %}<script>{{ vis_js }}</script>{% endif %}
 <script>
 const KG = {{ data_json }};
 </script>

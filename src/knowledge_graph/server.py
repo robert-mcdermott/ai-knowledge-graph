@@ -27,10 +27,12 @@ from knowledge_graph.logging_utils import ROOT_LOGGER, ConsoleFormatter, configu
 from knowledge_graph.main import (
     SUPPORTED_EXTENSIONS,
     InputError,
+    load_graph_meta,
     load_triples_from_json,
     make_community_namer,
     process_documents,
     read_documents,
+    save_graph_meta,
 )
 from knowledge_graph.query import GraphChat
 from knowledge_graph.visualization import TEMPLATE_DIR, build_graph_data, render_html, render_knowledge_graph
@@ -101,17 +103,21 @@ class GraphStore:
                 return cached[1]
         triples = load_triples_from_json(path)
         vis = self.config.get("visualization", {})
-        graph_data = build_graph_data(triples, vis.get("edge_smooth", False), show_inferred=vis.get("show_inferred", True),
+        stored_names = load_graph_meta(path).get("community_names") or None
+        graph_data = build_graph_data(triples, vis.get("edge_smooth", False), community_names=stored_names,
+                                      show_inferred=vis.get("show_inferred", True),
                                       theme=vis.get("theme", "light"), edge_labels=vis.get("edge_labels", "all"),
                                       title_case=vis.get("title_case", True),
                                       collapse_parallel_edges=vis.get("collapse_parallel_edges", True))
-        namer = make_community_namer(self.config)
+        namer = None if stored_names else make_community_namer(self.config)
         if namer is not None and graph_data["meta"]["stats"]["communities"] > 1:
             try:
                 names = namer(graph_data["meta"]["communities"]) or {}
                 for entry in graph_data["meta"]["communities"]:
                     if entry["id"] in names:
                         entry["name"] = names[entry["id"]]
+                if names:
+                    save_graph_meta(path, graph_data, self.config)
             except Exception as e:  # cosmetic; never block the page
                 log.warning(f"community naming failed: {e}")
         graph_data["meta"]["chatEndpoint"] = f"/api/chat/{name}"
@@ -228,8 +234,9 @@ class IngestJob:
             json_path = os.path.join(self.store.graphs_dir, f"{self.name}.json")
             with open(json_path, "w", encoding="utf-8") as f:
                 json.dump(triples, f, indent=2, ensure_ascii=False)
-            stats, _ = render_knowledge_graph(triples, html_path, config=self.store.config,
-                                              community_namer=make_community_namer(self.store.config))
+            stats, graph_data = render_knowledge_graph(triples, html_path, config=self.store.config,
+                                                       community_namer=make_community_namer(self.store.config))
+            save_graph_meta(json_path, graph_data, self.store.config)
             self.stats = stats
             self.store.forget(self.name)
             self.state = "done"

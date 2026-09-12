@@ -41,3 +41,17 @@ def test_extra_fields_and_long_predicates_are_preserved_or_trimmed():
 def test_invalid_triples_are_dropped():
     out = standardize_entities([T("a", "p", "b"), {"subject": "x"}, "junk"], {"standardization": {}})
     assert len(out) == 1
+
+
+def test_case_variants_introduced_by_llm_resolution_are_merged(monkeypatch):
+    from knowledge_graph import entity_standardization as es
+
+    class Client:
+        def complete(self, user, system=None):
+            return '{"Coffee Beans": ["beans"]}'  # the model picks a capitalised standard name
+    monkeypatch.setattr(es.LLMClient, "from_config", classmethod(lambda cls, cfg: Client()))
+    triples = [T("coffee beans", "come from", "cherries"), T("beans", "are", "seeds"), T("coffee beans", "are", "roasted")]
+    out = standardize_entities(triples, {"standardization": {"use_llm_for_entities": True}, "llm": {}})
+    names = {t["subject"] for t in out} | {t["object"] for t in out}
+    assert len({n.lower() for n in names}) == len(names)  # no case duplicates
+    assert "coffee beans" in names and "Coffee Beans" not in names  # the more frequent form wins

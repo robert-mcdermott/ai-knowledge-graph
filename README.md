@@ -3,7 +3,12 @@
 # AI Powered Knowledge Graph Generator
 
 This system takes an unstructured text document, and uses an LLM of your choice to extract knowledge in the form of Subject-Predicate-Object (SPO) triplets, and visualizes the relationships as an interactive knowledge graph.
-A demo of a knowlege graph created with this project can be found here: [Industrial-Revolution Knowledge Graph](https://robert-mcdermott.github.io/ai-knowledge-graph/)
+**Live examples** (no install needed): <https://robert-mcdermott.github.io/ai-knowledge-graph/>
+
+| | | |
+|---|---|---|
+| [The Industrial Revolutions](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/industrial-revolution.html) | [Marie Curie](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/marie-curie.html) | [The Apollo Program](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/apollo-program.html) |
+| [Coffee, from farm to cup](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/coffee-supply-chain.html) | [La Alhambra (Spanish)](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/la-alhambra.html) | |
 
 
 ## Features
@@ -173,6 +178,7 @@ incomplete graph.
 - `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
 - `--from-json FILE`: Re-render the visualization from a previously saved `.json` triples file (no LLM calls)
 - `--no-cache`: Bypass the LLM response cache for this run
+- `--library-path DIR`: Reference the vis-network library from `DIR` (copied there if missing) instead of embedding it, so many pages can share one copy, for example on GitHub Pages
 - `--export FORMATS`: Extra outputs next to the HTML, comma-separated: `json` (always), `csv`, `graphml` (Gephi, yEd, Cytoscape), `cypher` (Neo4j `MERGE` script)
 - `--test`: Generate sample visualization using test data
 
@@ -324,9 +330,37 @@ It binds to `127.0.0.1:8008` by default, has no accounts or authentication, and 
 directory, so it is meant for your own machine. Static HTML output is unchanged: the chat panel only exists in
 served pages. `--host 0.0.0.0` exposes it on your network if you put your own access control in front.
 
+## Sample corpus
+
+`data/samples/` contains five short texts and the graphs generated from them (`.json` triples plus a
+`.meta.json` sidecar with the LLM-generated community names), so you can try everything without an LLM or
+an API key. They are also the [live examples](https://robert-mcdermott.github.io/ai-knowledge-graph/) on GitHub Pages.
+
+| Sample | Domain | What it exercises | Live |
+|---|---|---|---|
+| `industrial-revolution.txt` | technology history | the original demo text: technologies, people, eras | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/industrial-revolution.html) |
+| `marie-curie.txt` | biography | people, places, dates, organizations, works | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/marie-curie.html) |
+| `apollo-program.txt` | program history | events, missions, organizations, many people | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/apollo-program.html) |
+| `coffee-supply-chain.txt` | process description | concepts, technologies, products, places | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/coffee-supply-chain.html) |
+| `la-alhambra.txt` | Spanish text | `extraction.language = "Spanish"`: entity names and predicates in Spanish | [open](https://robert-mcdermott.github.io/ai-knowledge-graph/samples/la-alhambra.html) |
+
+```bash
+generate-graph --from-json data/samples/marie-curie.json --output marie-curie.html   # renders instantly
+graph-serve --graphs data/samples --open                                             # browse all four
+graph-chat data/samples/apollo-program.json "Who flew on Apollo 13?"                  # needs your LLM
+```
+
+The graphs were generated with `deepseek-v4.1-flash` (`reasoning_effort = "low"`, `temperature = 0.2`,
+`use_llm_for_entities = false` because that model reasons without end over long entity lists) and the default
+inference settings. They double as regression fixtures: `tests/test_samples.py` checks that they stay
+well-formed, typed, sourced and connected. Regenerate them when the extraction prompt changes, then rebuild the
+GitHub Pages site with `python scripts/build_docs.py` (it writes `docs/index.html`, `docs/samples/*.html` and a
+shared `docs/vendor/` copy of vis-network, using `--library-path` style pages so each is about 100 KB).
+
 ## Output files
 
-Next to the HTML page the generator writes a JSON file with the same base name containing every triple:
+Next to the HTML page the generator writes a JSON file with the same base name containing every triple, and a
+`.meta.json` sidecar with the community names so that `--from-json` and `graph-serve` show them without an LLM:
 
 ```json
 {
@@ -414,7 +448,9 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
 ├── IMPROVEMENT_PLAN.md             # Roadmap / task list
 ├── .github/workflows/ci.yml        # Lint + tests on Python 3.11-3.13
 ├── data/                           # Sample input text and screenshot
-├── docs/                           # GitHub Pages demo
+│   └── samples/                    # Sample corpus: texts + generated graphs (no LLM needed to explore)
+├── docs/                           # GitHub Pages site: landing page + sample graphs (built by scripts/build_docs.py)
+├── scripts/build_docs.py           # Rebuilds docs/ from data/samples
 ├── tests/                          # pytest suite (runs without an LLM)
 └── src/knowledge_graph/            # Core package (installed as `knowledge_graph`)
     ├── __init__.py                 # Package initialization and version

@@ -61,6 +61,19 @@ def test_taxonomy_skips_people_places_and_organizations():
     assert [(t["subject"], t["object"]) for t in new] == [("quantum computing", "computing")]
 
 
+def test_taxonomy_respects_non_english_phrases_and_predicates():
+    from knowledge_graph.entity_standardization import taxonomy_predicates
+    # "entrega de granada" is not a kind of "granada": "de" ends the modifier phrase
+    new = _infer_taxonomy({"entrega de granada", "granada", "palacio nazarí", "palacio"}, [], taxonomy_predicates("Spanish"),
+                          head_first=True)
+    assert [(t["subject"], t["predicate"], t["object"]) for t in new] == [
+        ("entrega de granada", "incluye", "granada"), ("palacio nazarí", "es un", "palacio")]
+    assert taxonomy_predicates("auto") == ("is a", "involves") and taxonomy_predicates("Deutsch") == ("ist ein", "umfasst")
+    cfg = {"inference": {"use_llm_for_inference": False}, "extraction": {"language": "French"}}
+    out = inferred(infer_relationships([T("moteur à vapeur", "alimente", "usines"), T("moteur", "est", "machine")], cfg))
+    assert out and (out[0]["predicate"], out[0]["object"]) == ("est un", "moteur")  # head-first: a "moteur à vapeur" is a moteur
+
+
 # ---- singularization ------------------------------------------------------- #
 def test_singularize_rules():
     assert _singularize("factories") == "factory"

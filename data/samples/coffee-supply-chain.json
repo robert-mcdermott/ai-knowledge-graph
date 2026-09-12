@@ -1,0 +1,2343 @@
+[
+  {
+    "subject": "coffee",
+    "predicate": "begins as",
+    "object": "seed",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Coffee begins as the seed of a fruit.",
+    "chunk": 1
+  },
+  {
+    "subject": "seed",
+    "predicate": "part of",
+    "object": "fruit",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Coffee begins as the seed of a fruit.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee plant",
+    "predicate": "is shrub",
+    "object": "shrub",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee plant",
+    "predicate": "genus",
+    "object": "coffea",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee plant",
+    "predicate": "produces",
+    "object": "coffee cherry",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee cherry",
+    "predicate": "ripens from",
+    "object": "green",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee cherry",
+    "predicate": "ripens to",
+    "object": "red",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffee cherry",
+    "predicate": "ripens over",
+    "object": "months",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The coffee plant, a shrub of the genus Coffea, produces cherries that ripen from green to red over several months.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "species of",
+    "object": "coffea",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "species of",
+    "object": "coffea",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "dominates",
+    "object": "world production",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "dominates",
+    "object": "world production",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "grown at",
+    "object": "higher altitudes",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "prized for",
+    "object": "sweetness",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "prized for",
+    "object": "acidity",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "known as",
+    "object": "robusta",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "tolerates",
+    "object": "heat",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "tolerates",
+    "object": "disease",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "contains",
+    "object": "caffeine",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "supplies",
+    "object": "instant coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "supplies",
+    "object": "espresso blends",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "originated in",
+    "object": "ethiopia",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "ethiopia",
+    "predicate": "birthplace of",
+    "object": "coffee",
+    "subject_type": "place",
+    "object_type": "product",
+    "source": "Arabica originated in the highlands of Ethiopia, which is still regarded as the birthplace of coffee, while robusta is native to central and western Africa.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "native to",
+    "object": "central africa",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "native to",
+    "object": "western africa",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "brazil",
+    "predicate": "largest producer of",
+    "object": "coffee",
+    "subject_type": "place",
+    "object_type": "product",
+    "source": "Brazil is the largest coffee producer, followed by Vietnam, which grows mainly robusta, and Colombia, whose arabica is marketed by the Colombian Coffee Growers Federation.",
+    "chunk": 1
+  },
+  {
+    "subject": "brazil",
+    "predicate": "followed by",
+    "object": "vietnam",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Brazil is the largest coffee producer, followed by Vietnam, which grows mainly robusta, and Colombia, whose arabica is marketed by the Colombian Coffee Growers Federation.",
+    "chunk": 1
+  },
+  {
+    "subject": "vietnam",
+    "predicate": "producer of",
+    "object": "coffee",
+    "subject_type": "place",
+    "object_type": "product",
+    "source": "Brazil is the largest coffee producer, followed by Vietnam, which grows mainly robusta, and Colombia, whose arabica is marketed by the Colombian Coffee Growers Federation.",
+    "chunk": 1
+  },
+  {
+    "subject": "vietnam",
+    "predicate": "grows",
+    "object": "coffea canephora",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "colombia",
+    "predicate": "grows",
+    "object": "coffea arabica",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "colombian coffee growers federation",
+    "predicate": "markets",
+    "object": "coffea arabica",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "smallholder farmers",
+    "predicate": "grows",
+    "object": "coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "smallholder farmers",
+    "predicate": "located in",
+    "object": "tropical belt",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "tropical belt",
+    "predicate": "between",
+    "object": "tropic of cancer",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "tropical belt",
+    "predicate": "between",
+    "object": "tropic of capricorn",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "smallholder farmers",
+    "predicate": "operate",
+    "object": "farms",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "farms",
+    "predicate": "less than",
+    "object": "five hectares",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "smallholder farmers",
+    "predicate": "sell through",
+    "object": "cooperatives",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "Most of the world's coffee is grown by smallholder farmers in the tropical belt between the Tropic of Cancer and the Tropic of Capricorn, often on farms of less than five hectares.",
+    "chunk": 1
+  },
+  {
+    "subject": "cooperatives",
+    "predicate": "pool",
+    "object": "harvests",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Many smallholders sell through cooperatives, which pool harvests, provide credit and negotiate with exporters.",
+    "chunk": 1
+  },
+  {
+    "subject": "cooperatives",
+    "predicate": "provide",
+    "object": "credit",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Many smallholders sell through cooperatives, which pool harvests, provide credit and negotiate with exporters.",
+    "chunk": 1
+  },
+  {
+    "subject": "cooperatives",
+    "predicate": "negotiate with",
+    "object": "exporters",
+    "subject_type": "organization",
+    "object_type": "organization",
+    "source": "Many smallholders sell through cooperatives, which pool harvests, provide credit and negotiate with exporters.",
+    "chunk": 1
+  },
+  {
+    "subject": "harvesting",
+    "predicate": "include",
+    "object": "selective harvesting",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "harvesting",
+    "predicate": "include",
+    "object": "strip harvesting",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "pickers",
+    "predicate": "take",
+    "object": "ripe cherries",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "pickers",
+    "predicate": "pick by",
+    "object": "hand",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "strip harvesting",
+    "predicate": "removes",
+    "object": "all cherries",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "strip harvesting",
+    "predicate": "uses",
+    "object": "machine",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "machine",
+    "predicate": "used on",
+    "object": "flat plantations",
+    "subject_type": "technology",
+    "object_type": "place",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "flat plantations",
+    "predicate": "located in",
+    "object": "brazil",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Harvesting is either selective, in which pickers take only ripe cherries by hand, or strip harvesting, in which all cherries are removed at once, sometimes by machine on the flat plantations of Brazil.",
+    "chunk": 1
+  },
+  {
+    "subject": "processing",
+    "predicate": "removes",
+    "object": "fruit",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Processing then removes the fruit from the seed.",
+    "chunk": 1
+  },
+  {
+    "subject": "processing",
+    "predicate": "leaves",
+    "object": "seed",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Processing then removes the fruit from the seed.",
+    "chunk": 1
+  },
+  {
+    "subject": "washed process",
+    "predicate": "uses",
+    "object": "depulper",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "depulper",
+    "predicate": "strips",
+    "object": "skin",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "ferment in",
+    "object": "tanks",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "fermentation",
+    "predicate": "lasts",
+    "object": "one to two days",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "enzymes",
+    "predicate": "break down",
+    "object": "mucilage",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "mucilage",
+    "predicate": "is sticky",
+    "object": "sticky",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "undergo",
+    "object": "washing",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "dried on",
+    "object": "patios",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "dried on",
+    "object": "raised beds",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "natural process",
+    "predicate": "dries",
+    "object": "whole cherries",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the natural process, whole cherries are dried in the sun for several weeks, which imparts fruity flavours.",
+    "chunk": 1
+  },
+  {
+    "subject": "whole cherries",
+    "predicate": "dried in",
+    "object": "sun",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the natural process, whole cherries are dried in the sun for several weeks, which imparts fruity flavours.",
+    "chunk": 1
+  },
+  {
+    "subject": "drying",
+    "predicate": "lasts",
+    "object": "several weeks",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the natural process, whole cherries are dried in the sun for several weeks, which imparts fruity flavours.",
+    "chunk": 1
+  },
+  {
+    "subject": "natural process",
+    "predicate": "imparts",
+    "object": "fruity flavours",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the natural process, whole cherries are dried in the sun for several weeks, which imparts fruity flavours.",
+    "chunk": 1
+  },
+  {
+    "subject": "honey process",
+    "predicate": "common in",
+    "object": "costa rica",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "The honey process, common in Costa Rica, dries the beans with some mucilage still attached.",
+    "chunk": 1
+  },
+  {
+    "subject": "honey process",
+    "predicate": "dries",
+    "object": "beans",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "The honey process, common in Costa Rica, dries the beans with some mucilage still attached.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "have",
+    "object": "mucilage",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "mucilage",
+    "predicate": "attached to",
+    "object": "beans",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In the washed process, a depulper strips the skin, the beans ferment in tanks for one to two days so that enzymes break down the sticky mucilage, and the beans are washed and dried on patios or raised beds.",
+    "chunk": 1
+  },
+  {
+    "subject": "dried beans",
+    "predicate": "called",
+    "object": "parchment coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Dried beans, called parchment coffee, are stored until milling removes the parchment layer and yields green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "parchment coffee",
+    "predicate": "stored until",
+    "object": "milling",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Dried beans, called parchment coffee, are stored until milling removes the parchment layer and yields green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "milling",
+    "predicate": "removes",
+    "object": "parchment layer",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Dried beans, called parchment coffee, are stored until milling removes the parchment layer and yields green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "milling",
+    "predicate": "yields",
+    "object": "green coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Dried beans, called parchment coffee, are stored until milling removes the parchment layer and yields green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "graded by",
+    "object": "size",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "graded by",
+    "object": "density",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "graded by",
+    "object": "defect count",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "cuppers",
+    "predicate": "evaluate",
+    "object": "samples",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "samples",
+    "predicate": "evaluated for",
+    "object": "aroma",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "samples",
+    "predicate": "evaluated for",
+    "object": "acidity",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "samples",
+    "predicate": "evaluated for",
+    "object": "body",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "samples",
+    "predicate": "evaluated for",
+    "object": "flavour",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Green coffee is graded by size, density and defect count, and cuppers evaluate samples for aroma, acidity, body and flavour.",
+    "chunk": 1
+  },
+  {
+    "subject": "exporters",
+    "predicate": "ship",
+    "object": "green coffee",
+    "subject_type": "organization",
+    "object_type": "product",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "shipped in",
+    "object": "jute bags",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "shipped in",
+    "object": "bulk containers",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "exporters",
+    "predicate": "ship to",
+    "object": "importing countries",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "port of santos",
+    "predicate": "located in",
+    "object": "brazil",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "port of antwerp",
+    "predicate": "located in",
+    "object": "belgium",
+    "subject_type": "place",
+    "object_type": "place",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "port of santos",
+    "predicate": "handles",
+    "object": "large volumes",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "port of antwerp",
+    "predicate": "handles",
+    "object": "large volumes",
+    "subject_type": "place",
+    "object_type": "concept",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "large volumes",
+    "predicate": "of",
+    "object": "green coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Exporters ship green coffee in jute bags or bulk containers to importing countries; the port of Santos in Brazil and the port of Antwerp in Belgium handle large volumes.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "price set on",
+    "object": "intercontinental exchange",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "intercontinental exchange",
+    "predicate": "located in",
+    "object": "new york",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "The commodity price of arabica is set on the Intercontinental Exchange in New York, while robusta trades on the London exchange.",
+    "chunk": 1
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "trades on",
+    "object": "london exchange",
+    "subject_type": "concept",
+    "object_type": "organization",
+    "source": "Two species dominate world production: Coffea arabica, which is grown at higher altitudes and prized for its sweetness and acidity, and Coffea canephora, known as robusta, which tolerates heat and disease, contains roughly twice as much caffeine and supplies most instant coffee and many espresso bl…",
+    "chunk": 1
+  },
+  {
+    "subject": "fairtrade",
+    "predicate": "is certification scheme",
+    "object": "certification scheme",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "rainforest alliance",
+    "predicate": "is certification scheme",
+    "object": "certification scheme",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "fairtrade",
+    "predicate": "sets",
+    "object": "minimum prices",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "rainforest alliance",
+    "predicate": "sets",
+    "object": "environmental standards",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "specialty roasters",
+    "predicate": "buy through",
+    "object": "direct trade",
+    "subject_type": "organization",
+    "object_type": "concept",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "direct trade",
+    "predicate": "involves",
+    "object": "individual farms",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "specialty roasters",
+    "predicate": "buy from",
+    "object": "individual farms",
+    "subject_type": "organization",
+    "object_type": "place",
+    "source": "Certification schemes such as Fairtrade and Rainforest Alliance set minimum prices or environmental standards, and specialty roasters increasingly buy through direct trade relationships with individual farms.",
+    "chunk": 1
+  },
+  {
+    "subject": "roasting",
+    "predicate": "transforms",
+    "object": "green coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Roasting transforms green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "drum roaster",
+    "predicate": "roasts",
+    "object": "beans",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "In a drum roaster the beans reach temperatures between 180 and 250 degrees Celsius.",
+    "chunk": 1
+  },
+  {
+    "subject": "beans",
+    "predicate": "reach",
+    "object": "temperatures",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In a drum roaster the beans reach temperatures between 180 and 250 degrees Celsius.",
+    "chunk": 1
+  },
+  {
+    "subject": "temperatures",
+    "predicate": "between",
+    "object": "180 degrees celsius",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In a drum roaster the beans reach temperatures between 180 and 250 degrees Celsius.",
+    "chunk": 1
+  },
+  {
+    "subject": "temperatures",
+    "predicate": "between",
+    "object": "250 degrees celsius",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "In a drum roaster the beans reach temperatures between 180 and 250 degrees Celsius.",
+    "chunk": 1
+  },
+  {
+    "subject": "drum roaster",
+    "predicate": "used in",
+    "object": "roasting",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Roasting transforms green coffee.",
+    "chunk": 1
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "occurs at",
+    "object": "150 degrees celsius",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "between",
+    "object": "sugars",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "between",
+    "object": "amino acids",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "produces",
+    "object": "aromatic compounds",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "produces",
+    "object": "brown colour",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "first crack",
+    "predicate": "occurs at",
+    "object": "196 degrees celsius",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "steam",
+    "predicate": "bursts",
+    "object": "bean structure",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "carbon dioxide",
+    "predicate": "bursts",
+    "object": "bean structure",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "first crack",
+    "predicate": "involves",
+    "object": "steam",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "first crack",
+    "predicate": "involves",
+    "object": "carbon dioxide",
+    "subject_type": "event",
+    "object_type": "concept",
+    "source": "Around 150 degrees the Maillard reaction between sugars and amino acids produces hundreds of aromatic compounds and the brown colour; at the first crack, near 196 degrees, steam and carbon dioxide burst the bean structure.",
+    "chunk": 1
+  },
+  {
+    "subject": "light roasts",
+    "predicate": "preserve",
+    "object": "origin character",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "light roasts",
+    "predicate": "preserve",
+    "object": "acidity",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "dark roasts",
+    "predicate": "develop",
+    "object": "bitterness",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "dark roasts",
+    "predicate": "develop",
+    "object": "oils",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "oils",
+    "predicate": "on",
+    "object": "surface",
+    "subject_type": "concept",
+    "object_type": "place",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "roasted coffee",
+    "predicate": "stales",
+    "object": "quickly",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "carbon dioxide",
+    "predicate": "escapes",
+    "object": "beans",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 1
+  },
+  {
+    "subject": "oils",
+    "predicate": "undergo",
+    "object": "oxidation",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 1
+  },
+  {
+    "subject": "roasters",
+    "predicate": "pack",
+    "object": "beans",
+    "subject_type": "person",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "beans",
+    "predicate": "packed in",
+    "object": "bags",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "bags",
+    "predicate": "have",
+    "object": "one-way valves",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "brewing",
+    "predicate": "extracts",
+    "object": "soluble compounds",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "soluble compounds",
+    "predicate": "from",
+    "object": "ground coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 1
+  },
+  {
+    "subject": "brewing",
+    "predicate": "uses",
+    "object": "hot water",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "ground coffee",
+    "predicate": "used in",
+    "object": "brewing",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 1
+  },
+  {
+    "subject": "light roasts",
+    "predicate": "contrast",
+    "object": "dark roasts",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Light roasts preserve origin character and acidity, while dark roasts develop bitterness and oils on the surface.",
+    "chunk": 2
+  },
+  {
+    "subject": "carbon dioxide",
+    "predicate": "escapes from",
+    "object": "roasted coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "oils",
+    "predicate": "oxidise in",
+    "object": "roasted coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "roasters",
+    "predicate": "use",
+    "object": "bags",
+    "subject_type": "person",
+    "object_type": "product",
+    "source": "Roasted coffee stales quickly because carbon dioxide escapes and oils oxidise, so roasters pack beans in bags with one-way valves.",
+    "chunk": 2
+  },
+  {
+    "subject": "brewing",
+    "predicate": "uses",
+    "object": "ground coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "soluble compounds",
+    "predicate": "extracted from",
+    "object": "ground coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "hot water",
+    "predicate": "extracts",
+    "object": "soluble compounds",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "ground coffee",
+    "predicate": "contains",
+    "object": "soluble compounds",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Brewing extracts soluble compounds from ground coffee with hot water.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "forces",
+    "object": "water",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "uses",
+    "object": "pressure",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "pressure",
+    "predicate": "is",
+    "object": "nine bars",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "uses",
+    "object": "finely ground coffee",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "take",
+    "object": "thirty seconds",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "produces",
+    "object": "concentrated shot",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "concentrated shot",
+    "predicate": "topped with",
+    "object": "crema",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "crema",
+    "predicate": "tops",
+    "object": "concentrated shot",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "water",
+    "predicate": "passes through",
+    "object": "finely ground coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "uses",
+    "object": "water",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Espresso forces water at about nine bars of pressure through finely ground coffee in under thirty seconds, producing a concentrated shot topped with crema.",
+    "chunk": 2
+  },
+  {
+    "subject": "filter methods",
+    "predicate": "include",
+    "object": "pour-over",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "filter methods",
+    "predicate": "include",
+    "object": "drip",
+    "subject_type": "concept",
+    "object_type": "technology",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "pour-over",
+    "predicate": "is",
+    "object": "filter methods",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "drip",
+    "predicate": "is",
+    "object": "filter methods",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "filter methods",
+    "predicate": "use",
+    "object": "coarser grounds",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "filter methods",
+    "predicate": "use",
+    "object": "gravity",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "pour-over",
+    "predicate": "uses",
+    "object": "coarser grounds",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "drip",
+    "predicate": "uses",
+    "object": "coarser grounds",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "pour-over",
+    "predicate": "uses",
+    "object": "gravity",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "drip",
+    "predicate": "uses",
+    "object": "gravity",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Filter methods such as pour-over and drip use coarser grounds and gravity.",
+    "chunk": 2
+  },
+  {
+    "subject": "french press",
+    "predicate": "steeps",
+    "object": "coffee",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "The French press steeps coffee for about four minutes before a metal mesh separates the grounds.",
+    "chunk": 2
+  },
+  {
+    "subject": "french press",
+    "predicate": "steeps for",
+    "object": "four minutes",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "The French press steeps coffee for about four minutes before a metal mesh separates the grounds.",
+    "chunk": 2
+  },
+  {
+    "subject": "metal mesh",
+    "predicate": "separates",
+    "object": "grounds",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "The French press steeps coffee for about four minutes before a metal mesh separates the grounds.",
+    "chunk": 2
+  },
+  {
+    "subject": "french press",
+    "predicate": "uses",
+    "object": "metal mesh",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "The French press steeps coffee for about four minutes before a metal mesh separates the grounds.",
+    "chunk": 2
+  },
+  {
+    "subject": "french press",
+    "predicate": "contains",
+    "object": "metal mesh",
+    "subject_type": "technology",
+    "object_type": "product",
+    "source": "The French press steeps coffee for about four minutes before a metal mesh separates the grounds.",
+    "chunk": 2
+  },
+  {
+    "subject": "cold brew",
+    "predicate": "steeps",
+    "object": "coarse grounds",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "Cold brew steeps coarse grounds in cold water for twelve to twenty-four hours.",
+    "chunk": 2
+  },
+  {
+    "subject": "cold brew",
+    "predicate": "uses",
+    "object": "cold water",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Cold brew steeps coarse grounds in cold water for twelve to twenty-four hours.",
+    "chunk": 2
+  },
+  {
+    "subject": "cold brew",
+    "predicate": "steeps for",
+    "object": "twelve to twenty-four hours",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Cold brew steeps coarse grounds in cold water for twelve to twenty-four hours.",
+    "chunk": 2
+  },
+  {
+    "subject": "baristas",
+    "predicate": "adjust",
+    "object": "grind size",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "baristas",
+    "predicate": "adjust",
+    "object": "dose",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "baristas",
+    "predicate": "adjust",
+    "object": "water temperature",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "baristas",
+    "predicate": "adjust",
+    "object": "contact time",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "baristas",
+    "predicate": "control",
+    "object": "extraction",
+    "subject_type": "person",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "grind size",
+    "predicate": "affects",
+    "object": "extraction",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "dose",
+    "predicate": "affects",
+    "object": "extraction",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "water temperature",
+    "predicate": "affects",
+    "object": "extraction",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "contact time",
+    "predicate": "affects",
+    "object": "extraction",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "under-extracted coffee",
+    "predicate": "tastes",
+    "object": "sour",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "over-extracted coffee",
+    "predicate": "tastes",
+    "object": "bitter",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Baristas adjust grind size, dose, water temperature and contact time to control extraction; under-extracted coffee tastes sour and over-extracted coffee tastes bitter.",
+    "chunk": 2
+  },
+  {
+    "subject": "caffeine",
+    "predicate": "is",
+    "object": "alkaloid",
+    "subject_type": "concept",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "caffeine",
+    "predicate": "stimulates",
+    "object": "coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "caffeine",
+    "predicate": "removed in",
+    "object": "decaffeinated coffee",
+    "subject_type": "concept",
+    "object_type": "product",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "swiss water process",
+    "predicate": "removes",
+    "object": "caffeine",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "swiss water process",
+    "predicate": "uses",
+    "object": "carbon filters",
+    "subject_type": "technology",
+    "object_type": "technology",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "supercritical carbon dioxide extraction",
+    "predicate": "removes",
+    "object": "caffeine",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "decaffeinated coffee",
+    "predicate": "lacks",
+    "object": "caffeine",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "swiss water process",
+    "predicate": "is",
+    "object": "process",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "supercritical carbon dioxide extraction",
+    "predicate": "is",
+    "object": "extraction",
+    "subject_type": "technology",
+    "object_type": "concept",
+    "source": "Caffeine, the alkaloid that makes coffee stimulating, is removed in decaffeinated coffee by the Swiss Water process, which uses carbon filters, or by supercritical carbon dioxide extraction.",
+    "chunk": 2
+  },
+  {
+    "subject": "spent grounds",
+    "predicate": "composted",
+    "object": "compost",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "spent grounds",
+    "predicate": "used as",
+    "object": "fuel",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "pulp",
+    "predicate": "composted",
+    "object": "compost",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "pulp",
+    "predicate": "used as",
+    "object": "fuel",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "pulp",
+    "predicate": "from",
+    "object": "processing",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "shade-grown coffee",
+    "predicate": "planted under",
+    "object": "tree canopy",
+    "subject_type": "product",
+    "object_type": "place",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "shade-grown coffee",
+    "predicate": "supports",
+    "object": "birds",
+    "subject_type": "product",
+    "object_type": "concept",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "shade-grown coffee",
+    "predicate": "reduces need for",
+    "object": "fertiliser",
+    "subject_type": "product",
+    "object_type": "product",
+    "source": "The spent grounds and the pulp from processing are increasingly composted or used as fuel, and shade-grown coffee, planted under a tree canopy, supports birds and reduces the need for fertiliser.",
+    "chunk": 2
+  },
+  {
+    "subject": "espresso",
+    "predicate": "is",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "espresso",
+    "predicate": "served by",
+    "object": "baristas",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "occurs in",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "maillard reaction",
+    "predicate": "affects",
+    "object": "dark roasts",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "fairtrade",
+    "predicate": "certifies",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "rainforest alliance",
+    "predicate": "certifies",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "filter methods",
+    "predicate": "brews",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "pour-over",
+    "predicate": "brews",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "shade-grown coffee",
+    "predicate": "is",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "brewing",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "ground coffee",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "brewing",
+    "predicate": "extracts",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "cold brew",
+    "predicate": "is",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "cold brew",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "cold water",
+    "predicate": "used in",
+    "object": "extraction",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "natural process",
+    "predicate": "dries",
+    "object": "coffee cherry",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "whole cherries",
+    "predicate": "are",
+    "object": "coffee cherry",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "natural process",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "washed process",
+    "predicate": "removes",
+    "object": "mucilage",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "washed process",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "depulper",
+    "predicate": "processes",
+    "object": "coffee cherry",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "direct trade",
+    "predicate": "bypasses",
+    "object": "cooperatives",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "specialty roasters",
+    "predicate": "buy",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "individual farms",
+    "predicate": "grows",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "pickers",
+    "predicate": "pick",
+    "object": "coffee cherry",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "over-extracted coffee",
+    "predicate": "results from",
+    "object": "extraction",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "drying",
+    "predicate": "dries",
+    "object": "coffee cherry",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "fermentation",
+    "predicate": "removes",
+    "object": "mucilage",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "under-extracted coffee",
+    "predicate": "has",
+    "object": "acidity",
+    "inferred": true,
+    "method": "llm_bridge"
+  },
+  {
+    "subject": "coffee",
+    "predicate": "contains",
+    "object": "oils",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffee",
+    "predicate": "contains",
+    "object": "soluble compounds",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffee",
+    "predicate": "contains",
+    "object": "acidity",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffee",
+    "predicate": "made from",
+    "object": "beans",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffee cherry",
+    "predicate": "contains",
+    "object": "beans",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "beans",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "beans",
+    "predicate": "contains",
+    "object": "oils",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "contains",
+    "object": "acidity",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "coffea canephora",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "brazil",
+    "predicate": "produces",
+    "object": "coffea arabica",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "brazil",
+    "predicate": "produces",
+    "object": "coffea canephora",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "cooperatives",
+    "predicate": "produces",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "baristas",
+    "predicate": "make",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "espresso",
+    "predicate": "uses",
+    "object": "ground coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "espresso",
+    "predicate": "contains",
+    "object": "caffeine",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "espresso",
+    "predicate": "contains",
+    "object": "oils",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "drip",
+    "predicate": "uses",
+    "object": "ground coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "drip",
+    "predicate": "brews",
+    "object": "coffee",
+    "inferred": true,
+    "method": "llm_hub"
+  },
+  {
+    "subject": "180 degrees celsius",
+    "predicate": "lower than",
+    "object": "196 degrees celsius",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "180 degrees celsius",
+    "predicate": "lower than",
+    "object": "250 degrees celsius",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "196 degrees celsius",
+    "predicate": "lower than",
+    "object": "250 degrees celsius",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "jute bags",
+    "predicate": "type of",
+    "object": "bags",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "dried beans",
+    "predicate": "type of",
+    "object": "beans",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "carbon filters",
+    "predicate": "capture",
+    "object": "carbon dioxide",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "supercritical carbon dioxide extraction",
+    "predicate": "uses",
+    "object": "carbon dioxide",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "carbon filters",
+    "predicate": "used in",
+    "object": "supercritical carbon dioxide extraction",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "central africa",
+    "predicate": "borders",
+    "object": "western africa",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "coffea arabica",
+    "predicate": "hybridizes with",
+    "object": "coffea canephora",
+    "inferred": true,
+    "method": "llm_within"
+  },
+  {
+    "subject": "coarse grounds",
+    "predicate": "is a",
+    "object": "grounds",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "coarser grounds",
+    "predicate": "is a",
+    "object": "grounds",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "coffee cherry",
+    "predicate": "involves",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "coffee plant",
+    "predicate": "involves",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "cold water",
+    "predicate": "is a",
+    "object": "water",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "decaffeinated coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "espresso blends",
+    "predicate": "involves",
+    "object": "espresso",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "finely ground coffee",
+    "predicate": "is a",
+    "object": "ground coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "finely ground coffee",
+    "predicate": "involves",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "green coffee",
+    "predicate": "involves",
+    "object": "green",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "grind size",
+    "predicate": "is a",
+    "object": "size",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "ground coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "honey process",
+    "predicate": "is a",
+    "object": "process",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "hot water",
+    "predicate": "is a",
+    "object": "water",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "instant coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "natural process",
+    "predicate": "is a",
+    "object": "process",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "over-extracted coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "parchment coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "roasted coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "spent grounds",
+    "predicate": "is a",
+    "object": "grounds",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "swiss water process",
+    "predicate": "involves",
+    "object": "water",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "under-extracted coffee",
+    "predicate": "is a",
+    "object": "coffee",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "washed process",
+    "predicate": "is a",
+    "object": "process",
+    "inferred": true,
+    "method": "taxonomy"
+  },
+  {
+    "subject": "water temperature",
+    "predicate": "involves",
+    "object": "water",
+    "inferred": true,
+    "method": "taxonomy"
+  }
+]

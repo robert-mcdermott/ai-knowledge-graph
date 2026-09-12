@@ -10,6 +10,7 @@ import datetime as _dt
 import json
 import logging
 import os
+import shutil
 
 import networkx as nx
 from jinja2 import Environment, FileSystemLoader
@@ -80,7 +81,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
 
 
 def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
-                           community_namer=None):
+                           community_namer=None, community_names=None, library_dir=None):
     """
     Create and visualize a knowledge graph from subject-predicate-object triples.
 
@@ -91,6 +92,10 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
         edge_smooth: Edge smoothing setting (overrides config)
         config: Configuration dictionary (optional)
         community_namer: optional callable(list_of_community_dicts) -> {community_id: name}
+        community_names: optional {community_id: name} already known (e.g. from a .meta.json sidecar);
+                         when given, the namer is not called
+        library_dir: write the vis-network files there and reference them from the page instead of
+                     embedding them (smaller pages that share one library copy, e.g. for GitHub Pages)
 
     Returns:
         ``(stats, graph_data)``: the statistics dict and the data embedded in the page
@@ -106,7 +111,8 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
 
     log.info(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
-    graph_data = build_graph_data(triples, edge_smooth, show_inferred=vis_cfg.get("show_inferred", True),
+    graph_data = build_graph_data(triples, edge_smooth, community_names=community_names,
+                                  show_inferred=vis_cfg.get("show_inferred", True),
                                   theme=vis_cfg.get("theme", "light"), edge_labels=vis_cfg.get("edge_labels", "all"),
                                   title_case=vis_cfg.get("title_case", True),
                                   collapse_parallel_edges=vis_cfg.get("collapse_parallel_edges", True))
@@ -114,7 +120,9 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
     log.info(f"Found {stats['nodes']} unique nodes")
     log.info(f"Found {stats['inferred_edges']} inferred relationships")
     log.info(f"Detected {stats['communities']} communities using Louvain method")
-    if community_namer is not None and stats["communities"] > 1:
+    if community_names:
+        log.info(f"Using {len(community_names)} stored community names")
+    elif community_namer is not None and stats["communities"] > 1:
         try:
             names = community_namer(graph_data["meta"]["communities"]) or {}
         except Exception as e:  # naming is cosmetic; never fail the render
@@ -126,7 +134,7 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
                     entry["name"] = names[entry["id"]]
             log.info(f"Named {len(names)} communities")
 
-    html = render_html(graph_data)
+    html = render_html(graph_data, library_dir=library_dir, page_dir=os.path.dirname(os.path.abspath(output_file)))
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
     log.info(f"Knowledge graph visualization saved to {output_file}")
@@ -143,10 +151,12 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
         all_nodes.add(triple["object"])
     inferred_count = sum(1 for t in triples if t.get("inferred", False))
 
+    # Insert nodes and edges in sorted order: Louvain depends on iteration order, and Python's
+    # set order changes between processes, which would make community ids (and the stored
+    # community names) drift between runs of the same graph.
     G_undirected = nx.Graph()
-    G_undirected.add_nodes_from(all_nodes)
-    for triple in triples:
-        G_undirected.add_edge(triple["subject"], triple["object"])
+    G_undirected.add_nodes_from(sorted(all_nodes))
+    G_undirected.add_edges_from(sorted((t["subject"], t["object"]) for t in triples))
 
     centrality = _calculate_centrality_metrics(G_undirected, all_nodes)
     degree = centrality["degree"]
@@ -250,17 +260,39 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
     }
 
 
-def render_html(graph_data):
-    """Render the explorer page with the graph data and vendored library embedded."""
+VENDOR_FILES = ("vis-network.min.js", "vis-network.min.css")
+
+
+def render_html(graph_data, library_dir=None, page_dir=None):
+    """Render the explorer page.
+
+    By default the vis-network library is embedded so the file is self-contained. With
+    ``library_dir`` the library files are copied there (once) and referenced by a path relative
+    to ``page_dir`` (the directory the page will be saved in).
+    """
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=False)
     template = env.get_template("graph.html.j2")
     data_json = json.dumps(graph_data, ensure_ascii=False).replace("</", "<\\/")
-    return template.render(
-        title=graph_data["meta"]["title"],
-        data_json=data_json,
-        vis_js=_read_vendor("vis-network.min.js"),
-        vis_css=_read_vendor("vis-network.min.css"),
-    )
+    context = {"title": graph_data["meta"]["title"], "data_json": data_json}
+    if library_dir:
+        rel = ensure_library(library_dir, page_dir or os.getcwd())
+        context["vis_js_href"] = f"{rel}/vis-network.min.js"
+        context["vis_css_href"] = f"{rel}/vis-network.min.css"
+    else:
+        context["vis_js"] = _read_vendor("vis-network.min.js")
+        context["vis_css"] = _read_vendor("vis-network.min.css")
+    return template.render(**context)
+
+
+def ensure_library(library_dir, page_dir):
+    """Copy the vendored library into ``library_dir`` if missing/outdated; return the URL path from ``page_dir``."""
+    os.makedirs(library_dir, exist_ok=True)
+    for name in VENDOR_FILES:
+        src, dst = os.path.join(VENDOR_DIR, name), os.path.join(library_dir, name)
+        if not os.path.exists(dst) or os.path.getsize(dst) != os.path.getsize(src):
+            shutil.copyfile(src, dst)
+    rel = os.path.relpath(os.path.abspath(library_dir), os.path.abspath(page_dir))
+    return rel.replace(os.sep, "/")
 
 
 def _read_vendor(name):

@@ -130,6 +130,19 @@ def test_llm_inference_parses_and_tags(monkeypatch):
                     "inferred": True, "method": "llm_within"}]
 
 
+def test_llm_inference_maps_names_case_insensitively_and_drops_unknown(monkeypatch):
+    class FakeClient:
+        def __init__(self, *a, **k): pass
+        def complete(self, user, system=None):
+            return ('[{"subject": "Isabel De Castilla", "predicate": "reinó en", "object": "castilla"},'
+                    ' {"subject": "isabel de castilla", "predicate": "visitó", "object": "atlantis"}]')
+    monkeypatch.setattr(es.LLMClient, "from_config", classmethod(lambda cls, cfg: FakeClient()))
+    known = {"isabel de castilla": "isabel de castilla", "castilla": "castilla"}
+    out = es._llm_infer({}, "s", "u", "llm_bridge", "test", known)
+    assert out == [{"subject": "isabel de castilla", "predicate": "reinó en", "object": "castilla",
+                    "inferred": True, "method": "llm_bridge"}]
+
+
 def test_llm_inference_error_is_swallowed(monkeypatch, caplog):
     class Boom:
         def __init__(self, *a, **k): pass
