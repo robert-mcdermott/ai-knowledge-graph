@@ -2,8 +2,7 @@
 import json
 import re
 
-from tests.test_llm_client import FakeSession, completion
-
+from fakes import FakeSession, completion
 from knowledge_graph.entity_standardization import normalize_predicates
 from knowledge_graph.llm import LLMClient
 from knowledge_graph.visualization import _calculate_node_sizes, build_graph_data
