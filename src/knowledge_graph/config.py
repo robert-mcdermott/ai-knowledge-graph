@@ -24,6 +24,7 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "cache_dir": ".kg-cache",
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
+    "extraction": {"language": "auto"},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
     "inference": {
         "enabled": True,
@@ -116,6 +117,9 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
         raise ConfigError("[chunking] overlap must be a non-negative integer")
     if overlap >= size:
         raise ConfigError(f"[chunking] overlap ({overlap}) must be smaller than chunk_size ({size})")
+
+    if not isinstance(config["extraction"]["language"], str) or not config["extraction"]["language"].strip():
+        raise ConfigError("[extraction] language must be a non-empty string such as 'auto', 'English' or 'Chinese'")
 
     visualization = config["visualization"]
     if visualization["theme"] not in ("light", "dark"):

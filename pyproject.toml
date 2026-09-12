@@ -23,6 +23,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+pdf = ["pypdf>=4.0"]
+docx = ["python-docx>=1.1"]
+all = ["pypdf>=4.0", "python-docx>=1.1"]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [project.urls]

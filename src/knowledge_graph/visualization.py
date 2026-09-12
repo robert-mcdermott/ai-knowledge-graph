@@ -52,6 +52,12 @@ def community_color(index):
 
 def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
                               community_namer=None):
+    """Render the page and return the statistics dict (see :func:`render_knowledge_graph`)."""
+    return render_knowledge_graph(triples, output_file, edge_smooth, config, community_namer)[0]
+
+
+def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
+                           community_namer=None):
     """
     Create and visualize a knowledge graph from subject-predicate-object triples.
 
@@ -64,14 +70,16 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         community_namer: optional callable(list_of_community_dicts) -> {community_id: name}
 
     Returns:
-        Dictionary with graph statistics
+        ``(stats, graph_data)``: the statistics dict and the data embedded in the page
+        (nodes, edges, options, meta including named communities)
     """
     if edge_smooth is None:
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
 
     if not triples:
         print("Warning: No triples provided for visualization")
-        return {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
+        empty = {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
+        return empty, {"nodes": [], "edges": [], "options": {}, "meta": {"stats": empty, "communities": [], "types": []}}
 
     print(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
@@ -98,7 +106,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
         f.write(html)
     print(f"Knowledge graph visualization saved to {output_file}")
     print(f"Graph Statistics: {json.dumps(stats, indent=2)}")
-    return stats
+    return stats, graph_data
 
 
 def build_graph_data(triples, edge_smooth=False, community_names=None, show_inferred=True,
@@ -155,6 +163,8 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             title += f"\n“{triple['source']}”"
         elif triple.get("chunk"):
             title += f"\nExtracted from chunk {triple['chunk']}"
+        if triple.get("document"):
+            title += f"\nDocument: {triple['document']}"
         edge = {"id": f"e{index}", "from": triple["subject"], "to": triple["object"], "label": triple["predicate"],
                 "title": title, "inferred": is_inferred, "arrows": "to"}
         if method:
@@ -165,6 +175,8 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             edge["chunk"] = triple["chunk"]
         if triple.get("source"):
             edge["source"] = triple["source"]
+        if triple.get("document"):
+            edge["document"] = triple["document"]
         if is_inferred:
             edge["dashes"] = True
             edge["color"] = {"color": INFERRED_EDGE_COLOR, "opacity": 0.8}

@@ -20,6 +20,10 @@ temperature = 0.2   # Lower = more consistent entity naming across chunks. Omit 
 chunk_size = 100  # Number of words per chunk
 overlap = 20      # Number of words to overlap between chunks
 
+[extraction]
+language = "auto"        # Language for entity names and predicates, e.g. "Chinese", "German"; "auto" keeps the
+                         # model's default (usually the document's language)
+
 [standardization]
 enabled = true               # Whether to enable entity standardization
 use_llm_for_entities = true  # Whether to use LLM for additional entity resolution

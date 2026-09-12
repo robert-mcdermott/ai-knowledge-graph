@@ -23,6 +23,8 @@ from .main_prompts import MAIN_SYSTEM_PROMPT, MAIN_USER_PROMPT
 __all__ = [
     "PromptFactory",
     "prompt_factory",
+    "language_instruction",
+    "system_prompt_for",
     "MAIN_SYSTEM_PROMPT",
     "MAIN_USER_PROMPT",
     "ENTITY_RESOLUTION_SYSTEM_PROMPT",
@@ -94,5 +96,19 @@ class PromptFactory:
 
 
 prompt_factory = PromptFactory()
+
+
+def language_instruction(language):
+    """Extra system-prompt sentence for non-English output; empty for 'auto'/English/unset."""
+    if not language or str(language).strip().lower() in ("auto", "en", "english"):
+        return ""
+    return (f"\nIMPORTANT: Write all entity names, entity types' values excluded, predicates and community names "
+            f"in {str(language).strip()}. Keep the JSON keys in English.")
+
+
+def system_prompt_for(name, config):
+    """Fetch a system prompt and append the configured language instruction (``extraction.language``)."""
+    language = (config or {}).get("extraction", {}).get("language", "auto")
+    return prompt_factory.get_prompt(name) + language_instruction(language)
 
 

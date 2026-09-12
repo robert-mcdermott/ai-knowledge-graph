@@ -8,10 +8,11 @@ A demo of a knowlege graph created with this project can be found here: [Industr
 
 ## Features
 
-- **Sentence-aware chunking**: large documents are split on sentence boundaries with overlap, and chunks are extracted in parallel
+- **Any text input**: `.txt`, `.md`, `.rst`, `.pdf` and `.docx` files or whole directories, in any language (`extraction.language`); large documents are split on sentence boundaries with overlap and extracted in parallel
 - **Typed knowledge extraction**: the LLM returns Subject-Predicate-Object triples with entity types (person, organization, place, event, technology, product, work, date, concept) and every extracted relationship keeps the sentence it came from
 - **Entity standardization**: case, stop-word and plural variants are merged, with an optional LLM pass for the rest
 - **Conservative, traceable inference**: LLM passes bridge isolated parts of the graph and add well-known relationships between central entities; a deterministic taxonomy rule links specific terms to general ones; every inferred edge carries its method and is capped relative to the extracted edges
+- **Exports**: JSON, CSV, GraphML for Gephi/yEd/Cytoscape and a Cypher script for Neo4j
 - **Interactive explorer**: a single self-contained HTML file with search, click-to-highlight, a relationships panel with sources, named communities, entity-type filters, a shortest-path finder, exports and light/dark themes
 - **Robust LLM client**: truncation detection for reasoning models, retries with back-off, automatic `max_completion_tokens` fallback, environment-variable API keys and an on-disk response cache
 - **Works with any OpenAI-compatible endpoint**: Ollama, LM Studio, vLLM, OpenAI, Gemini, OpenRouter, LiteLLM (which fronts AWS Bedrock, Azure OpenAI, Anthropic and many others)
@@ -48,6 +49,7 @@ python generate-graph.py --input your_text_file.txt --output knowledge_graph.htm
 
 ```bash
 pip install -e ".[dev]"   # adds pytest and ruff
+pip install -e ".[all]"   # adds pypdf and python-docx for .pdf / .docx inputs
 pytest -q                 # 108 tests, no LLM needed
 ruff check .
 ```
@@ -74,6 +76,9 @@ temperature = 0.2                # omit for models that only accept the default 
 #[llm.extra_body]                # arbitrary extra request fields, e.g. Ollama's think switch (keep last in [llm])
 #think = false
 #[llm.extra_headers]             # extra HTTP headers, e.g. OpenRouter attribution
+
+[extraction]
+language = "auto"                # e.g. "Chinese" to get entity names and predicates in Chinese
 
 [chunking]
 chunk_size = 500                 # target words per chunk; chunks end on sentence boundaries
@@ -148,7 +153,7 @@ incomplete graph.
 
 ## Command Line Options
 
-- `--input FILE`: Input text file to process
+- `--input PATH [PATH ...]`: Input file(s) or directories. Plain text (`.txt`, `.md`, `.rst`), `.pdf` (install the `[pdf]` extra) and `.docx` (`[docx]` extra). With several inputs every triple is tagged with its `document`
 - `--output FILE`: Output HTML file for visualization (default: knowledge_graph.html)
 - `--config FILE`: Path to config file (default: config.toml)
 - `--debug`: Enable debug output with raw LLM responses
@@ -157,6 +162,7 @@ incomplete graph.
 - `--continue-on-error`: Skip chunks whose LLM call fails or is truncated instead of aborting
 - `--from-json FILE`: Re-render the visualization from a previously saved `.json` triples file (no LLM calls)
 - `--no-cache`: Bypass the LLM response cache for this run
+- `--export FORMATS`: Extra outputs next to the HTML, comma-separated: `json` (always), `csv`, `graphml` (Gephi, yEd, Cytoscape), `cypher` (Neo4j `MERGE` script)
 - `--test`: Generate sample visualization using test data
 
 ### Usage message (--help)
@@ -285,6 +291,10 @@ Next to the HTML page the generator writes a JSON file with the same base name c
 }
 ```
 
+With `--export graphml,cypher,csv` the same graph is also written as GraphML (typed nodes with community
+and degree, edges with provenance), an idempotent Neo4j Cypher script (`:Entity` plus a label per entity
+type, one relationship type per predicate; run it with `cypher-shell -f graph.cypher`), and a flat CSV.
+
 Inferred triples carry `"inferred": true` and a `"method"` (`llm_bridge`, `llm_hub`, `llm_within`,
 `taxonomy`, `transitive` or `lexical`); transitive triples also record the intermediate node in `"via"`.
 The JSON can be re-rendered at any time with `generate-graph --from-json graph.json --output graph.html`
@@ -359,6 +369,7 @@ The generated HTML is a single self-contained file (vis-network is embedded) tha
     ├── __init__.py                 # Package initialization and version
     ├── config.py                   # Configuration loading, defaults and validation
     ├── entity_standardization.py   # Entity standardization and relationship inference
+    ├── exports.py                  # CSV, GraphML and Cypher exports
     ├── llm.py                      # LLM client (retries, truncation detection, cache) and JSON extraction
     ├── main.py                     # CLI, input handling and pipeline orchestration
     ├── text_utils.py               # Sentence splitting, chunking and provenance lookup
@@ -447,6 +458,6 @@ flowchart TD
 
 - **"Response ... was cut off (finish_reason='length')"**: the model spent the token budget on hidden reasoning. Raise `max_tokens` to 32k, set `reasoning_effort = "low"`, use smaller chunks, or switch to a non-reasoning model. `--continue-on-error` skips the failed chunk instead of aborting.
 - **gpt-5 / o-series reject `max_tokens` or `temperature`**: the client switches to `max_completion_tokens` automatically; remove the `temperature` line for models that only accept the default.
-- **"'utf-8' codec can't decode"**: the input is not plain text. Convert PDFs first (`pdftotext file.pdf file.txt`); other encodings are detected automatically.
+- **"Reading PDFs needs the optional 'pypdf' package"**: `pip install "ai-knowledge-graph[pdf]"` (or `[docx]`, `[all]`). Scanned PDFs have no text layer and need OCR first. Text encodings are detected automatically.
 - **Identical re-runs still call the API**: the cache key includes the model and every request parameter, so any config change is a miss. Delete `.kg-cache/` to start fresh.
 - **Graph looks fragmented**: check that `inference.enabled` and `use_llm_for_inference` are on; small models sometimes name the same concept differently across chunks, and a lower `temperature` helps.

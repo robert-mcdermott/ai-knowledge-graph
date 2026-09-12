@@ -87,6 +87,10 @@ is stale (`prompts.py` is now a package).
 > **Wave 8 (done):** shortest-path finder in the details panel, sqrt node sizing, `visualization.show_inferred`,
 > predicate tense normalization, on-disk LLM response cache (`llm.cache_dir`, `--no-cache`; a cached re-run
 > takes ~3 s instead of ~20 s), deterministic representative ordering so prompts and cache keys are stable.
+> **Wave 9 (done):** inputs and outputs. `.md/.rst/.pdf/.docx` inputs (pdf/docx via optional extras),
+> multiple files or directories with per-triple `document` tags, `extraction.language`, and `--export`
+> csv/graphml/cypher (Neo4j MERGE script with a label per entity type). README refreshed and Pages demo
+> regenerated (only the screenshot is still old).
 > **Wave 6 (done):** PyVis removed; the page is rendered from `templates/graph.html.j2` with vis-network
 > 9.1.9 vendored. Search, click-to-highlight with a relationships panel, edge labels on selection,
 > communities panel with toggles + min-degree slider + inferred switch, stats, physics settings,
@@ -264,9 +268,9 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       the run above produced both `involve` and `involves`. `P2 S`
 - [x] **Use `networkx.community.louvain_communities`** (built in) and drop `python-louvain`;
       offer Leiden via optional `igraph`/`leidenalg` extra (issue #24). `P2 S`
-- [ ] **Language option** (`extraction.language = "auto"|"zh"|…`) instructing the model to
+- [x] **Language option** (`extraction.language = "auto"|"zh"|…`) instructing the model to
       keep entities in the source language (issue #7). `P2 S`
-- [ ] **More input formats**: `.md`, `.pdf` (pypdf), `.docx` (python-docx) as optional
+- [x] **More input formats**: `.md`, `.pdf` (pypdf), `.docx` (python-docx) as optional
       extras; accept multiple `--input` files / a directory and tag triples by document. `P2 M`
 
 ---
@@ -281,13 +285,13 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
       explicitly if PyVis is dropped. Regenerate `uv.lock`. `P1 S`
 - [ ] **Typed data model**: `Triple`, `Node`, `Edge`, `Config` dataclasses (or pydantic)
       with validation of config values and helpful error messages. `P1 M`
-- [ ] **Tests (pytest)** with a fake LLM: chunking edge cases, JSON extraction corpus
+- [x] **Tests (pytest)** with a fake LLM: chunking edge cases, JSON extraction corpus
       (think tags, prose, truncated arrays, dict vs list), standardization (no over-merge),
       inference (no self-loops, respects config, predicate integrity), HTML generation smoke
       test that asserts no `CDN` links and valid embedded JSON. `P1 M`
 - [x] **CI**: GitHub Actions running ruff + pytest on 3.11/3.12/3.13; a nightly job that
       regenerates `docs/index.html` from the checked-in sample JSON. `P1 S`
-- [ ] **Docs refresh**: fix the project layout section, add config examples for OpenAI,
+- [x] **Docs refresh**: fix the project layout section, add config examples for OpenAI,
       Anthropic (via LiteLLM), Gemini (merge PR #16), OpenRouter, vLLM; a "reasoning
       models" note (`max_tokens ≥ 16K`); a troubleshooting section; screenshots of the new
       UI; CHANGELOG; CONTRIBUTING; issue templates. `P1 M`
@@ -308,7 +312,7 @@ Consider Sigma.js/Graphology (WebGL) later only if users hit >2–3k nodes.
 - [ ] **Lightweight local web UI** (`generate-graph serve`): upload text, watch progress,
       open the result. Evaluate PR #22 (2.3k-line generated FastAPI app) as a starting point
       but keep it optional and out of the core package. `P2 L`
-- [ ] **Neo4j / Cypher export** (issue #18) and GraphML for Gephi. `P2 S`
+- [x] **Neo4j / Cypher export** (issue #18) and GraphML for Gephi. `P2 S`
 - [ ] **Incremental / multi-document graphs**: merge new documents into an existing JSON
       graph with entity standardization across documents. `P2 L`
 - [ ] **Code-project graphs** (issue #12): out of scope for prompts aimed at prose; answer

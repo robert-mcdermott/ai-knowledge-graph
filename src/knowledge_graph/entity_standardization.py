@@ -21,7 +21,7 @@ import re
 from collections import Counter, defaultdict, deque
 
 from knowledge_graph.llm import LLMClient, extract_json_from_text
-from knowledge_graph.prompts import prompt_factory
+from knowledge_graph.prompts import prompt_factory, system_prompt_for
 
 logger = logging.getLogger(__name__)
 
@@ -276,7 +276,7 @@ def _resolve_entities_with_llm(triples, config):
     counts = _degrees(triples)
     entities = [e for e, _ in counts.most_common(100)]  # cap prompt size
 
-    system_prompt = prompt_factory.get_prompt("entity_resolution_system")
+    system_prompt = system_prompt_for("entity_resolution_system", config)
     user_prompt = prompt_factory.get_prompt("entity_resolution_user", "\n".join(sorted(entities)))
 
     try:
@@ -508,7 +508,7 @@ def _infer_bridges_with_llm(triples, communities, degree, config):
     main, others = ordered[0], ordered[1:1 + max_components]
     main_reps = sorted(main, key=lambda n: (-degree.get(n, 0), n))[:20]
     main_text = ", ".join(main_reps)
-    system_prompt = prompt_factory.get_prompt("bridge_inference_system")
+    system_prompt = system_prompt_for("bridge_inference_system", config)
 
     new_triples = []
     for batch_start in range(0, len(others), per_call):
@@ -537,7 +537,7 @@ def _infer_hub_relationships_with_llm(triples, degree, config):
     existing = [t for t in triples if t["subject"] in hub_set and t["object"] in hub_set]
     user_prompt = prompt_factory.get_prompt(
         "hub_inference_user", "\n".join(hubs), _format_triples(existing, 60) or "(none)", max_new)
-    found = _llm_infer(config, prompt_factory.get_prompt("hub_inference_system"), user_prompt, "llm_hub", "hub enrichment")
+    found = _llm_infer(config, system_prompt_for("hub_inference_system", config), user_prompt, "llm_hub", "hub enrichment")
     found = [t for t in found if t["subject"] in hub_set and t["object"] in hub_set][:max_new]
     print(f"LLM hub enrichment proposed {len(found)} relationships among the {len(hubs)} most central entities", flush=True)
     return found
@@ -583,7 +583,7 @@ def _infer_within_community_relationships(triples, communities, config):
     """Ask the LLM about lexically related but unconnected pairs inside large components."""
     new_triples = []
     connected = {_pair_key(t["subject"], t["object"]) for t in triples}
-    system_prompt = prompt_factory.get_prompt("within_community_system")
+    system_prompt = system_prompt_for("within_community_system", config)
 
     for community in sorted(communities, key=len, reverse=True)[:3]:
         if len(community) < 5:
