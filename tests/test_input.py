@@ -94,7 +94,7 @@ def test_pdf_text_is_extracted_with_fake_pypdf(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, "pypdf", types.SimpleNamespace(PdfReader=PdfReader))
     p = tmp_path / "doc.pdf"
     p.write_bytes(b"%PDF-1.4")
-    assert read_input_text(str(p)) == "Page one.\n\nPage two."
+    assert read_input_text(str(p)) == "Page one.\f\fPage two."
     monkeypatch.setitem(sys.modules, "pypdf", types.SimpleNamespace(PdfReader=lambda path: types.SimpleNamespace(pages=[Page("")])))
     with pytest.raises(InputError, match="scanned"):
         read_input_text(str(p))
@@ -142,7 +142,7 @@ def test_process_documents_tags_triples_with_document(monkeypatch):
     out = process_documents(cfg, [("a.txt", "Alpha text here."), ("b.txt", "Beta text here.")])
     assert {(t["subject"], t["document"]) for t in out} == {("alpha", "a.txt"), ("beta", "b.txt")}
     single = process_documents(cfg, [("a.txt", "Alpha text here.")])
-    assert "document" not in single[0]  # a single document is not tagged
+    assert single[0]["document"] == "a.txt"  # provenance is kept even for one document
 
 
 def test_graph_meta_sidecar_round_trip(tmp_path):
@@ -157,4 +157,5 @@ def test_graph_meta_sidecar_round_trip(tmp_path):
     assert load_graph_meta(str(tmp_path / "missing.json")) == {}
     (tmp_path / "bad.meta.json").write_text("{not json")
     assert load_graph_meta(str(tmp_path / "bad.json")) == {}
-    assert save_graph_meta(json_path, {"meta": {"communities": [{"id": 0, "top": []}]}}) is None  # nothing to store
+    save_graph_meta(json_path, {"meta": {"communities": [{"id": 0, "top": []}]}})
+    assert load_graph_meta(json_path)["community_names"] == {}  # stale names are cleared

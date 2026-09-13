@@ -11,9 +11,12 @@ import json
 import logging
 import os
 import shutil
+from collections import defaultdict
 
 import networkx as nx
 from jinja2 import Environment, FileSystemLoader
+
+from knowledge_graph.workspace import claim_id, evidence_for, identity
 
 log = logging.getLogger("knowledge_graph.visualization")
 
@@ -64,7 +67,7 @@ def entity_types(triples):
     for t in triples:
         for name, key in ((t["subject"], "subject_type"), (t["object"], "object_type")):
             value = t.get(key)
-            if isinstance(value, str) and value.strip().lower() in ENTITY_TYPES:
+            if isinstance(value, str) and value.strip():
                 votes.setdefault(name, {}).setdefault(value.strip().lower(), 0)
                 votes[name][value.strip().lower()] += 1
     return {name: max(counts.items(), key=lambda kv: (kv[1], kv[0]))[0] for name, counts in votes.items()}
@@ -81,7 +84,7 @@ def visualize_knowledge_graph(triples, output_file="knowledge_graph.html", edge_
 
 
 def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smooth=None, config=None,
-                           community_namer=None, community_names=None, library_dir=None):
+                           community_namer=None, community_names=None, library_dir=None, workspace=None):
     """
     Create and visualize a knowledge graph from subject-predicate-object triples.
 
@@ -103,11 +106,6 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
     """
     if edge_smooth is None:
         edge_smooth = (config or {}).get("visualization", {}).get("edge_smooth", False)
-
-    if not triples:
-        log.warning("No triples provided for visualization")
-        empty = {"nodes": 0, "edges": 0, "original_edges": 0, "inferred_edges": 0, "communities": 0}
-        return empty, {"nodes": [], "edges": [], "options": {}, "meta": {"stats": empty, "communities": [], "types": []}}
 
     log.info(f"Processing {len(triples)} triples for visualization")
     vis_cfg = (config or {}).get("visualization", {})
@@ -134,7 +132,10 @@ def render_knowledge_graph(triples, output_file="knowledge_graph.html", edge_smo
                     entry["name"] = names[entry["id"]]
             log.info(f"Named {len(names)} communities")
 
+    if workspace is not None:
+        attach_workspace(graph_data, workspace)
     html = render_html(graph_data, library_dir=library_dir, page_dir=os.path.dirname(os.path.abspath(output_file)))
+    os.makedirs(os.path.dirname(os.path.abspath(output_file)), exist_ok=True)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
     log.info(f"Knowledge graph visualization saved to {output_file}")
@@ -146,7 +147,10 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
                      theme="light", edge_labels="all", title_case=True, collapse_parallel_edges=True):
     """Compute nodes, edges, options and metadata for the page (pure data, no I/O)."""
     all_nodes = set()
+    aliases = defaultdict(set)
     for triple in triples:
+        for side in ("subject", "object"):
+            aliases[triple[side]].update(triple.get(side + "_aliases", []))
         all_nodes.add(triple["subject"])
         all_nodes.add(triple["object"])
     inferred_count = sum(1 for t in triples if t.get("inferred", False))
@@ -173,6 +177,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             title += f"\nType: {node_type}"
         entry = {
             "id": node,
+            "entity_id": identity("entity", node.casefold()),
             "label": display_name(node) if title_case else node,
             "title": title,
             "color": community_color(community),
@@ -180,6 +185,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             "degree": degree.get(node, 0),
             "size": round(node_sizes[node], 2),
             "shape": TYPE_SHAPES.get(node_type, "dot"),
+            "aliases": sorted(aliases[node]),
         }
         if node_type:
             entry["type"] = node_type
@@ -190,6 +196,9 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
         is_inferred = bool(triple.get("inferred", False))
         method = triple.get("method")
         title = f"{triple['subject']} → {triple['predicate']} → {triple['object']}"
+        qualifiers = [f"{k}: {triple[k]}" for k in ("polarity", "time", "attribution") if triple.get(k)]
+        if qualifiers:
+            title += "\n" + " · ".join(qualifiers)
         if is_inferred:
             title += f"\nInferred ({method or 'unknown'})"
             if triple.get("via"):
@@ -200,8 +209,15 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             title += f"\nExtracted from chunk {triple['chunk']}"
         if triple.get("document"):
             title += f"\nDocument: {triple['document']}"
-        edge = {"id": f"e{index}", "from": triple["subject"], "to": triple["object"], "label": triple["predicate"],
+        edge = {"id": f"e{index}", "claim_id": triple.get("id") or claim_id(triple),
+                "triple": triple, "evidence": evidence_for(triple), "from": triple["subject"], "to": triple["object"], "label": triple["predicate"],
                 "title": title, "inferred": is_inferred, "arrows": "to"}
+        display_label = triple["predicate"]
+        if triple.get("polarity") and triple["polarity"] != "positive":
+            display_label = f"[{triple['polarity']}] " + display_label
+        if triple.get("time"):
+            display_label += " · " + triple["time"]
+        edge["displayLabel"] = display_label
         if method:
             edge["method"] = method
         if triple.get("via"):
@@ -230,7 +246,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             entry["name"] = community_names[community]
         communities.append(entry)
     present_types = sorted({n["type"] for n in nodes if "type" in n})
-    type_legend = [{"type": t, "shape": TYPE_SHAPES[t], "glyph": TYPE_GLYPHS[TYPE_SHAPES[t]],
+    type_legend = [{"type": t, "shape": TYPE_SHAPES.get(t, "dot"), "glyph": TYPE_GLYPHS[TYPE_SHAPES.get(t, "dot")],
                     "count": sum(1 for n in nodes if n.get("type") == t)} for t in present_types]
 
     stats = {
@@ -248,6 +264,7 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
         "meta": {
             "title": title,
             "stats": stats,
+            "documents": sorted({e.get("document", "") for t in triples for e in evidence_for(t)} | {t["document"] for t in triples if t.get("document")}),
             "communities": communities,
             "types": type_legend,
             "freezePhysicsAbove": FREEZE_PHYSICS_ABOVE,
@@ -258,6 +275,16 @@ def build_graph_data(triples, edge_smooth=False, community_names=None, show_infe
             "generated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         },
     }
+
+
+def attach_workspace(graph_data, workspace):
+    from knowledge_graph.workspace import projected_claims
+    graph_data["meta"].update({"workspaceTitle": workspace.get("title"), "revision": workspace.get("revision", 0),
+                              "views": workspace.get("views", []), "runs": workspace.get("runs", [])[-1:],
+                              "sourceDocuments": [{k: d[k] for k in ("id", "name", "hash", "partial") if k in d}
+                                                  for d in workspace.get("documents", [])],
+                              "corrections": workspace.get("overrides", {}),
+                              "reviewClaims": [t for t in projected_claims(workspace, True) if t.get("rejected")]})
 
 
 VENDOR_FILES = ("vis-network.min.js", "vis-network.min.css")
@@ -302,7 +329,7 @@ def _read_vendor(name):
 
 def _calculate_centrality_metrics(G_undirected, all_nodes):
     """Calculate centrality metrics for the graph nodes."""
-    betweenness = nx.betweenness_centrality(G_undirected)
+    betweenness = nx.betweenness_centrality(G_undirected, k=min(64, len(all_nodes)) if len(all_nodes) > 500 else None, seed=42)
     degree = dict(G_undirected.degree())
     try:
         eigenvector = nx.eigenvector_centrality(G_undirected, max_iter=1000)
@@ -313,6 +340,8 @@ def _calculate_centrality_metrics(G_undirected, all_nodes):
 
 def _detect_communities(G_undirected, all_nodes):
     """Detect communities (Louvain). Ids are assigned by community size, largest first."""
+    if not all_nodes:
+        return {}, 0
     try:
         communities = nx.community.louvain_communities(G_undirected, seed=42)
         ordered = sorted(communities, key=len, reverse=True)

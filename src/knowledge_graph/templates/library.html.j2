@@ -1,80 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Knowledge Graphs</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Knowledge collections</title>
 <style>
-:root { --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --border: #d0d7de; --accent: #0969da; }
-@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --border: #30363d; --accent: #388bfd; } }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-h1 { font-size: 22px; margin: 0 0 4px 0; }
-.sub { color: var(--muted); margin-bottom: 24px; }
-.card { display: block; text-decoration: none; color: inherit; border: 1px solid var(--border); background: var(--panel); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
-.card:hover { border-color: var(--accent); }
-.card .name { font-weight: 650; font-size: 16px; }
-.card .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
-.empty { border: 1px dashed var(--border); border-radius: 10px; padding: 24px; color: var(--muted); }
-code { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
-footer { color: var(--muted); font-size: 12px; margin-top: 32px; }
-details.new { border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; margin-bottom: 20px; background: var(--panel); }
-details.new summary { cursor: pointer; font-weight: 600; }
-details.new form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-details.new label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
-details.new input[type=text], details.new input:not([type]), details.new textarea { font: inherit; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); }
-details.new .row { display: flex; align-items: center; gap: 12px; }
-details.new .hint { font-size: 13px; color: var(--muted); }
-.btn { padding: 7px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
-.btn[disabled] { opacity: .5; cursor: default; }
-.err { color: #cf222e; font-size: 13px; }
-</style>
-</head>
-<body>
-<main>
-  <h1>Knowledge Graphs</h1>
-  <div class="sub">{{ graphs|length }} graph{{ '' if graphs|length == 1 else 's' }} in <code>{{ graphs_dir }}</code> · questions answered by <code>{{ model }}</code></div>
-  <details class="new" {% if not graphs %}open{% endif %}>
-    <summary>New graph from text or files</summary>
-    <form id="ingest" enctype="multipart/form-data">
-      <label>Name <input name="name" placeholder="my-document" maxlength="80"></label>
-      <label>Paste text <textarea name="text" rows="6" placeholder="Paste the text to analyse…"></textarea></label>
-      <label>…or upload files <input type="file" name="files" multiple accept=".txt,.md,.markdown,.rst,.text,.log,.pdf,.docx"></label>
-      <div class="row"><button class="btn" type="submit" {% if active_job %}disabled{% endif %}>Generate</button>
-        <span class="hint">{% if active_job %}A graph is being generated right now (<a href="/jobs/{{ active_job.id }}">progress</a>).{% else %}Runs the same pipeline as <code>generate-graph</code> with your configured model.{% endif %}</span></div>
-      <div class="err" id="ingest-error"></div>
-    </form>
-  </details>
-  {% if graphs %}
-    {% for g in graphs %}
-    <a class="card" href="/graph/{{ g.name | urlencode }}">
-      <div class="name">{{ g.name }}</div>
-      <div class="meta">{{ g.nodes }} nodes · {{ g.triples }} relationships ({{ g.inferred }} inferred) · {{ g.modified }}</div>
-    </a>
-    {% endfor %}
-  {% else %}
-    <div class="empty">No graphs here yet. Use the form above, or run<br><code>generate-graph --input your_text.txt --output {{ graphs_dir }}/your_graph.html</code><br>and reload this page.</div>
-  {% endif %}
-  <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" style="color: inherit">AI-Knowledge-Graph</a> · local server, no accounts, bound to localhost by default</footer>
-</main>
+:root{--bg:#f7f8fc;--fg:#202238;--muted:#69718a;--panel:#fff;--border:#e0e4ef;--accent:#5b50d6;--soft:#eeecff;--danger:#bc334c}
+@media(prefers-color-scheme:dark){:root{--bg:#10121d;--fg:#ecedf7;--muted:#a3abc4;--panel:#191c2a;--border:#31364d;--accent:#a89bff;--soft:#28243d;--danger:#ff93a5}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1160px;margin:auto;padding:32px 28px}.mast{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:46px}.brand{font-weight:750;letter-spacing:-.04em;font-size:20px}.brand span{color:var(--accent)}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.14em;font-weight:700;color:var(--accent)}h1{font-size:clamp(32px,5vw,52px);line-height:1.08;letter-spacing:-.055em;margin:10px 0 16px}.lead{max-width:580px;color:var(--muted);font-size:16px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:30px;margin-top:34px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}h2{font-size:17px;letter-spacing:-.02em;margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.card{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;transition:transform .15s,border-color .15s}.card:hover{border-color:var(--accent);transform:translateY(-2px)}.card .icon{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:20px;margin-bottom:14px}.card .name{font-size:17px;font-weight:650;overflow-wrap:anywhere}.card .meta,.muted{font-size:12px;color:var(--muted)}.card .counts{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:12px}.counts strong{display:block;font-size:21px;line-height:1.2}.counts span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.builder{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;align-self:start}.builder h2{font-size:21px}.builder form{display:flex;flex-direction:column;gap:12px;margin-top:18px}label{font-size:12px;color:var(--muted);display:block}input:not([type=checkbox]),textarea,select{font:inherit;width:100%;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:8px;padding:9px 11px;margin-top:5px}textarea{resize:vertical}input[type=file]{font-size:11px;padding:12px;border-style:dashed}.btn{font:inherit;font-size:12px;background:var(--panel);color:var(--fg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;text-decoration:none}.btn.primary{background:var(--accent);color:var(--panel);border-color:var(--accent);font-weight:650}.btn:disabled{opacity:.5;cursor:wait}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.err{color:var(--danger);font-size:12px}.notice{border:1px solid var(--border);background:var(--soft);border-radius:10px;padding:13px;margin:12px 0}.hidden{display:none!important}.empty{padding:35px;border:1px dashed var(--border);border-radius:14px;color:var(--muted)}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}a{color:var(--accent)}footer{font-size:11px;color:var(--muted);margin-top:40px}.status{font-size:11px;color:var(--muted)}.chip{display:inline-block;font-size:10px;background:var(--soft);border-radius:10px;padding:2px 8px;color:var(--accent)}.doc-remove{display:flex;gap:6px;align-items:center;padding:5px 0}.doc-remove input{width:auto}details summary{font-size:12px;color:var(--muted);cursor:pointer}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.builder{grid-row:1}.mast{margin-bottom:24px}main{padding:20px}.grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+</style></head><body><main>
+<header class="mast"><div class="brand"><span>◈</span> Knowledge Graph</div><div class="row"><span class="status">{{ model }}</span><button class="btn" id="connection">Check connection</button></div></header>
+<div class="eyebrow">Your local knowledge workspace</div><h1>Knowledge, connected.</h1><p class="lead">Turn documents into a map you can explore, question, and grow. Follow every claim back to its evidence.</p><div id="connection-status" class="status" role="status"></div>
+{% if active_job %}<div class="notice">A collection is being prepared. <a href="/jobs/{{ active_job.id }}">Follow progress or review changes →</a></div>{% endif %}
+<div class="layout"><section><div class="section-title"><h2>Your collections</h2><span class="muted">{{ graphs|length }} saved</span></div><div class="grid">
+{% for g in graphs %}<a class="card" href="/graph/{{ g.name | urlencode }}"><div class="icon">◈</div><div class="name">{{ g.name }}</div><div class="counts"><div><strong>{{ g.nodes }}</strong><span>Entities</span></div><div><strong>{{ g.triples }}</strong><span>Claims</span></div><div><strong>{{ g.documents }}</strong><span>Sources</span></div></div><div class="meta">{{ g.inferred }} inferred · {{ g.modified }}</div>{% if g.partial %}<span class="chip">Partial · needs retry</span>{% elif g.views %}<span class="chip">{{ g.views }} saved views</span>{% endif %}</a>{% else %}<div class="empty"><h2>Your first connection starts here.</h2><p>Paste a passage or upload a document. Preview the extraction before building a collection.</p><a href="https://robert-mcdermott.github.io/ai-knowledge-graph/" target="_blank" rel="noopener">Explore sample graphs without a model →</a></div>{% endfor %}
+</div><p class="muted">Stored in {{ graphs_dir }}. Your graph exports work offline.</p></section>
+<aside class="builder"><span class="eyebrow">Build & grow</span><h2>A new perspective.</h2><form id="ingest" enctype="multipart/form-data">
+<label>Collection<select name="target" id="target"><option value="">Create a new collection</option>{% for g in graphs %}<option value="{{ g.name }}">{{ g.name }}</option>{% endfor %}</select></label>
+<label id="name-field">Name<input name="name" placeholder="e.g. My research notes" maxlength="80"></label>
+<label>Extraction profile<select name="profile" id="profile">{% for key,p in profiles.items() %}<option value="{{ key }}">{{ p.label }}</option>{% endfor %}</select></label>
+<label>Paste a passage<textarea name="text" id="input-text" rows="5" placeholder="An idea, a research abstract, a chapter…"></textarea></label>
+<label>Or add documents<input type="file" name="files" multiple accept=".txt,.md,.markdown,.rst,.text,.log,.pdf,.docx"></label>
+<div id="documents" class="hidden"><details><summary>Remove documents from this collection</summary><div id="remove-list"></div></details></div>
+<label><input type="checkbox" name="strict" value="true"> Require source references for every claim</label>
+<div class="row"><button class="btn" type="button" id="trial">Try a short extraction</button><button class="btn primary" type="submit" {% if active_job %}disabled{% endif %}>Preview changes →</button></div>
+<div id="plan" class="notice hidden"></div><button class="btn primary hidden" type="button" id="generate">Build collection</button>
+<div class="err" id="ingest-error" role="alert"></div><div id="trial-results"></div>
+<p class="muted">Previewing changes is free of model calls. Trial extraction and generation use your configured model. Updated files with the same name replace their previous evidence.</p>
+</form></aside></div><footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph">AI Knowledge Graph</a> · Local by default · Portable by design</footer></main>
 <script>
-const form = document.getElementById('ingest');
-if (form) form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const err = document.getElementById('ingest-error');
-  err.textContent = '';
-  const button = form.querySelector('button');
-  button.disabled = true;
-  try {
-    const res = await fetch('/api/ingest', { method: 'POST', body: new FormData(form) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || res.statusText);
-    location.href = data.page_url;
-  } catch (ex) {
-    err.textContent = ex.message || String(ex);
-    button.disabled = false;
-  }
-});
-</script>
-</body>
-</html>
+const $=id=>document.getElementById(id),form=$('ingest');let planReady=false;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function request(url,options){const res=await fetch(url,options);const data=await res.json();if(!res.ok)throw new Error(data.detail||data.error||res.statusText);return data;}
+function formData(dry){const data=new FormData(form);data.set('dry_run',String(dry));data.set('remove',JSON.stringify([...$('remove-list').querySelectorAll('input:checked')].map(c=>c.value)));return data;}
+form.addEventListener('input',()=>{planReady=false;$('generate').classList.add('hidden');});
+$('target').onchange=async()=>{
+ $('name-field').classList.toggle('hidden',!!$('target').value);$('remove-list').innerHTML='';$('documents').classList.add('hidden');
+ if(!$('target').value)return;
+ try{const ws=await request('/api/workspaces/'+encodeURIComponent($('target').value));$('documents').classList.remove('hidden');
+ $('remove-list').innerHTML=(ws.documents||[]).map(d=>`<label class="doc-remove"><input type="checkbox" value="${esc(d.name)}">${esc(d.name)}${d.partial?' · partial':''}</label>`).join('')||'<p class="muted">This legacy graph has no retained documents. Add new sources to begin a collection.</p>';
+ }catch(e){$('ingest-error').textContent=e.message;}
+};
+form.onsubmit=async e=>{e.preventDefault();$('ingest-error').textContent='';const button=form.querySelector('button[type=submit]');button.disabled=true;
+ try{const data=await request('/api/ingest',{method:'POST',body:formData(true)});$('plan').classList.remove('hidden');
+ $('plan').innerHTML=Object.entries(data.diff).map(([k,v])=>`<div><strong>${esc(k)}:</strong> ${v.length?v.map(esc).join(', '):'—'}</div>`).join('')+`<p class="muted">${data.chunks} chunks to extract with ${esc(data.model)}.</p>`;
+ planReady=true;$('generate').textContent=$('target').value?'Prepare update for review':'Build collection';$('generate').classList.remove('hidden');
+ }catch(ex){$('ingest-error').textContent=ex.message;}finally{button.disabled=false;}};
+$('generate').onclick=async()=>{if(!planReady)return;$('generate').disabled=true;try{const data=await request('/api/ingest',{method:'POST',body:formData(false)});location.href=data.page_url;}catch(e){$('ingest-error').textContent=e.message;$('generate').disabled=false;}};
+$('connection').onclick=async()=>{$('connection').disabled=true;$('connection-status').textContent='Checking your model…';try{const d=await request('/api/connection',{method:'POST'});$('connection-status').textContent='Connected · '+d.model;}catch(e){$('connection-status').textContent=e.message;}finally{$('connection').disabled=false;}};
+$('trial').onclick=async()=>{$('trial').disabled=true;$('trial-results').innerHTML='<p class="muted">Extracting a short preview…</p>';try{const d=await request('/api/preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:$('input-text').value,profile:$('profile').value})});$('trial-results').innerHTML='<h3>Preview · '+d.triples.length+' claims</h3>'+d.triples.slice(0,12).map(t=>`<div class="notice">${esc(t.subject)} → ${esc(t.predicate)} → ${esc(t.object)}<p class="muted">${esc(t.source||'No source reference supplied')}</p></div>`).join('');}catch(e){$('trial-results').textContent=e.message;}finally{$('trial').disabled=false;}};
+if(location.hash.startsWith('#collection=')){try{$('target').value=decodeURIComponent(location.hash.slice(12));$('target').onchange();}catch(_){}}
+</script></body></html>

@@ -126,7 +126,7 @@ def test_llm_inference_parses_and_tags(monkeypatch):
             return '[{"subject": "a", "predicate": "influenced deeply and lastingly", "object": "b"}, {"subject": "c", "predicate": "p", "object": "c"}]'
     monkeypatch.setattr(es.LLMClient, "from_config", classmethod(lambda cls, cfg: FakeClient()))
     out = es._llm_infer({}, "s", "u", "llm_within", "test")
-    assert out == [{"subject": "a", "predicate": "influenced deeply and", "object": "b",
+    assert out == [{"subject": "a", "predicate": "influenced deeply and lastingly", "object": "b",
                     "inferred": True, "method": "llm_within"}]
 
 
@@ -151,3 +151,15 @@ def test_llm_inference_error_is_swallowed(monkeypatch, caplog):
     with caplog.at_level("INFO", logger="knowledge_graph"):
         assert es._llm_infer({}, "s", "u", "llm_within", "test") == []
     assert "down" in caplog.text
+
+
+def test_transitive_inference_never_drops_premise_qualifiers():
+    for qualifier in ({'polarity': 'negative'}, {'polarity': 'uncertain'}, {'time': '1900'}, {'attribution': 'a disputed report'}):
+        triples = [T('a', 'located in', 'b', **qualifier), T('b', 'located in', 'c')]
+        result = _apply_transitive_inference(triples, {'a': {'b'}, 'b': {'c'}}, {}, {})
+        assert result == []
+
+
+def test_inference_context_retains_qualifiers():
+    line = es._format_triples([T('a', 'founded', 'b', polarity='negative', time='1900', attribution='Author')], 1)
+    assert 'negative' in line and '1900' in line and 'Author' in line

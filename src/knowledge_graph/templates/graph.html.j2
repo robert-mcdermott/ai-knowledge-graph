@@ -120,6 +120,7 @@ footer a { color: inherit; text-decoration: none; }
   #stats, #physics { bottom: 8px; }
   footer { display: none; }
 }
+{% include "workspace.css.j2" %}
 </style>
 </head>
 <body>
@@ -128,7 +129,13 @@ footer a { color: inherit; text-decoration: none; }
   <div class="brand">Knowledge Graph<span class="counts" id="counts"></span></div>
   <div class="search"><input id="search" list="node-list" placeholder="Search nodes  ( / )" autocomplete="off"><datalist id="node-list"></datalist></div>
   <div class="actions">
+    <button class="btn on" id="btn-discover">Explore</button>
+    <button class="btn" id="btn-sources">Sources</button>
+    <button class="btn" id="btn-stories">Stories</button>
+    <button class="btn" id="btn-review">Review</button>
+    <button class="btn" id="btn-share-view">Share view</button>
     <button class="btn" id="btn-legend" title="Communities and filters (c)">Communities</button>
+    <details class="menu controls-menu"><summary class="btn">Display ▾</summary><div class="items">
     <button class="btn on" id="btn-physics" title="Toggle physics (p)">Physics</button>
     <button class="btn on" id="btn-labels" title="Toggle node labels (l)">Labels</button>
     <button class="btn" id="btn-edge-labels" title="Edge labels: all / none / on selection (e)">Edge labels</button>
@@ -136,6 +143,7 @@ footer a { color: inherit; text-decoration: none; }
     <button class="btn" id="btn-fit" title="Fit graph to view (f)">Fit</button>
     <button class="btn" id="btn-stats" title="Statistics (s)">Stats</button>
     <button class="btn" id="btn-physics-settings" title="Physics settings">Settings</button>
+    </div></details>
     <div class="menu"><button class="btn" id="btn-export">Export ▾</button>
       <div class="items hidden" id="export-menu">
         <button id="export-png">PNG image</button>
@@ -157,6 +165,7 @@ footer a { color: inherit; text-decoration: none; }
     <div id="legend-list"></div>
     <div class="control"><button class="btn small" id="legend-all">All</button><button class="btn small" id="legend-none">None</button></div>
     <div id="type-legend"></div>
+    <label class="field">Relationship<select id="predicate-filter"></select></label>
     <div class="control"><span>Min connections</span><input type="range" id="min-degree" min="1" max="10" value="1"><span id="min-degree-value">1</span></div>
     <div class="control"><label><input type="checkbox" id="show-inferred" checked> Show inferred relationships</label></div>
   </aside>
@@ -165,6 +174,7 @@ footer a { color: inherit; text-decoration: none; }
     <h3>Node <button class="close" data-close="details" title="Close (Esc)">×</button></h3>
     <div class="name" id="d-name"></div>
     <div class="meta" id="d-meta"></div>
+    <div class="compact-row"><button class="btn small" id="focus-nearby">Focus nearby</button><button class="btn small" id="expand-nearby">Expand</button><button class="btn small" id="clear-focus">Full map</button></div>
     <div id="d-relations"></div>
     <h4>Path to another node</h4>
     <div class="path-form"><input id="path-target" list="node-list" placeholder="node name…" autocomplete="off"><button class="btn small" id="path-go">Find</button></div>
@@ -202,13 +212,15 @@ footer a { color: inherit; text-decoration: none; }
   <div class="panel hidden" id="chat">
     <h3>Ask the graph <span><button class="btn small" id="chat-reset" title="Forget the conversation">Reset</button> <button class="close" data-close="chat" title="Close">×</button></span></h3>
     <div id="chat-log"><p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Answers use only the relationships in this graph and cite the facts they rely on. Click a cited fact to jump to it.</p></div>
+    <label class="muted"><input type="checkbox" id="chat-extracted"> Use extracted claims only</label>
     <form id="chat-form"><input id="chat-input" placeholder="Ask a question…" autocomplete="off"><button class="btn on" type="submit">Send</button></form>
   </div>
+  {% include "workspace-panels.html.j2" %}
   <footer><a href="https://github.com/robert-mcdermott/ai-knowledge-graph" target="_blank" rel="noopener">Project: AI-Knowledge-Graph</a></footer>
 </main>
 
 {% if vis_js_href %}<script src="{{ vis_js_href }}"></script>{% else %}<script>{{ vis_js }}</script>{% endif %}
-<script>
+<script id="kg-data">
 const KG = {{ data_json }};
 </script>
 <script>
@@ -220,6 +232,7 @@ const KG = {{ data_json }};
   // `relations` is every relationship (used by the details panel, paths, stats and exports).
   // `edges` is what is drawn: with collapseParallelEdges, one edge per (from, to) pair with a "+N" badge.
   const relations = KG.edges;
+  const relationById = new Map(relations.map(r=>[r.id,r]));
   const hiddenRel = new Set();                 // relation ids hidden by the filters
   const relVisible = r => !hiddenRel.has(r.id);
   const visualEdges = [], visualOf = new Map(); // relation id -> drawn edge id
@@ -236,7 +249,7 @@ const KG = {{ data_json }};
     groups.forEach(members => {
       const first = members[0];
       const allInferred = members.every(r => r.inferred);
-      const labels = Array.from(new Set(members.map(r => r.label)));
+      const labels = Array.from(new Set(members.map(r => r.displayLabel || r.label)));
       const e = { id: 'v' + (n++), from: first.from, to: first.to, arrows: 'to', members: members.map(r => r.id),
                   label: labels[0] + (members.length > 1 ? ' +' + (members.length - 1) : ''),
                   title: members.map(r => r.title).join('\n\n'), inferred: allInferred,
@@ -285,15 +298,20 @@ const KG = {{ data_json }};
     edges.update(edges.get().map(e => {
       const on = !focused || edgeSet.has(e.id);
       const showLabel = state.edgeLabels !== 'none' && on && (state.edgeLabels === 'all' || focused);
-      let color = base.edge.get(e.id).color, width = 1;
+      const active=e.members.map(id=>relationById.get(id)).filter(relVisible);
+      const first=active.find(r=>!r.inferred)||active[0]||base.edge.get(e.id);
+      let color = first.color, width = 1;
+      const fullLabel=first.displayLabel||first.label;
+      const label=(fullLabel.length>70?fullLabel.slice(0,67)+'…':fullLabel)+(active.length>1?' +'+(active.length-1):'');
       if (focused && !on) color = { color: '#999999', opacity: 0.08 };
       else if (onPath) { color = { color: '#f5a623', opacity: 1 }; width = 3; }
       else if (focused) width = 2;
-      return { id: e.id, color, width, font: { size: showLabel ? 11 : 0, color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } };
+      return { id: e.id, color, width, label, title:active.map(r=>r.title).join('\n\n'), dashes:active.length>0&&active.every(r=>r.inferred), font: { size: showLabel ? 11 : 0, color: t.edge, strokeColor: t.stroke, strokeWidth: 3 } };
     }));
   }
   const applyFonts = refreshStyles;
-  applyTheme(meta.theme === 'dark');  // initial theme comes from the config (visualization.theme)
+  let savedTheme; try { savedTheme=localStorage.getItem('kg-theme'); } catch (_) {}
+  applyTheme(savedTheme ? savedTheme==='dark' : meta.theme === 'dark');  // initial theme comes from the config (visualization.theme)
 
   // ---------- network ----------
   const options = KG.options;
@@ -310,6 +328,7 @@ const KG = {{ data_json }};
     updateStats();
     applyHash();
   });
+  if (!KG.nodes.length) $('progress').classList.add('hidden');
   if (meta.showInferred === false) setTimeout(() => setInferred(false), 0);
   network.on('click', params => { if (params.nodes.length) select(params.nodes[0]); else clearSelection(); });
   network.on('doubleClick', params => { if (params.nodes.length) network.focus(params.nodes[0], { scale: 1.6, animation: true }); });
@@ -329,6 +348,7 @@ const KG = {{ data_json }};
   function unhighlight() { refreshStyles(); }
   function select(id, focus) {
     if (!nodes.get(id)) return;
+    openPanel('details');
     state.selected = id;
     state.path = null;
     network.selectNodes([id]);
@@ -349,6 +369,7 @@ const KG = {{ data_json }};
     history.replaceState(null, '', location.pathname + location.search);
   }
   function applyHash() {
+    if(location.hash.startsWith('#view=')){try{restoreView(JSON.parse(decodeURIComponent(location.hash.slice(6))));}catch(_){toast('This view link could not be restored.');}return;}
     const m = location.hash.match(/^#node=(.+)$/);
     if (m) { const id = decodeURIComponent(m[1]); if (nodes.get(id)) select(id, true); }
   }
@@ -393,7 +414,7 @@ const KG = {{ data_json }};
     state.path = steps;
     $('path-result').innerHTML = `<p class="note">${steps.length} step${steps.length === 1 ? '' : 's'}</p>` + steps.map(st => {
       const forward = st.edge.from === st.from;
-      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(labelOf(st.from))}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(labelOf(st.to))}</span></div>`;
+      return `<div class="path-step" data-node="${esc(st.to)}"><span>${esc(labelOf(st.from))}</span><span class="pred">${forward ? '→' : '←'} ${esc(st.edge.displayLabel||st.edge.label)} ${forward ? '→' : '←'}</span><span>${esc(labelOf(st.to))}</span></div>`;
     }).join('');
     $('path-result').querySelectorAll('.path-step').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
     highlightPath(steps);
@@ -419,30 +440,39 @@ const KG = {{ data_json }};
     const row = (e, other, arrow) => `<div class="rel" data-node="${esc(other)}" title="${esc(e.title || '')}">` +
       `<span class="pred">${arrow} ${esc(e.label)} ${arrow}</span><span class="other">${esc(labelOf(other))}</span>` +
       `<span class="tag ${e.inferred ? '' : 'extracted'}">${e.inferred ? esc(e.method || 'inferred') : 'extracted'}</span>` +
-      (e.source ? `<span class="source">“${esc(e.source)}”</span>` : (e.via ? `<span class="source">via ${esc(e.via)}</span>` : '')) + `</div>`;
+      `<button class="evidence-link" data-evidence="${esc(e.claim_id)}">${e.evidence&&e.evidence.length?e.evidence.length+' source passage'+(e.evidence.length>1?'s':''):'Inspect claim'}</button>` +
+      ['time','polarity','attribution'].filter(k=>e.triple&&e.triple[k]).map(k=>`<span class="status-pill">${esc(k)}: ${esc(e.triple[k])}</span>`).join('') + `</div>`;
     let html = '';
     if (out.length) html += '<h4>Outgoing</h4>' + out.map(e => row(e, e.to, '→')).join('');
     if (inc.length) html += '<h4>Incoming</h4>' + inc.map(e => row(e, e.from, '←')).join('');
     if (!html) html = '<p style="color: var(--muted)">No visible relationships (check the filters).</p>';
     $('d-relations').innerHTML = html;
     $('d-relations').querySelectorAll('.rel').forEach(el => el.addEventListener('click', () => select(el.dataset.node, true)));
+    $('d-relations').querySelectorAll('[data-evidence]').forEach(b=>b.onclick=event=>{event.stopPropagation();inspectClaim(b.dataset.evidence);});
     $('details').classList.remove('hidden');
   }
 
   // ---------- filters (communities, degree, inferred) ----------
   function applyFilters() {
-    const nodeUpdates = [], hiddenNodes = new Set();
+    const nodeUpdates = [], hiddenNodes = new Set(), focusedIds=focusNodes();
     nodes.get().forEach(n => {
       const hidden = state.hiddenCommunities.has(n.community) || (degree.get(n.id) || 0) < state.minDegree ||
-                     (n.type && state.hiddenTypes.has(n.type));
+                     (n.type && state.hiddenTypes.has(n.type)) || (focusedIds&&!focusedIds.has(n.id));
       if (hidden) hiddenNodes.add(n.id);
       nodeUpdates.push({ id: n.id, hidden });
     });
     nodes.update(nodeUpdates);
     hiddenRel.clear();
-    relations.forEach(r => { if ((!state.inferred && r.inferred) || hiddenNodes.has(r.from) || hiddenNodes.has(r.to)) hiddenRel.add(r.id); });
+    relations.forEach(r => { if ((!state.inferred && r.inferred) || hiddenNodes.has(r.from) || hiddenNodes.has(r.to) ||
+      (state.document && r.document!==state.document && !evidenceFor(r).some(e=>e.document===state.document) && !(r.triple.origins||[]).some(o=>o.document===state.document)) ||
+      (state.predicate && r.label!==state.predicate)) hiddenRel.add(r.id); });
+    if(state.document||state.predicate||!state.inferred){
+      const connected=new Set(relations.filter(relVisible).flatMap(r=>[r.from,r.to]));
+      nodeUpdates.forEach(n=>{if(!connected.has(n.id)){n.hidden=true;hiddenNodes.add(n.id);}});nodes.update(nodeUpdates);
+    }
     edges.update(edges.get().map(e => ({ id: e.id, hidden: e.members.every(m => hiddenRel.has(m)) })));
-    if (state.selected) { if (hiddenNodes.has(state.selected)) clearSelection(); else { highlight(state.selected); renderDetails(state.selected); } }
+    if (state.selected) { if (hiddenNodes.has(state.selected)) clearSelection(); else { highlight(state.selected); const showDetails=!$('details').classList.contains('hidden'); renderDetails(state.selected); $('details').classList.toggle('hidden',!showDetails); } }
+    refreshStyles();
     updateStats();
   }
   function renderLegend() {
@@ -495,7 +525,7 @@ const KG = {{ data_json }};
     refreshStyles();
   }
   function setInferred(on) { state.inferred = on; setBtn('btn-inferred', on); $('show-inferred').checked = on; applyFilters(); }
-  function togglePanel(id) { $(id).classList.toggle('hidden'); }
+  function togglePanel(id) { if($(id).classList.contains('hidden'))openPanel(id);else $(id).classList.add('hidden'); }
   $('btn-physics').addEventListener('click', () => setPhysics(!state.physics));
   $('btn-labels').addEventListener('click', () => setLabels(!state.labels));
   $('btn-edge-labels').addEventListener('click', cycleEdgeLabels);
@@ -504,10 +534,11 @@ const KG = {{ data_json }};
   $('btn-legend').addEventListener('click', () => togglePanel('legend'));
   $('btn-stats').addEventListener('click', () => { updateStats(); togglePanel('stats'); });
   $('btn-physics-settings').addEventListener('click', () => { syncPhysicsPanel(); togglePanel('physics'); });
-  $('btn-theme').addEventListener('click', () => applyTheme(!state.dark));
+  $('btn-theme').addEventListener('click', () => {applyTheme(!state.dark);try{localStorage.setItem('kg-theme',state.dark?'dark':'light');}catch(_){}});
   $('btn-help').addEventListener('click', () => togglePanel('help'));
   $('btn-export').addEventListener('click', e => { e.stopPropagation(); $('export-menu').classList.toggle('hidden'); });
   document.addEventListener('click', () => $('export-menu').classList.add('hidden'));
+  document.querySelectorAll('.controls-menu .items button').forEach(b=>b.addEventListener('click',()=>b.closest('details').removeAttribute('open')));
   document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => { $(b.dataset.close).classList.add('hidden'); if (b.dataset.close === 'details') clearSelection(); }));
 
   // ---------- search ----------
@@ -525,17 +556,9 @@ const KG = {{ data_json }};
 
   // ---------- stats ----------
   function visibleTriples() {
-    return relations.filter(relVisible).map(e => {
-      const t = { subject: e.from, predicate: e.label, object: e.to };
-      if (e.inferred) { t.inferred = true; t.method = e.method || null; if (e.via) t.via = e.via; }
-      if (e.chunk) t.chunk = e.chunk;
-      if (e.source) t.source = e.source;
-      const sn = base.node.get(e.from), on = base.node.get(e.to);
-      if (sn && sn.type) t.subject_type = sn.type;
-      if (on && on.type) t.object_type = on.type;
-      return t;
-    });
+    return relations.filter(relVisible).map(e => Object.assign({}, e.triple || {subject:e.from,predicate:e.label,object:e.to}));
   }
+
   function updateStats() {
     const visN = nodes.get().filter(n => !n.hidden).length, visE = relations.filter(relVisible);
     const inf = visE.filter(e => e.inferred).length;
@@ -589,7 +612,8 @@ const KG = {{ data_json }};
   $('export-json').addEventListener('click', () => download('knowledge-graph.json', new Blob([JSON.stringify(visibleTriples(), null, 2)], { type: 'application/json' })));
   $('export-csv').addEventListener('click', () => {
     const q = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
-    const lines = ['subject,predicate,object,inferred,method,via'].concat(visibleTriples().map(t => [t.subject, t.predicate, t.object, !!t.inferred, t.method || '', t.via || ''].map(q).join(',')));
+    const fields=['subject','predicate','object','subject_type','object_type','inferred','method','via','chunk','document','source','time','polarity','attribution','evidence','evidence_status','subject_aliases','object_aliases','origins'];
+    const lines=[fields.join(',')].concat(visibleTriples().map(t=>fields.map(k=>q(k==='inferred'?!!t[k]:typeof t[k]==='object'?JSON.stringify(t[k]):t[k])).join(',')));
     download('knowledge-graph.csv', new Blob([lines.join('\n')], { type: 'text/csv' }));
   });
 
@@ -623,11 +647,15 @@ const KG = {{ data_json }};
     log.scrollTop = log.scrollHeight;
     const thinking = log.lastElementChild;
     try {
-      const res = await fetch(chatEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question }) });
+      const res = await fetch(chatEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, session:sessionId, extracted_only:$('chat-extracted').checked }) });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || data.detail || res.statusText);
-      thinking.outerHTML = `<div class="a">${renderAnswer(data.answer || '')}</div>` + (data.facts || []).map(factRow).join('');
-      log.querySelectorAll('.fact[data-node]').forEach(el => el.onclick = () => select(el.dataset.node, true));
+      const answerHtml=renderAnswer(data.answer||'').replace(/\[(\d+)\]/g,(all,n)=>data.citations&&data.citations[n]?`<button class="citation" data-citation="${n}">[${n}]</button>`:all);
+      const replyNode=document.createElement("div");
+      replyNode.innerHTML = `<div class="a">${answerHtml}</div><p class="muted">${data.citation_status==='linked'?'Citations linked to graph evidence.':data.citation_status==='invalid'?'Some citations could not be resolved. Treat this answer as unverified.':'No citations supplied. Treat this answer as unverified.'}</p>` + (data.facts || []).map(factRow).join('');
+      thinking.replaceWith(replyNode);
+      replyNode.querySelectorAll('[data-citation]').forEach(b=>b.onclick=()=>{const t=data.citations[b.dataset.citation];const r=relations.find(r=>t.id?r.claim_id===t.id:r.from===t.subject&&r.to===t.object&&r.label===t.predicate); if(r)inspectClaim(r.claim_id);});
+      replyNode.querySelectorAll('.fact[data-node]').forEach(el => el.onclick = () => select(el.dataset.node, true));
     } catch (e) {
       thinking.outerHTML = `<div class="err">Error: ${esc(e.message || e)}</div>`;
     }
@@ -643,16 +671,17 @@ const KG = {{ data_json }};
   });
   $('chat-reset').addEventListener('click', async () => {
     if (!chatEndpoint) return;
-    await fetch(chatEndpoint + '/reset', { method: 'POST' }).catch(() => {});
+    await fetch(chatEndpoint + '/reset', { method: 'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:sessionId}) }).catch(() => {});
     $('chat-log').innerHTML = '<p class="note" style="color: var(--muted); font-size: 12px; margin: 0;">Conversation reset.</p>';
   });
 
+  {% include "explorer.js.j2" %}
   // ---------- keyboard ----------
   document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable || e.metaKey || e.ctrlKey || e.altKey) return;
     switch (e.key) {
       case '/': e.preventDefault(); $('search').focus(); $('search').select(); break;
-      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help', 'chat'].forEach(id => $(id).classList.add('hidden')); document.body.classList.remove('chat-open'); break;
+      case 'Escape': clearSelection(); ['legend', 'stats', 'physics', 'help', 'chat', 'discover', 'stories', 'evidence-panel', 'review-panel', 'sources-panel', 'tour-caption'].forEach(id => $(id).classList.add('hidden')); document.body.classList.remove('chat-open'); break;
       case 'f': network.fit({ animation: true }); break;
       case 'l': setLabels(!state.labels); break;
       case 'e': cycleEdgeLabels(); break;

@@ -34,7 +34,7 @@ def test_word_subset_merging_can_be_enabled():
 def test_extra_fields_and_long_predicates_are_preserved_or_trimmed():
     triples = [dict(T("a", "one two three four", "b"), source="s1")]
     out = standardize_entities(triples, {"standardization": {}})
-    assert out[0]["predicate"] == "one two three"
+    assert out[0]["predicate"] == "one two three four"
     assert out[0]["source"] == "s1" and out[0]["chunk"] == 1
 
 

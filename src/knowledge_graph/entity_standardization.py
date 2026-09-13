@@ -22,6 +22,7 @@ from collections import Counter, defaultdict, deque
 
 from knowledge_graph.llm import LLMClient, extract_json_from_text
 from knowledge_graph.prompts import prompt_factory, system_prompt_for
+from knowledge_graph.workspace import merge_claims
 
 logger = logging.getLogger(__name__)
 
@@ -135,7 +136,7 @@ def _degrees(triples):
 
 
 def _make_inferred(subject, predicate, obj, method, **extra):
-    triple = {"subject": subject, "predicate": limit_predicate_length(predicate), "object": obj,
+    triple = {"subject": subject, "predicate": predicate.strip(), "object": obj,
               "inferred": True, "method": method}
     triple.update(extra)
     return triple
@@ -177,7 +178,8 @@ def standardize_entities(triples, config):
     stopwords = {"the", "a", "an", "of", "and", "or", "in", "on", "at", "to", "for", "with", "by", "as"}
 
     def normalize_text(text):
-        words = [_singularize(w) for w in re.findall(r"\b\w+\b", text.lower()) if w not in stopwords]
+        # Keep punctuation that distinguishes identities: C++, C#, x-ray, etc.
+        words = [_singularize(w) for w in text.casefold().split() if w not in stopwords]
         return " ".join(words)
 
     groups = defaultdict(list)
@@ -186,8 +188,13 @@ def standardize_entities(triples, config):
         if normalized:
             groups[normalized].append(entity)
 
+    types = {name.lower(): value for name, value in _entity_types(valid_triples).items()}
+    guarded = defaultdict(list)
+    for normalized, variants in groups.items():
+        for variant in variants:
+            guarded[(normalized, types.get(variant, ""))].append(variant)
     mapping = {}
-    for variants in groups.values():
+    for variants in guarded.values():
         standard = sorted(variants, key=lambda v: (-counts[v], len(v)))[0]
         for variant in variants:
             mapping[variant] = standard
@@ -210,7 +217,9 @@ def standardize_entities(triples, config):
         new_triple = dict(triple)
         new_triple["subject"] = mapping.get(triple["subject"].lower(), triple["subject"])
         new_triple["object"] = mapping.get(triple["object"].lower(), triple["object"])
-        new_triple["predicate"] = limit_predicate_length(triple["predicate"])
+        for side in ("subject", "object"):
+            if new_triple[side] != triple[side]:
+                new_triple[side + "_aliases"] = sorted(set(triple.get(side + "_aliases", [])) | {triple[side]})
         new_triple.setdefault("chunk", 0)
         standardized.append(new_triple)
 
@@ -297,8 +306,11 @@ def _merge_case_variants(triples):
                 canonical[v] = best
     if canonical:
         for t in triples:
-            t["subject"] = canonical.get(t["subject"], t["subject"])
-            t["object"] = canonical.get(t["object"], t["object"])
+            for side in ("subject", "object"):
+                old = t[side]
+                t[side] = canonical.get(old, old)
+                if old != t[side]:
+                    t[side + "_aliases"] = sorted(set(t.get(side + "_aliases", [])) | {old})
         log.info(f"Merged {len(canonical) - len(set(canonical.values()))} case variants of entity names")
     return triples
 
@@ -353,8 +365,11 @@ def _resolve_entities_with_llm(triples, config):
             entity_to_standard[standard] = standard
 
         for triple in triples:
-            triple["subject"] = entity_to_standard.get(triple["subject"], triple["subject"])
-            triple["object"] = entity_to_standard.get(triple["object"], triple["object"])
+            for side in ("subject", "object"):
+                old = triple[side]
+                triple[side] = entity_to_standard.get(old, old)
+                if old != triple[side]:
+                    triple[side + "_aliases"] = sorted(set(triple.get(side + "_aliases", [])) | {old})
         log.info(f"Applied LLM-based entity standardization for {len(entity_mapping)} entity groups")
     except Exception as e:  # optional phase: never abort the run
         log.error(f"Error in LLM-based entity resolution: {e}")
@@ -438,8 +453,6 @@ def infer_relationships(triples, config):
              if dropped_budget else ""))
 
     result = _deduplicate_triples(valid_triples + accepted)
-    for t in result:
-        t["predicate"] = limit_predicate_length(t["predicate"])
     result = [t for t in result if t["subject"] != t["object"]]
     normalize_predicates(result)
     return _deduplicate_triples(result)
@@ -489,6 +502,9 @@ def _apply_transitive_inference(triples, graph, degree, inf_cfg):
 
     predicates = defaultdict(set)
     for t in triples:
+        # Do not turn a denied, dated, or attributed premise into a timeless fact.
+        if t.get("polarity", "positive") != "positive" or t.get("time") or t.get("attribution"):
+            continue
         predicates[(t["subject"], t["object"])].add(t["predicate"])
     connected = {_pair_key(t["subject"], t["object"]) for t in triples}
 
@@ -519,12 +535,7 @@ def _apply_transitive_inference(triples, graph, degree, inf_cfg):
 
 def _deduplicate_triples(triples):
     """Remove exact duplicate triples, preferring extracted over inferred."""
-    unique = {}
-    for triple in triples:
-        key = (triple["subject"], _norm_pred(triple["predicate"]), triple["object"])
-        if key not in unique or not triple.get("inferred", False):
-            unique[key] = triple
-    return list(unique.values())
+    return merge_claims(triples)
 
 
 def _llm_infer(config, system_prompt, user_prompt, method, context, known=None):
@@ -535,6 +546,7 @@ def _llm_infer(config, system_prompt, user_prompt, method, context, known=None):
     graph are dropped (they would only add isolated nodes).
     """
     try:
+        system_prompt += "\nPreserve negation, time, uncertainty and attribution in the context. Never convert a qualified claim to an unqualified fact. Include polarity, time and attribution fields when needed."
         response = LLMClient.from_config(config).complete(user_prompt, system_prompt)
         parsed = extract_json_from_text(response, expect="array")
     except Exception as e:  # optional phase: never abort the run
@@ -545,7 +557,7 @@ def _llm_infer(config, system_prompt, user_prompt, method, context, known=None):
         return []
     results, unknown = [], 0
     for t in parsed:
-        if not (isinstance(t, dict) and all(k in t for k in REQUIRED_KEYS)):
+        if not (isinstance(t, dict) and all(isinstance(t.get(k), str) and t[k].strip() for k in REQUIRED_KEYS)):
             continue
         subject, obj = str(t["subject"]).strip(), str(t["object"]).strip()
         if known is not None:
@@ -554,7 +566,8 @@ def _llm_infer(config, system_prompt, user_prompt, method, context, known=None):
                 unknown += 1
                 continue
         if subject != obj:
-            results.append(_make_inferred(subject, str(t["predicate"]), obj, method))
+            qualifiers = {k: t[k] for k in ("polarity", "time", "attribution") if isinstance(t.get(k), str)}
+            results.append(_make_inferred(subject, t["predicate"], obj, method, **qualifiers))
     if unknown:
         log.info(f"Ignored {unknown} proposed relationships naming entities not in the graph ({context})")
     return results
@@ -569,7 +582,10 @@ def _known_entities(triples):
 
 
 def _format_triples(triples, limit):
-    return "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in triples[:limit])
+    def line(t):
+        qualifiers = "; ".join(f"{k}={t[k]}" for k in ("polarity", "time", "attribution") if t.get(k))
+        return f"{t['subject']} {t['predicate']} {t['object']}" + (f" [{qualifiers}]" if qualifiers else "")
+    return "\n".join(line(t) for t in triples[:limit])
 
 
 def _infer_bridges_with_llm(triples, communities, degree, config):
@@ -695,22 +711,29 @@ def _infer_within_community_relationships(triples, communities, config):
         if len(community) < 5:
             continue
         members = sorted(community)
+        words_index = defaultdict(list)
+        for member in members:
+            for word in set(member.casefold().split()):
+                if len(word) >= 4 and word not in _LEXICAL_STOPWORDS:
+                    words_index[word].append(member)
         pairs = []
-        for i, a in enumerate(members):
-            a_words = set(a.lower().split())
-            for b in members[i + 1:]:
-                if _pair_key(a, b) in connected:
-                    continue
-                b_words = set(b.lower().split())
-                if (a_words & b_words) or a.lower() in b.lower() or b.lower() in a.lower():
-                    pairs.append((a, b))
-        pairs = pairs[:10]
+        for group in words_index.values():
+            for i, a in enumerate(group):
+                for b in group[i + 1:]:
+                    if _pair_key(a, b) not in connected and (a, b) not in pairs:
+                        pairs.append((a, b))
+                    if len(pairs) >= 10:
+                        break
+                if len(pairs) >= 10:
+                    break
+            if len(pairs) >= 10:
+                break
         if not pairs:
             continue
 
         of_interest = {n for pair in pairs for n in pair}
         context = [t for t in triples if t["subject"] in of_interest or t["object"] in of_interest][:20]
-        triples_text = "\n".join(f"{t['subject']} {t['predicate']} {t['object']}" for t in context)
+        triples_text = _format_triples(context, len(context))
         pairs_text = "\n".join(f"{a} and {b}" for a, b in pairs)
         user_prompt = prompt_factory.get_prompt("within_community_user", pairs_text, triples_text)
         found = _llm_infer(config, system_prompt, user_prompt, "llm_within", "within community", known)

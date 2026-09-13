@@ -10,7 +10,8 @@ from knowledge_graph.query import GraphIndex, match_entities, retrieve_subgraph
 from knowledge_graph.visualization import ENTITY_TYPES, build_graph_data
 
 SAMPLES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "samples")
-SAMPLE_JSON = sorted(p for p in glob.glob(os.path.join(SAMPLES_DIR, "*.json")) if not p.endswith(".meta.json"))
+SAMPLE_JSON = [os.path.join(SAMPLES_DIR, name + ".json") for name in
+               ("apollo-program", "coffee-supply-chain", "industrial-revolution", "la-alhambra", "marie-curie")]
 METHODS = {"llm_bridge", "llm_hub", "llm_within", "taxonomy", "transitive", "lexical"}
 
 

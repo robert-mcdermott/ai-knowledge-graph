@@ -53,7 +53,7 @@ def test_cypher_is_idempotent_merge_with_labels_and_types(tmp_path):
     assert "CREATE CONSTRAINT" in text
     assert 'MERGE (e:Entity {name: "james watt"}) SET e:Person' in text
     assert 'MERGE (e:Entity {name: "mills"}) SET e:Entity' in text  # untyped node keeps the base label
-    assert "-[r:REFINED {predicate: \"refined\"}]->" in text
+    assert '-[r:REFINED {predicate: "refined", time: "", polarity: "", attribution: ""}]->' in text
     assert "-[r:R_2ND_ORDER_RELATES_TO " in text
     assert 'name: "quote \\"name\\""' in text  # quotes escaped
     assert 'via: "steam engine"' in text and "inferred: true" in text and "chunk: 1" in text

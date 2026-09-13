@@ -1,5 +1,7 @@
 # AI Knowledge Graph – Improvement Plan (v0.7 "nextgen")
 
+> Historical v0.7 implementation plan. See [CHANGELOG.md](CHANGELOG.md) for the new workspace changes and [REVIEW_RECOMMENDATIONS.md](REVIEW_RECOMMENDATIONS.md) for the subsequent product review. Findings below describe the code at the time of that review.
+
 This plan comes from a full review of the code, a real end-to-end run against Ollama
 (`config-working.toml`, `deepseek-v4.1-flash:cloud`, `data/industrial-revolution.txt`),
 and a hands-on audit of the published demo (`docs/index.html`) in a browser, in light

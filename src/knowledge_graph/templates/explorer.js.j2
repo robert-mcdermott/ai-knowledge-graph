@@ -1,0 +1,151 @@
+  // Workspace tools share the explorer's graph and filter state.
+  const storageKey = 'kg-views:' + (meta.workspaceTitle || meta.title) + ':' + KG.nodes.map(n=>n.id).slice(0,5).join('|');
+  let savedViews = meta.views || [], tourIndex = 0;
+  const sessionId = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : String(Date.now()) + Math.random();
+  function toast(message) { $('toast').textContent=message; $('toast').classList.remove('hidden'); setTimeout(()=>$('toast').classList.add('hidden'),4500); }
+  async function post(url, body) {
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await res.json(); if(!res.ok) throw new Error(data.detail||data.error||'Request failed'); return data;
+  }
+  function openPanel(id) { ['discover','evidence-panel','stories','review-panel','sources-panel','details','legend','stats','physics','help'].forEach(p=>$(p).classList.toggle('hidden',p!==id)); }
+  function evidenceFor(r) { return r.evidence || []; }
+  function inspectClaim(id) {
+    const r=relations.find(r=>r.claim_id===id); if(!r) return;
+    const t=r.triple||{}, evidence=evidenceFor(r);
+    $('evidence-content').innerHTML=`<p><strong>${esc(labelOf(r.from))}</strong> → ${esc(r.label)} → <strong>${esc(labelOf(r.to))}</strong></p>`+
+      ['time','polarity','attribution'].filter(k=>t[k]).map(k=>`<span class="status-pill">${esc(k)}: ${esc(t[k])}</span> `).join('')+
+      `<p class="muted">${r.inferred?'Inferred by '+esc(r.method||'an inference method')+'. A connection is not proof of causation.':evidence.length?'Source passages linked below. Linking a passage does not independently verify the claim.':'No supporting passage was provided. This claim is unverified.'}</p>`+
+      evidence.map(e=>`<div class="evidence-card"><div class="location">${esc(e.document||'Source passage')}${e.page?' · page '+esc(e.page):''}${Number.isInteger(e.start)?' · characters '+e.start+'–'+e.end:''}</div><blockquote>${esc(e.text)}</blockquote><span class="status-pill ${e.status==='unverified'?'warning':''}">${e.status==='unverified'?'Legacy citation · unverified':'Source linked'}</span></div>`).join('')+
+      (meta.reviewEndpoint?'<button class="btn" id="reject-claim">Reject this claim</button>':'<p class="muted">Open this graph in the local app to save corrections.</p>');
+    if($('reject-claim')) $('reject-claim').onclick=()=>correct('reject',{claim_id:id});
+    openPanel('evidence-panel');
+  }
+  async function correct(action, data) {
+    if(!meta.reviewEndpoint) { toast('Open this graph with graph-serve to save corrections.'); return; }
+    try { await post(meta.reviewEndpoint,{action,revision:meta.revision||0,...data}); location.reload(); }
+    catch(e){toast(e.message);}
+  }
+  function renderCorrections() {
+    const rejected=meta.reviewClaims||[], merges=(meta.corrections||{}).merges||{};
+    $('corrections-list').innerHTML='<h4>Rejected claims</h4>'+ (rejected.length?rejected.map(t=>`<div class="evidence-card"><p>${esc(t.subject)} → ${esc(t.predicate)} → ${esc(t.object)}</p><button class="btn small" data-restore="${esc(t.id)}">Restore</button></div>`).join(''):'<p class="muted">No rejected claims.</p>')+
+      '<h4>Entity merges</h4>'+Object.entries(merges).map(([a,b])=>`<div class="evidence-card">${esc(a)} → ${esc(b)} <button class="btn small" data-unmerge="${esc(a)}">Undo merge</button></div>`).join('');
+    $('corrections-list').querySelectorAll('[data-restore]').forEach(b=>b.onclick=()=>correct('restore',{claim_id:b.dataset.restore}));
+    $('corrections-list').querySelectorAll('[data-unmerge]').forEach(b=>b.onclick=()=>correct('unmerge',{source:b.dataset.unmerge}));
+  }
+  const resolveName = value => KG.nodes.find(n=>n.id.toLowerCase()===value.toLowerCase()||(n.label||'').toLowerCase()===value.toLowerCase())?.id;
+  $('merge-entities').onclick=()=>correct('merge',{source:resolveName($('merge-source').value),target:resolveName($('merge-target').value)});
+  function renderDiscoveries() {
+    $('collection-title').textContent=meta.workspaceTitle||'Follow your curiosity.';
+    $('discovery-list').innerHTML=meta.communities.slice(0,4).map(c=>`<button class="discovery" data-theme-id="${c.id}"><strong>${esc(c.name||'Explore '+labelOf(c.top[0]||''))}</strong><small>${c.size} entities · ${esc(c.top.slice(0,2).map(labelOf).join(' & '))}</small></button>`).join('') || '<p class="muted">This collection has no visible claims yet. Restore a claim or add a document.</p>';
+    $('discovery-list').querySelectorAll('[data-theme-id]').forEach(b=>b.onclick=()=>{
+      const community=meta.communities.find(c=>c.id===Number(b.dataset.themeId));
+      state.hiddenCommunities=new Set(meta.communities.filter(c=>c.id!==community.id).map(c=>c.id));
+      state.focusHops=0; state.focusRoot=null; renderLegend(); applyFilters();
+      network.fit({nodes:KG.nodes.filter(n=>n.community===community.id).map(n=>n.id),animation:true});
+      $('discover').classList.add('hidden');
+    });
+  }
+  function focusNeighborhood(hops) {
+    if(!state.selected) {toast('Choose an entity first.');return;}
+    state.focusRoot=state.selected; state.focusHops=hops; applyFilters();
+    network.fit({nodes:nodes.get().filter(n=>!n.hidden).map(n=>n.id),animation:true});
+  }
+  function focusNodes() {
+    if(!state.focusHops||!state.focusRoot) return null;
+    const found=new Set([state.focusRoot]); let frontier=[state.focusRoot];
+    for(let h=0;h<state.focusHops;h++) {
+      const next=[]; relations.forEach(r=>{
+        if(!state.inferred&&r.inferred)return;
+        if(frontier.includes(r.from)&&!found.has(r.to)){found.add(r.to);next.push(r.to);}
+        if(frontier.includes(r.to)&&!found.has(r.from)){found.add(r.from);next.push(r.from);}
+      }); frontier=next;
+    } return found;
+  }
+  function snapshotView() {
+    return {selected:state.selected,pathTarget:$('path-target').value,pathExtracted:$('path-extracted-only').checked,
+      hiddenCommunities:[...state.hiddenCommunities],hiddenTypes:[...state.hiddenTypes],minDegree:state.minDegree,
+      inferred:state.inferred,edgeLabels:state.edgeLabels,document:state.document||'',predicate:state.predicate||'',
+      focusHops:state.focusHops||0,focusRoot:state.focusRoot||null,position:network.getViewPosition(),scale:network.getScale()};
+  }
+  function restoreView(view) {
+    if(!view||typeof view!=='object')return;
+    state.hiddenCommunities=new Set(Array.isArray(view.hiddenCommunities)?view.hiddenCommunities:[]);state.hiddenTypes=new Set(Array.isArray(view.hiddenTypes)?view.hiddenTypes:[]);
+    state.minDegree=Number(view.minDegree)||1;state.inferred=view.inferred!==false;state.document=view.document||'';
+    state.predicate=view.predicate||'';state.focusHops=Math.min(Number(view.focusHops)||0,5);state.focusRoot=view.focusRoot;
+    state.edgeLabels=['all','none','selection'].includes(view.edgeLabels)?view.edgeLabels:'selection';
+    $('min-degree').value=state.minDegree;$('min-degree-value').textContent=state.minDegree;
+    $('predicate-filter').value=state.predicate;$('show-inferred').checked=state.inferred;setBtn('btn-inferred',state.inferred);
+    renderLegend();renderTypeLegend();showEdgeLabelMode();applyFilters();
+    if(view.selected&&nodes.get(view.selected)&&!nodes.get(view.selected).hidden)select(view.selected);
+    else clearSelection();
+    if(view.pathTarget&&state.selected){$('path-target').value=view.pathTarget;$('path-extracted-only').checked=!!view.pathExtracted;runPath();}
+    if(view.position&&Number.isFinite(view.position.x)&&Number.isFinite(view.position.y)&&Number.isFinite(view.scale))
+      network.moveTo({position:view.position,scale:Math.max(.05,Math.min(view.scale,5)),animation:true});
+  }
+  function renderViews() {
+    $('saved-views').innerHTML=savedViews.map((v,i)=>`<div class="evidence-card"><button class="discovery" data-view="${i}"><strong>${esc(v.title)}</strong><small>${esc(v.note||'Saved graph view')}</small></button><button class="btn small" data-delete-view="${i}">Remove</button></div>`).join('');
+    $('saved-views').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>restoreView(savedViews[Number(b.dataset.view)].state));
+    $('saved-views').querySelectorAll('[data-delete-view]').forEach(b=>b.onclick=async()=>{
+      const index=Number(b.dataset.deleteView);
+      try{if(meta.viewsEndpoint){const data=await post(meta.viewsEndpoint,{revision:meta.revision||0,delete:savedViews[index].id});savedViews=data.views;meta.revision=data.revision;}
+      else{savedViews.splice(index,1);localStorage.setItem(storageKey,JSON.stringify(savedViews));} renderViews();}catch(e){toast(e.message);}
+    });
+  }
+  $('save-view').onclick=async()=>{
+    const title=$('view-title').value.trim();if(!title){toast('Give this view a title.');$('view-title').focus();return;}
+    const view={title,note:$('view-note').value.trim(),state:snapshotView(),id:String(Date.now())};
+    try{if(meta.viewsEndpoint){const data=await post(meta.viewsEndpoint,{revision:meta.revision||0,view});savedViews=data.views;meta.revision=data.revision;}
+    else{savedViews.push(view);localStorage.setItem(storageKey,JSON.stringify(savedViews));}renderViews();toast('View saved.');}catch(e){toast(e.message);}
+  };
+  function showTour(index) {
+    if(!savedViews.length){toast('Save a view to begin your story.');return;}
+    tourIndex=(index+savedViews.length)%savedViews.length;const view=savedViews[tourIndex];restoreView(view.state);
+    $('tour-title').textContent=view.title;$('tour-note').textContent=view.note||'';$('tour-count').textContent=`${tourIndex+1} / ${savedViews.length}`;
+    $('tour-caption').classList.remove('hidden');$('stories').classList.add('hidden');$('discover').classList.add('hidden');
+  }
+  $('play-tour').onclick=()=>showTour(0);$('tour-prev').onclick=()=>showTour(tourIndex-1);$('tour-next').onclick=()=>showTour(tourIndex+1);$('tour-close').onclick=()=>$('tour-caption').classList.add('hidden');
+  $('export-story').onclick=async()=>{
+    try {
+    const data=JSON.parse(JSON.stringify(KG));data.meta.views=savedViews;data.meta.initialView=snapshotView();
+    ['chatEndpoint','workspaceEndpoint','reviewEndpoint','viewsEndpoint','manageUrl','libraryUrl'].forEach(k=>delete data.meta[k]);
+    const doc=document.documentElement.cloneNode(true);doc.querySelector('#graph').innerHTML='';
+    doc.querySelector('#kg-data').textContent='const KG = '+JSON.stringify(data).replace(/<\//g,'<\\/')+';';
+    doc.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+    ['library-link','btn-chat','manage-collection','toast','tour-caption'].forEach(id=>doc.querySelector('#'+id).classList.add('hidden'));
+    doc.querySelector('#discover').classList.remove('hidden');
+    doc.querySelector('#chat-log').innerHTML='';
+    doc.querySelector('#chat-input').value='';
+    // Pages published with shared assets must embed those assets in their download.
+    for(const script of doc.querySelectorAll('script[src]')) {
+      const response=await fetch(script.src);if(!response.ok)throw new Error('Could not embed the graph library.');
+      script.textContent=await response.text();script.removeAttribute('src');
+    }
+    for(const link of doc.querySelectorAll('link[rel=stylesheet]')) {
+      const response=await fetch(link.href);if(!response.ok)throw new Error('Could not embed graph styles.');
+      const style=document.createElement('style');style.textContent=await response.text();link.replaceWith(style);
+    }
+    download('knowledge-story.html',new Blob(['<!DOCTYPE html>\n'+doc.outerHTML],{type:'text/html'}));toast('Offline story exported.');
+    } catch(e){toast('Export failed: '+e.message);}
+  };
+  $('btn-share-view').onclick=async()=>{
+    const hash='#view='+encodeURIComponent(JSON.stringify(snapshotView()));history.replaceState(null,'',hash);
+    try{await navigator.clipboard.writeText(location.href);toast('View link copied.');}catch(_){toast('View saved in the address bar. Copy its link to share.');}
+  };
+  function renderSources() {
+    const sourceNames=meta.documents||[];
+    $('source-list').innerHTML='<button class="discovery" data-document=""><strong>All documents</strong></button>'+sourceNames.filter(Boolean).map(name=>`<button class="discovery" data-document="${esc(name)}"><strong>${esc(name)}</strong><small>${relations.filter(r=>evidenceFor(r).some(e=>e.document===name)||r.document===name||(r.triple.origins||[]).some(o=>o.document===name)).length} relationships</small></button>`).join('');
+    $('source-list').querySelectorAll('[data-document]').forEach(b=>b.onclick=()=>{state.document=b.dataset.document;applyFilters();toast(state.document?'Showing '+state.document:'Showing all documents');});
+    if(meta.manageUrl){$('manage-collection').href=meta.manageUrl;$('manage-collection').classList.remove('hidden');}
+  }
+  $('btn-discover').onclick=()=>openPanel('discover');$('btn-stories').onclick=()=>openPanel('stories');$('btn-sources').onclick=()=>openPanel('sources-panel');$('btn-review').onclick=()=>openPanel('review-panel');
+  $('discover-story').onclick=()=>openPanel('stories');$('discover-overview').onclick=()=>{state.hiddenCommunities.clear();state.focusHops=0;state.focusRoot=null;state.document='';renderLegend();applyFilters();togglePanel('legend');};
+  $('focus-nearby').onclick=()=>focusNeighborhood(1);$('expand-nearby').onclick=()=>focusNeighborhood(Math.min(5,(state.focusHops||1)+1));
+  $('clear-focus').onclick=()=>{state.focusHops=0;state.focusRoot=null;applyFilters();network.fit({animation:true});};
+  $('predicate-filter').innerHTML='<option value="">All relationships</option>'+[...new Set(relations.map(r=>r.label))].sort().map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  $('predicate-filter').onchange=()=>{state.predicate=$('predicate-filter').value;applyFilters();};
+  try{if(!meta.viewsEndpoint&&!savedViews.length)savedViews=JSON.parse(localStorage.getItem(storageKey)||'[]');}catch(_){}
+  if(!Array.isArray(savedViews))savedViews=[];
+  renderDiscoveries();renderViews();renderCorrections();renderSources();
+  const latestRun=(meta.runs||[]).slice(-1)[0];
+  if(latestRun&&latestRun.status==='partial'){$('run-banner').textContent='Partial collection · '+latestRun.failures.length+' chunks need retrying';$('run-banner').classList.remove('hidden');}
+  if(meta.initialView)network.once('stabilizationIterationsDone',()=>restoreView(meta.initialView));

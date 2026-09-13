@@ -1,0 +1,35 @@
+<aside class="panel" id="discover">
+ <h3><span class="eyebrow">A place to start</span><button class="close" data-close="discover" aria-label="Close discovery">×</button></h3>
+ <h2 id="collection-title">Follow your curiosity.</h2>
+ <p class="muted">Choose a theme, follow a connection, and inspect the evidence behind it.</p>
+ <div id="discovery-list"></div>
+ <div class="compact-row"><button class="btn" id="discover-overview">All themes</button><button class="btn" id="discover-story">Saved stories</button></div>
+</aside>
+<aside class="panel hidden" id="evidence-panel">
+ <h3>Behind this claim <button class="close" data-close="evidence-panel" aria-label="Close evidence">×</button></h3>
+ <div id="evidence-content"></div>
+</aside>
+<aside class="panel hidden" id="sources-panel">
+ <h3>Source documents <button class="close" data-close="sources-panel" aria-label="Close sources">×</button></h3>
+ <p class="muted">Filter the map by source. A claim can appear in several documents.</p>
+ <div id="source-list"></div>
+ <a class="btn hidden" id="manage-collection">Add or update documents</a>
+</aside>
+<aside class="panel hidden" id="stories">
+ <h3>Stories & saved views <button class="close" data-close="stories" aria-label="Close stories">×</button></h3>
+ <p class="muted">Save a connection with a note. Export your story as an interactive page that works offline.</p>
+ <label class="field">Title<input id="view-title" placeholder="A connection worth remembering" maxlength="120"></label>
+ <label class="field">Note<textarea id="view-note" placeholder="What makes this view interesting?" maxlength="2000"></textarea></label>
+ <div class="compact-row"><button class="btn on" id="save-view">Save this view</button><button class="btn" id="play-tour">Play story</button><button class="btn" id="export-story">Export HTML</button></div>
+ <div id="saved-views"></div>
+</aside>
+<aside class="panel hidden" id="review-panel">
+ <h3>Corrections <button class="close" data-close="review-panel" aria-label="Close corrections">×</button></h3>
+ <p class="muted">Rejected claims stay in the workspace and can be restored. Entity merges are reversible.</p>
+ <label class="field">Entity to merge<input id="merge-source" list="node-list" placeholder="Source name"></label>
+ <label class="field">Keep this name<input id="merge-target" list="node-list" placeholder="Canonical name"></label>
+ <button class="btn" id="merge-entities">Merge entities</button>
+ <div id="corrections-list"></div>
+</aside>
+<aside class="panel hidden" id="tour-caption"><h3 id="tour-title"></h3><p id="tour-note" class="muted"></p><div class="compact-row"><button class="btn" id="tour-prev">Previous</button><span id="tour-count" class="muted"></span><button class="btn on" id="tour-next">Next</button><button class="btn" id="tour-close">Close</button></div></aside>
+<div id="run-banner" class="hidden" role="status"></div><div id="toast" class="hidden" role="status"></div>

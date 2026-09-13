@@ -17,11 +17,15 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import os
 import re
 import sys
+import unicodedata
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
+
+import networkx as nx
 
 from knowledge_graph.config import load_config
 from knowledge_graph.entity_standardization import _singularize
@@ -47,6 +51,7 @@ class GraphIndex:
     adjacency: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
     by_pair: dict[tuple[str, str], list[int]] = field(default_factory=lambda: defaultdict(list))
     degree: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    terms: dict[str, set[int]] = field(default_factory=lambda: defaultdict(set))
     names: dict[str, str] = field(default_factory=dict)  # lower-case -> canonical
 
     @classmethod
@@ -61,16 +66,27 @@ class GraphIndex:
             index.degree[s] += 1
             index.degree[o] += 1
             index.names[s.lower()] = s
-            index.names[o.lower()] = o
+            index.names[o.casefold()] = o
+            for side in ("subject", "object"):
+                for alias in t.get(side + "_aliases", []):
+                    index.names[alias.casefold()] = t[side]
+            searchable = " ".join([s, o, t["predicate"], t.get("source", "")] +
+                                  [e.get("text", "") for e in t.get("evidence", [])])
+            for term in _content_words(searchable):
+                index.terms[term].add(i)
         return index
 
     @property
     def entities(self):
-        return sorted(self.names.values(), key=lambda n: (-self.degree[n], n))
+        return sorted(set(self.names.values()), key=lambda n: (-self.degree[n], n))
 
 
 def _content_words(text):
-    words = {w for w in re.findall(r"[a-z0-9][a-z0-9\-']+", text.lower()) if len(w) >= 4 and w not in _STOPWORDS}
+    text = unicodedata.normalize("NFKC", text).casefold()
+    words = {w for w in re.findall(r"[\w+#'-]+", text) if len(w) >= 2 and w not in _STOPWORDS}
+    # Bigrams provide a useful no-dependency baseline for unsegmented CJK text.
+    for run in re.findall(r"[\u3400-\u9fff]+", text):
+        words.update(run[i:i + 2] for i in range(len(run) - 1))
     return {_singularize(w) for w in words}
 
 
@@ -84,9 +100,10 @@ def _words_match(a, b):
 
 def match_entities(index, question, limit=8):
     """Entities the question is about: whole-name matches first, then shared content words."""
-    q = " " + re.sub(r"[^a-z0-9\- ]+", " ", question.lower()) + " "
+    q = " " + re.sub(r"[^\w+#'\- ]+", " ", unicodedata.normalize("NFKC", question).casefold()) + " "
     q = re.sub(r"\s+", " ", q)
-    matched = [name for lower, name in index.names.items() if f" {lower} " in q]
+    matched = list(dict.fromkeys(name for lower, name in index.names.items()
+                                if f" {lower} " in q or (re.search(r"[\u3400-\u9fff]", lower) and lower in q)))
     # Drop names contained in a longer matched name ("engine" when "steam engine" matched).
     matched = [n for n in matched if not any(n != m and f" {n.lower()} " in f" {m.lower()} " for m in matched)]
     matched.sort(key=lambda n: (-len(n), -index.degree[n]))
@@ -117,7 +134,7 @@ def shortest_path(index, start, goal, max_depth=6):
         node, depth = queue.popleft()
         if depth >= max_depth:
             continue
-        for nxt in index.adjacency.get(node, ()):
+        for nxt in sorted(index.adjacency.get(node, ())):
             if nxt in parent:
                 continue
             parent[nxt] = node
@@ -144,7 +161,7 @@ def retrieve_subgraph(index, seeds, hops=2, max_triples=150):
         node = queue.popleft()
         if distance[node] >= hops:
             continue
-        for nxt in index.adjacency.get(node, ()):
+        for nxt in sorted(index.adjacency.get(node, ())):
             if nxt not in distance:
                 distance[nxt] = distance[node] + 1
                 queue.append(nxt)
@@ -194,6 +211,13 @@ def format_facts(index, indices):
             line += f"  (inferred: {t.get('method', 'unknown')}" + (f" via {t['via']}" if t.get("via") else "") + ")"
         else:
             line += "  (extracted" + (f': "{t["source"]}"' if t.get("source") else "") + ")"
+        if t.get("document"):
+            line += f" [document: {t['document']}]"
+        for qualifier in ("time", "polarity", "attribution"):
+            if t.get(qualifier):
+                line += f" [{qualifier}: {t[qualifier]}]"
+        for evidence in t.get("evidence", [])[1:4]:
+            line += f"\n    Additional passage ({evidence.get('document', 'source')}, page {evidence.get('page', '?')}): {evidence['text']}"
         lines.append(line)
     return "\n".join(lines), numbering
 
@@ -208,6 +232,7 @@ def parse_answer(text):
     if match:
         cited = [int(x) for x in re.findall(r"\d+", match.group(1))]
         text = text[: match.start()].rstrip()
+    cited = list(dict.fromkeys(cited + [int(n) for group in re.findall(r"\[([0-9, ]+)\]", text) for n in re.findall(r"\d+", group)]))
     return text.strip(), cited
 
 
@@ -226,11 +251,16 @@ class GraphChat:
         self.max_seeds = int(q.get("max_seed_entities", 8))
         self.llm_matching = bool(q.get("use_llm_for_entity_matching", True))
         self.history_turns = int(q.get("history_turns", 3))
+        self.max_context_tokens = int(q.get("max_context_tokens", 6000))
+        self._lock = __import__("threading").Lock()
 
     def seeds_for(self, question):
         seeds = match_entities(self.index, question, self.max_seeds)
-        if not seeds and self.last_seeds:
+        if not seeds and self.last_seeds and re.search(r"\b(it|they|them|that|those|he|she|and|also)\b|它|他们|她|他", question, re.I):
             seeds = self.last_seeds  # follow-up such as "and who built it?" keeps the previous context
+        if not seeds:
+            hits = passage_search(self.index, question)
+            seeds = list(dict.fromkeys(self.index.triples[i][k] for i in hits[:4] for k in ("subject", "object")))[:self.max_seeds]
         if not seeds and self.llm_matching:
             seeds = self._pick_entities_with_llm(question)
         if not seeds:  # fall back to the hubs so the model can at least say what the graph covers
@@ -248,22 +278,77 @@ class GraphChat:
         valid = {e.lower(): e for e in entities}
         return [valid[str(p).lower()] for p in picked if str(p).lower() in valid][: self.max_seeds]
 
-    def ask(self, question):
+    def ask(self, question, extracted_only=False):
+        with self._lock:
+            return self._ask(question, extracted_only)
+
+    def _ask(self, question, extracted_only=False):
         """Return a dict with the answer, the seed entities, and the cited facts."""
-        seeds = self.seeds_for(question)
-        indices = retrieve_subgraph(self.index, seeds, self.hops, self.max_triples)
-        facts_text, numbering = format_facts(self.index, indices)
-        if not indices:
-            facts_text = "(no facts found for this question)"
-        history_text = "\n".join(f"Q: {q}\nA: {a}" for q, a in self.history[-self.history_turns:])
-        user_prompt = prompt_factory.get_prompt("query_user", question, facts_text, history_text)
+        broad = bool(re.search(r"main themes|overview|summari[sz]e|across (?:the |my )?documents|big picture|主要主题|总结", question, re.I))
+        index = GraphIndex.build([t for t in self.index.triples if not t.get("inferred")]) if extracted_only else self.index
+        seeds = self.seeds_for(question) if not broad else []
+        if broad:
+            indices = community_context(index, self.max_triples)
+        else:
+            neighborhood = retrieve_subgraph(index, seeds, self.hops, self.max_triples)
+            source_hits = passage_search(index, question)[:min(20, self.max_triples)]
+            extra = [i for i in source_hits if i not in neighborhood]
+            indices = list(dict.fromkeys(neighborhood[:max(0, self.max_triples - len(extra))] + source_hits))[:self.max_triples]
+        # Budget actual serialized context, not just the number of relationships.
+        kept, used = [], 0
+        for i in indices:
+            line, _ = format_facts(index, [i])
+            cost = max(len(line.split()) * 2, math.ceil(len(line) / 3))
+            if used + cost <= self.max_context_tokens:
+                kept.append(i)
+                used += cost
+        facts_text, numbering = format_facts(index, kept)
+        history = self.history[-self.history_turns:] if self.history_turns else []
+        history_text = "\n".join(f"Q: {q}\nA: {a}" for q, a in history)
+        user_prompt = prompt_factory.get_prompt("query_user", question, facts_text or "(no facts found)", history_text)
         reply = self.client.complete(user_prompt, system_prompt_for("query_system", self.config))
         answer, cited = parse_answer(reply)
-        facts = [self.index.triples[numbering[n]] for n in cited if n in numbering]
-        self.history.append((question, answer))
+        facts = [index.triples[numbering[n]] for n in cited if n in numbering]
+        citations = {str(n): index.triples[numbering[n]] for n in cited if n in numbering}
+        if self.history_turns:
+            self.history = (self.history + [(question, answer)])[-self.history_turns:]
+        else:
+            self.history.clear()
         self.last_seeds = seeds
         return {"question": question, "answer": answer, "seeds": seeds, "facts": facts,
-                "facts_considered": len(indices)}
+                "citations": citations, "citation_status": "invalid" if any(n not in numbering for n in cited)
+                else "linked" if facts else "uncited", "mode": "overview" if broad else "focused",
+                "facts_considered": len(kept), "context_tokens_estimate": used}
+
+
+def passage_search(index, question):
+    scores = defaultdict(float)
+    for word in _content_words(question):
+        hits = index.terms.get(word, set())
+        weight = math.log(1 + len(index.triples) / (1 + len(hits)))
+        for i in hits:
+            scores[i] += weight
+    return sorted(scores, key=lambda i: (-scores[i], bool(index.triples[i].get("inferred")), i))
+
+
+def community_context(index, limit):
+    """Balanced community evidence for broad questions, without extra LLM calls."""
+    graph = nx.Graph()
+    graph.add_edges_from((t["subject"], t["object"]) for t in index.triples)
+    if not graph:
+        return []
+    groups = nx.community.louvain_communities(graph, seed=42)
+    buckets = []
+    for group in sorted(groups, key=lambda g: (-len(g), min(g))):
+        bucket = [i for i, t in enumerate(index.triples) if t["subject"] in group]
+        bucket.sort(key=lambda i: (bool(index.triples[i].get("inferred")), -len(index.triples[i].get("evidence", [])), i))
+        buckets.append(deque(bucket))
+    result = []
+    while any(buckets) and len(result) < limit:
+        for bucket in buckets:
+            if bucket and len(result) < limit:
+                result.append(bucket.popleft())
+    return result
 
 
 def _print_result(result, show_facts=True):
@@ -285,6 +370,7 @@ def main(argv=None):
     parser.add_argument("question", nargs="?", help="Question to answer; omit for an interactive session")
     parser.add_argument("--config", default="config.toml", help="Path to configuration file (uses its [llm] section)")
     parser.add_argument("--json", action="store_true", help="Print the result as JSON (single-question mode)")
+    parser.add_argument("--extracted-only", action="store_true", help="Exclude inferred relationships from answers")
     parser.add_argument("--no-facts", action="store_true", help="Do not list the cited facts after the answer")
     args = parser.parse_args(argv)
     configure_logging(logging.WARNING)
@@ -302,7 +388,7 @@ def main(argv=None):
 
     if args.question:
         try:
-            result = chat.ask(args.question)
+            result = chat.ask(args.question, extracted_only=args.extracted_only)
         except LLMError as e:
             print(f"Error: {e}")
             sys.exit(1)
@@ -323,7 +409,7 @@ def main(argv=None):
         if not question or question.lower() in ("quit", "exit", "q"):
             break
         try:
-            _print_result(chat.ask(question), show_facts=not args.no_facts)
+            _print_result(chat.ask(question, extracted_only=args.extracted_only), show_facts=not args.no_facts)
         except LLMError as e:
             print(f"Error: {e}")
 

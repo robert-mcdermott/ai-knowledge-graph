@@ -34,7 +34,7 @@ def client(tmp_path, monkeypatch):
 
 def test_library_lists_only_triple_files(client):
     html = client.get("/").text
-    assert "industrial" in html and "notes" not in html and "other" not in html
+    assert 'href="/graph/industrial"' in html and 'href="/graph/notes"' not in html and 'href="/graph/other"' not in html
     data = client.get("/api/graphs").json()
     assert data["graphs"][0]["name"] == "industrial" and data["graphs"][0]["nodes"] == 5
     assert data["graphs"][0]["inferred"] == 1
@@ -87,12 +87,16 @@ def _fake_pipeline(monkeypatch):
     logging.getLogger("knowledge_graph").setLevel(logging.INFO)
     log = logging.getLogger("knowledge_graph.main")
 
-    def fake_process(config, documents, debug=False, continue_on_error=False):
+    def fake_process(config, documents, debug=False, continue_on_error=False, run=None):
         log.info("PHASE 1: INITIAL TRIPLE EXTRACTION")
         log.info(f"Processing text in {len(documents)} chunks (size: 500 words, overlap: 50 words)")
         for i, _ in enumerate(documents, start=1):
             log.info(f"Chunk {i}: 2 triples")
         log.info("PHASE 3: RELATIONSHIP INFERENCE")
+        if run:
+            run.total = run.completed = len(documents)
+            if run.callback:
+                run.callback(run.snapshot())
         return [dict(t, document=name) for name, _ in documents for t in TRIPLES[:2]]
     monkeypatch.setattr(srv, "process_documents", fake_process)
 
@@ -116,7 +120,7 @@ def test_ingest_pasted_text_creates_graph_files_and_reports_progress(client, tmp
     status = _wait(client, body["job_id"])
     assert status["state"] == "done" and status["phase"] == "done"
     assert status["chunks_total"] == 1 and status["chunks_done"] == 1
-    assert status["graph_url"] == "/graph/My Notes"
+    assert status["graph_url"] == "/graph/My%20Notes"
     assert status["stats"]["nodes"] > 0 and "PHASE 1" in "\n".join(status["log"])
     assert (tmp_path / "My Notes.json").exists() and (tmp_path / "My Notes.html").exists()
     assert client.get("/graph/My%20Notes").status_code == 200
@@ -132,7 +136,7 @@ def test_ingest_uploads_use_format_readers_and_tag_documents(client, tmp_path, m
     status = _wait(client, res.json()["job_id"])
     assert status["state"] == "done" and status["documents"] == ["a.md", "b.txt"]
     triples = json.loads((tmp_path / "docs.json").read_text())
-    assert {t["document"] for t in triples} == {"a.md", "b.txt"}
+    assert {e["document"] for t in triples for e in t.get("evidence", [])} == {"a.md", "b.txt"}
 
 
 def test_ingest_validation_errors(client, monkeypatch):
@@ -149,7 +153,7 @@ def test_ingest_names_are_unique_and_pipeline_errors_are_reported(client, tmp_pa
     _wait(client, first["job_id"])
     assert first["name"] == "industrial-2"  # industrial.json already existed
 
-    def boom(config, documents, debug=False, continue_on_error=False):
+    def boom(config, documents, debug=False, continue_on_error=False, run=None):
         raise srv.LLMError("model unreachable")
     monkeypatch.setattr(srv, "process_documents", boom)
     failed = client.post("/api/ingest", data={"name": "bad", "text": "x"}).json()
@@ -162,13 +166,13 @@ def test_only_one_job_at_a_time(client, monkeypatch):
     import threading
     gate = threading.Event()
 
-    def slow(config, documents, debug=False, continue_on_error=False):
+    def slow(config, documents, debug=False, continue_on_error=False, run=None):
         gate.wait(5)
         return TRIPLES[:2]
     monkeypatch.setattr(srv, "process_documents", slow)
     first = client.post("/api/ingest", data={"name": "slow", "text": "x"})
     assert first.status_code == 200
     assert client.post("/api/ingest", data={"name": "other", "text": "y"}).status_code == 409
-    assert "being generated" in client.get("/").text
+    assert "being prepared" in client.get("/").text
     gate.set()
     _wait(client, first.json()["job_id"])

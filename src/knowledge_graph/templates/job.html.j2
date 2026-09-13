@@ -1,61 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Generating {{ job.name }}</title>
-<style>
-:root { --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --panel: #f6f8fa; --border: #d0d7de; --accent: #0969da; --danger: #cf222e; }
-@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --panel: #161b22; --border: #30363d; --accent: #388bfd; --danger: #ff7b72; } }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-h1 { font-size: 22px; margin: 0 0 4px 0; }
-.sub { color: var(--muted); margin-bottom: 20px; }
-.bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 12px 0; }
-.bar div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
-.phase { font-weight: 600; }
-pre { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; max-height: 320px; overflow: auto; white-space: pre-wrap; }
-.err { color: var(--danger); font-weight: 600; }
-a.btn { display: inline-block; padding: 8px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; margin-top: 8px; }
-a.back { color: var(--muted); text-decoration: none; font-size: 13px; }
-</style>
-</head>
-<body>
-<main>
-  <a class="back" href="/">◀ Library</a>
-  <h1>Generating “{{ job.name }}”</h1>
-  <div class="sub">from {{ job.documents | join(', ') }}</div>
-  <div class="phase" id="phase">{{ job.phase }}</div>
-  <div class="bar"><div id="bar"></div></div>
-  <div id="detail" class="sub"></div>
-  <div id="result"></div>
-  <pre id="log"></pre>
-</main>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preparing {{ job.name }}</title><style>
+:root{--bg:#f7f8fc;--fg:#202238;--muted:#69718a;--panel:#fff;--border:#e0e4ef;--accent:#5b50d6}@media(prefers-color-scheme:dark){:root{--bg:#10121d;--fg:#ecedf7;--muted:#a3abc4;--panel:#191c2a;--border:#31364d;--accent:#a89bff}}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:820px;padding:40px 24px;margin:auto}a{color:var(--accent)}h1{font-size:36px;letter-spacing:-.04em;line-height:1.2;margin-top:35px}.sub{color:var(--muted)}.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:24px}.bar{height:7px;border-radius:8px;background:var(--border);overflow:hidden;margin:18px 0}.bar div{height:100%;background:var(--accent);transition:width .3s}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;max-height:240px;overflow:auto;background:var(--bg);padding:14px;border-radius:8px}.btn{font:inherit;font-size:12px;display:inline-block;border:1px solid var(--border);background:var(--panel);color:var(--fg);padding:9px 15px;border-radius:8px;cursor:pointer;text-decoration:none;margin:6px 6px 0 0}.primary{background:var(--accent);color:var(--panel)}.hidden{display:none}.err{color:#b73451}.metrics{display:flex;gap:28px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.metrics strong{display:block;font-size:24px;color:var(--fg)}.notice{padding:13px;border-left:3px solid var(--accent);background:var(--bg);margin:14px 0}button:disabled{opacity:.5;cursor:wait}
+</style></head><body><main><a href="/">← Collections</a><h1 id="heading">Preparing “{{ job.name }}”</h1><p class="sub">{{ job.documents | join(', ') }}</p><section class="card"><strong id="phase">Starting…</strong><div class="bar"><div id="bar"></div></div><div id="detail" class="sub"></div><div id="metrics" class="metrics"></div><div id="result"></div><div id="actions"></div><p id="error" class="err" role="alert"></p><details><summary class="sub">Generation details</summary><pre id="log"></pre></details></section></main>
 <script>
-const jobId = {{ job.id | tojson }};
-const PHASE_LABEL = { starting: 'Starting…', extracting: 'Phase 1 · extracting relationships', standardizing: 'Phase 2 · standardizing entities',
-                      inferring: 'Phase 3 · inferring relationships', rendering: 'Rendering the page', done: 'Done', error: 'Failed' };
-const PHASE_PROGRESS = { starting: 2, extracting: 10, standardizing: 70, inferring: 80, rendering: 95, done: 100, error: 100 };
-async function poll() {
-  const res = await fetch('/api/jobs/' + jobId);
-  if (!res.ok) return;
-  const s = await res.json();
-  document.getElementById('phase').textContent = PHASE_LABEL[s.phase] || s.phase;
-  let pct = PHASE_PROGRESS[s.phase] || 0;
-  if (s.phase === 'extracting' && s.chunks_total) pct = 10 + 60 * s.chunks_done / s.chunks_total;
-  document.getElementById('bar').style.width = pct + '%';
-  document.getElementById('detail').textContent = s.phase === 'extracting' && s.chunks_total ? `${s.chunks_done} of ${s.chunks_total} chunks` : '';
-  document.getElementById('log').textContent = s.log.join('\n');
-  if (s.state === 'done') {
-    const st = s.stats || {};
-    document.getElementById('result').innerHTML = `<p>${st.nodes || '?'} nodes · ${st.edges || '?'} relationships · ${st.communities || '?'} communities</p><a class="btn" href="${s.graph_url}">Open the graph</a>`;
-    setTimeout(() => { location.href = s.graph_url; }, 1500);
-    return;
-  }
-  if (s.state === 'error') { document.getElementById('result').innerHTML = `<p class="err">${s.error}</p>`; return; }
-  setTimeout(poll, 1500);
-}
+const jobId={{ job.id | tojson }},$=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const labels={starting:'Getting ready',extracting:'Reading and linking evidence',standardizing:'Aligning entities',inferring:'Finding connections',rendering:'Preparing your map',ready:'Your update is ready to review',done:'Your collection is ready',partial:'Ready with missing chunks',error:'Generation needs attention',cancelled:'Generation cancelled'};
+async function action(name){$('error').textContent='';try{const res=await fetch('/api/jobs/'+jobId+'/'+name,{method:'POST'}),data=await res.json();if(!res.ok)throw new Error(data.detail||res.statusText);if(data.page_url){location.href=data.page_url;return;}poll();}catch(e){$('error').textContent=e.message;}}
+async function poll(){try{const res=await fetch('/api/jobs/'+jobId);if(!res.ok)throw new Error('Could not load job status');const s=await res.json(),run=s.run||{},stats=s.stats||{};
+ $('phase').textContent=labels[s.phase]||s.phase;$('bar').style.width=(['done','partial','ready','error','cancelled'].includes(s.state)?100:s.chunks_total?10+65*s.chunks_done/s.chunks_total:5)+'%';
+ $('detail').textContent=`${s.chunks_done} / ${s.chunks_total} chunks · ${Math.round(s.elapsed_seconds||0)}s elapsed · ${run.cache_hits||0} cached`;
+ $('log').textContent=(s.log||[]).join('\n');$('metrics').innerHTML=Object.entries({Entities:stats.nodes,Claims:stats.edges,'Extraction tokens':(run.usage||{}).total_tokens}).filter(([k,v])=>v!==undefined).map(([k,v])=>`<div><strong>${v}</strong>${k}</div>`).join('');
+ $('result').innerHTML='';$('actions').innerHTML='';
+ const button=(text,name,primary=false)=>{const b=document.createElement('button');b.className='btn'+(primary?' primary':'');b.textContent=text;b.onclick=()=>{b.disabled=true;action(name);};$('actions').appendChild(b);};
+ if(s.state==='ready'){const d=s.diff||{};$('result').innerHTML='<div class="notice">'+['added','updated','removed','unchanged'].map(k=>`<div><strong>${k}:</strong> ${(d[k]||[]).map(esc).join(', ')||'—'}</div>`).join('')+`<p>${d.new_claims||0} new claims · ${d.removed_claims||0} removed · ${d.retained_claims||0} retained</p><p class="sub">Your current collection stays unchanged until you apply this update. Corrections and saved stories are preserved.</p></div>`;for(const [key,label] of [['added_examples','Added claims'],['removed_examples','Removed claims']]){if((d[key]||[]).length){const box=document.createElement('details');box.innerHTML='<summary>'+label+' · up to 20 examples</summary>'+d[key].map(t=>'<p>'+esc(t.subject)+' → '+esc(t.predicate)+' → '+esc(t.object)+'</p>').join('');$('result').appendChild(box);}}if((run.failures||[]).length){const notice=document.createElement('p');notice.className='err';notice.textContent=run.failures.length+' chunks failed. Applying this update will publish a partial collection; you can retry afterward.';$('result').appendChild(notice);}button('Apply update','apply',true);button('Discard update','cancel');return;}
+ if(s.state==='done'||s.state==='partial'){const link=document.createElement('a');link.className='btn primary';link.href=s.graph_url;link.textContent='Explore collection →';$('actions').appendChild(link);}
+ if(s.state==='partial'){$('result').textContent=(run.failures||[]).length+' chunks failed. The collection is incomplete; retry to recover missing evidence.';button('Retry missing chunks','retry');}
+ if(s.state==='error'||s.state==='cancelled'){$('error').textContent=s.error||'No changes were applied.';button('Retry generation','retry');}
+ if(['done','partial','error','cancelled'].includes(s.state))return;
+ button('Cancel generation','cancel');setTimeout(poll,1200);
+ }catch(e){$('error').textContent=e.message+' · reconnecting…';setTimeout(poll,3000);}}
 poll();
-</script>
-</body>
-</html>
+</script></body></html>

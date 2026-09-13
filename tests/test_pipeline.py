@@ -1,6 +1,8 @@
 """Wave 7: typed triples, provenance, parallel extraction, community naming."""
 import json
 
+import pytest
+
 from knowledge_graph import main as m
 from knowledge_graph.llm import LLMTruncatedError
 from knowledge_graph.visualization import build_graph_data, entity_types
@@ -33,16 +35,15 @@ def test_normalize_triple_validates_types_and_attaches_source():
     t = m.normalize_triple({"subject": " James Watt ", "predicate": "refined", "object": "steam engine",
                             "subject_type": "Person", "object_type": "gadget"}, chunk)
     assert t == {"subject": "James Watt", "predicate": "refined", "object": "steam engine", "subject_type": "person",
-                 "source": "James Watt refined the steam engine."}
+                 "evidence_status": "unverified"}
 
 
 def test_process_with_llm_keeps_types_and_drops_bad_items(monkeypatch):
     reply = json.dumps([{"subject": "a", "predicate": "p", "object": "b", "subject_type": "place", "object_type": "event"},
                         {"subject": "a", "predicate": "p"}, {"subject": 5, "predicate": "p", "object": "b"}])
     patch(monkeypatch, FakeClient({"```": reply}))
-    out = m.process_with_llm(CFG, "a p b.")
-    assert out == [{"subject": "a", "predicate": "p", "object": "b", "subject_type": "place", "object_type": "event",
-                    "source": "a p b."}]
+    with pytest.raises(m.LLMError, match="Triple 2"):
+        m.process_with_llm(CFG, "a p b.")
 
 
 def test_chunks_run_in_parallel_and_keep_order(monkeypatch):
@@ -54,7 +55,7 @@ def test_chunks_run_in_parallel_and_keep_order(monkeypatch):
     assert client.calls >= 3
     chunks = [t["chunk"] for t in out]
     assert chunks == sorted(chunks)  # order preserved despite concurrency
-    assert all("source" in t for t in out)
+    assert all(t["evidence_status"] == "unverified" for t in out)
 
 
 def test_failed_chunk_aborts_unless_continue(monkeypatch):

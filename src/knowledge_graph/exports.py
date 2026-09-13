@@ -49,12 +49,15 @@ def parse_formats(spec):
 
 def write_csv(triples, path):
     fields = ["subject", "predicate", "object", "subject_type", "object_type", "inferred", "method", "via",
-              "chunk", "document", "source"]
+              "chunk", "document", "source", "time", "polarity", "attribution", "evidence", "evidence_status", "subject_aliases", "object_aliases", "origins"]
     with open(path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
         for t in triples:
             row = {k: t.get(k, "") for k in fields}
+            for field in ("evidence", "subject_aliases", "object_aliases", "origins"):
+                if row.get(field):
+                    row[field] = json.dumps(row[field], ensure_ascii=False)
             row["inferred"] = "true" if t.get("inferred") else "false"
             writer.writerow(row)
 
@@ -78,7 +81,9 @@ def write_graphml(triples, graph_data, path):
     for t in triples:
         G.add_edge(t["subject"], t["object"], label=t["predicate"], predicate=t["predicate"],
                    inferred=bool(t.get("inferred", False)), method=t.get("method", "") or "",
-                   via=t.get("via", "") or "", source=t.get("source", "") or "", document=t.get("document", "") or "")
+                   via=t.get("via", "") or "", source=t.get("source", "") or "", document=t.get("document", "") or "",
+                   evidence=json.dumps(t.get("evidence", []), ensure_ascii=False),
+                   time=t.get("time", ""), polarity=t.get("polarity", ""), attribution=t.get("attribution", ""))
     nx.write_graphml(G, path, encoding="utf-8")
 
 
@@ -118,9 +123,11 @@ def write_cypher(triples, graph_data, path):
     lines.append("")
     for t in triples:
         props = {"predicate": t["predicate"], "inferred": bool(t.get("inferred", False))}
-        for key in ("method", "via", "source", "document"):
+        for key in ("method", "via", "source", "document", "time", "polarity", "attribution"):
             if t.get(key):
                 props[key] = t[key]
+        if t.get("evidence"):
+            props["evidence"] = json.dumps(t["evidence"], ensure_ascii=False)
         if t.get("chunk"):
             props["chunk"] = int(t["chunk"])
         prop_text = ", ".join(
@@ -128,7 +135,7 @@ def write_cypher(triples, graph_data, path):
             for k, v in props.items())
         lines.append(
             f"MATCH (a:Entity {{name: {_cypher_string(t['subject'])}}}), (b:Entity {{name: {_cypher_string(t['object'])}}}) "
-            f"MERGE (a)-[r:{cypher_rel_type(t['predicate'])} {{predicate: {_cypher_string(t['predicate'])}}}]->(b) "
+            f"MERGE (a)-[r:{cypher_rel_type(t['predicate'])} {{predicate: {_cypher_string(t['predicate'])}, time: {_cypher_string(t.get('time', ''))}, polarity: {_cypher_string(t.get('polarity', ''))}, attribution: {_cypher_string(t.get('attribution', ''))}}}]->(b) "
             f"SET r += {{{prop_text}}};"
         )
     with open(path, "w", encoding="utf-8") as f:

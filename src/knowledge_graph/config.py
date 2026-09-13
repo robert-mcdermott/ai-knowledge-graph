@@ -27,9 +27,9 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "cache_dir": ".kg-cache",
     },
     "chunking": {"chunk_size": 500, "overlap": 50},
-    "extraction": {"language": "auto"},
+    "extraction": {"language": "auto", "profile": "general", "strict_evidence": False},
     "query": {"hops": 2, "max_triples": 150, "max_seed_entities": 8, "use_llm_for_entity_matching": True,
-              "history_turns": 3},
+              "history_turns": 3, "max_context_tokens": 6000},
     "standardization": {"enabled": True, "use_llm_for_entities": True, "merge_word_subsets": False},
     "inference": {
         "enabled": True,
@@ -96,6 +96,9 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     """
     if not isinstance(config, dict):
         raise ConfigError("Configuration must be a table")
+    for section in DEFAULTS:
+        if section in config and not isinstance(config[section], dict):
+            raise ConfigError(f"[{section}] must be a table")
     apply_defaults(config)
 
     llm = config["llm"]
@@ -126,8 +129,22 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(config["extraction"]["language"], str) or not config["extraction"]["language"].strip():
         raise ConfigError("[extraction] language must be a non-empty string such as 'auto', 'English' or 'Chinese'")
 
+    from knowledge_graph.profiles import PROFILES
+    extraction = config["extraction"]
+    if extraction["profile"] not in PROFILES:
+        raise ConfigError("[extraction] profile must be general, research or organizations")
+    for key in ("entity_types", "predicates"):
+        values = extraction.get(key, [])
+        if not isinstance(values, list) or any(not isinstance(v, str) or not v.strip() for v in values):
+            raise ConfigError(f"[extraction] {key} must be a list of nonempty strings")
+    if not isinstance(extraction["strict_evidence"], bool):
+        raise ConfigError("[extraction] strict_evidence must be boolean")
+    if not isinstance(llm["timeout"], (float, int)) or llm["timeout"] <= 0:
+        raise ConfigError("[llm] timeout must be positive")
+    if not isinstance(llm["max_retries"], int) or llm["max_retries"] < 0:
+        raise ConfigError("[llm] max_retries must be non-negative")
     query = config["query"]
-    for key in ("hops", "max_triples", "max_seed_entities", "history_turns"):
+    for key in ("hops", "max_triples", "max_seed_entities", "history_turns", "max_context_tokens"):
         if not isinstance(query[key], int) or query[key] < 0:
             raise ConfigError(f"[query] {key} must be a non-negative integer")
 

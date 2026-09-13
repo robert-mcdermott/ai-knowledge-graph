@@ -82,7 +82,7 @@ def test_show_inferred_option_reaches_the_page(tmp_path):
     html2 = out.read_text(encoding="utf-8")
     data2 = json.loads(re.search(r"const KG = (\{.*?\});\n</script>", html2, re.DOTALL).group(1).replace("<\\/", "</"))
     assert data2["meta"]["theme"] == "dark" and data2["meta"]["edgeLabels"] == "none"
-    assert "localStorage" not in html2
+    assert "kg-theme" in html2  # explicit user theme choice now persists
     assert 'id="path-target"' in html and "function findPath" in html
     assert build_graph_data(SAMPLE_TRIPLES)["meta"]["showInferred"] is True
 
